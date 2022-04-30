@@ -8,29 +8,30 @@
   <link href="styles/reset.css" rel="stylesheet">
   <link href="styles/styles.css" rel="stylesheet">
 
-
   <script src="main.js" defer></script>
 </head>
 
 <body>
   <header>
     <h1>Do<span>II</span>Done</h1>
-    <p>A productivity app that will transform your to-do list to a done list!</p>
   </header>
 
   <main>
-    <div>
-      <div>
-        <button>Home</button>
+    <div id="control-panel">
+      <div id="controls">
+        <h2>Home</h2>
+        <button>All Tasks</button>
         <button>Today</button>
         <button>Next 7 Days</button>
+        <button>Important</button>
       </div>
-      <div>
+      <div id="projects">
         <button>+ Add Project</button>
       </div>
     </div>
-    <div>
-      <h2>Home</h2>
+
+    <div id="taskview">
+      <h2 id="taskview-header">All Tasks</h2>
       <button>+ Add Task</button>
     </div>
   </main>

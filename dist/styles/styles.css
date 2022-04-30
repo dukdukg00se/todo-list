@@ -1,0 +1,55 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid black;
+  padding: 30px;
+}
+h1 {
+  font-size: 40px;
+}
+
+main {
+  display: flex;
+  flex: 1;
+}
+#control-panel {
+  display: flex;
+  flex-direction: column;
+}
+#controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-right: 3px solid gray;
+  border-bottom: 3px solid gray;
+  padding: 20px;
+}
+#projects {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border-right: 3px solid gray;
+  padding: 20px;
+}
+#taskview {
+
+}
+
+footer {
+  display: flex;
+  border: 3px solid black;
+  padding: 30px;
+}
