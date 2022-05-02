@@ -28,6 +28,9 @@ main {
 #control-panel {
   display: flex;
   flex-direction: column;
+
+  min-width: 200px;
+
 }
 #controls {
   display: flex;
@@ -43,10 +46,20 @@ main {
   flex: 1;
   border-right: 3px solid gray;
   padding: 20px;
+  gap: 20px;
 }
-#taskview {
+.project-form {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 10px;
+  align-items: center;
+  border: 2px solid blue;
+}
+.hidden {
+  display: none;
+}
 
-}
 
 footer {
   display: flex;
