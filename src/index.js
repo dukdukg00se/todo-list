@@ -1,5 +1,10 @@
-// let allProjectsArr = [];
+const projectForm = document.querySelector('.project-form');
+let projectTitle = document.getElementById('project-name');
+let projectContainer = document.querySelector('#projects');
+// let sub = document.querySelector('.sub-container');
+let addProjBtn = document.querySelector('#submit-project');
 
+// Create an array to store projects
 const checkStorage = (() => {
   let allProjectsArr;
   if (localStorage.length > 0) {
@@ -11,13 +16,7 @@ const checkStorage = (() => {
   }
   return { allProjectsArr };
 })();
-
 // console.log(checkStorage.allProjectsArr);
-
-const projectForm = document.querySelector('.project-form');
-let projectTitle = document.getElementById('project-name');
-let projectContainer = document.querySelector('#projects');
-let addProjBtn = document.querySelector('#submit-project');
 
 function Project(title) {
   this.title = title
@@ -43,42 +42,35 @@ btns.forEach(btn => {
       // localStorage.setItem(projectTitle.value, JSON.stringify(projName));
 
       checkStorage.allProjectsArr.push(projName);
-      // localStorage.clear();
       populateStorage(checkStorage.allProjectsArr);
 
       projectForm.classList.add('hidden');
       projectForm.reset();
 
+      // Remove previous project subcontainer before displaying new projects
+      let sub = document.querySelector('.sub-container');
+      if (projectContainer.contains(sub)) {
+        console.log('yes');
+        projectContainer.removeChild(sub);
+      }
+
       displayProj();
     }
   })
 })
-// console.log(allProjectsArr);
+
 displayProj();
 
 function displayProj() {
-  // console.log(allProjectsArr);
-
   // for (let i = 0; i < localStorage.length; i++) {
     // console.log(localStorage.getItem(localStorage.key(i)));
     // console.log(JSON.parse(localStorage.getItem(localStorage.key(0))));
   // }
 
-
-
-
   let test = JSON.parse(localStorage.getItem('allProjects'));
-  // console.log(test.length);
-
 
   let projectSubContainer = document.createElement('div');
   projectSubContainer.classList.add('sub-container');
-  let sub = document.querySelector('.sub-container');
-
-  // if (projectContainer.contains(sub)) {
-  //   // console.log('yes');
-  //   projectContainer.removeChild(sub);
-  // }
 
   test.forEach(obj => {
     // console.log(obj);
@@ -95,19 +87,7 @@ function displayProj() {
   projectContainer.insertBefore(projectSubContainer, projectForm);
 }
 
+// Add array containing all projects to local storage
 function populateStorage(x) {
   localStorage.setItem('allProjects', JSON.stringify(x));
 }
-
-// displayProj();
-
-// addProjBtn.addEventListener('click', () => {
-//   allProjects.forEach((project) => {
-//     let eachProj = document.createElement('div');
-//     let eachProjTitle = document.createElement('h3');
-//     eachProjTitle.textContent = project.title;
-//     eachProj.append(eachProjTitle);
-
-//     projectContainer.insertBefore(eachProj, projectForm);
-//   })
-// })
