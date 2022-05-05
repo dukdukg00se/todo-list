@@ -16,7 +16,6 @@ const checkStorage = (() => {
   }
   return { allProjectsArr };
 })();
-// console.log(checkStorage.allProjectsArr);
 
 function Project(title) {
   this.title = title
@@ -26,7 +25,6 @@ function Project(title) {
 let btns = document.querySelectorAll('button');
 btns.forEach(btn => {
   btn.addEventListener('click', (e) => {
-
     if (e.target.id === 'add-project') {
       projectForm.classList.remove('hidden');
     } 
@@ -47,7 +45,7 @@ btns.forEach(btn => {
       projectForm.classList.add('hidden');
       projectForm.reset();
 
-      // Remove previous project subcontainer before displaying new projects
+      // Remove previous proj subcontainer before displaying new proj
       let sub = document.querySelector('.sub-container');
       if (projectContainer.contains(sub)) {
         console.log('yes');
@@ -72,19 +70,39 @@ function displayProj() {
   let projectSubContainer = document.createElement('div');
   projectSubContainer.classList.add('sub-container');
 
-  test.forEach(obj => {
-    // console.log(obj);
+  if (test) {
+    test.forEach(obj => {
+      // console.log(obj);
+  
+      let eachProj = document.createElement('div');
+      eachProj.classList.add('indiv-proj');
 
-    let eachProj = document.createElement('div');
-    eachProj.classList.add('indiv-proj');
-    let eachProjTitle = document.createElement('h3');
-    eachProjTitle.textContent = obj.title;
-    eachProj.append(eachProjTitle);
-    projectSubContainer.append(eachProj);
+      let projTitleContainer = document.createElement('div');
+      projTitleContainer.classList.add('proj-title-cont');
 
-  })
+      let clipboardIcon = document.createElement('span');
+      clipboardIcon.classList.add('material-icons');
+      // clipboardIcon.classList.add('test');
+      clipboardIcon.textContent = 'construction';
 
-  projectContainer.insertBefore(projectSubContainer, projectForm);
+      let eachProjTitle = document.createElement('h3');
+      eachProjTitle.textContent = obj.title;
+
+      projTitleContainer.append(clipboardIcon, eachProjTitle);
+
+      let kebabIcon = document.createElement('span');
+      kebabIcon.classList.add('material-icons');
+      kebabIcon.classList.add('proj-edit');
+
+      kebabIcon.textContent = 'more_vert';
+      
+      eachProj.append(projTitleContainer, kebabIcon);
+      projectSubContainer.append(eachProj);
+  
+    })
+
+    projectContainer.insertBefore(projectSubContainer, projectForm);
+  }
 }
 
 // Add array containing all projects to local storage
