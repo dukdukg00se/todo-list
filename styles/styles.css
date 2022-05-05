@@ -60,6 +60,43 @@ main {
   display: none;
 }
 
+.indiv-proj {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 5px;;
+}
+.indiv-proj:hover {
+  cursor: pointer;
+}
+.proj-title-cont {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+/* .proj-edit:hover {
+  cursor: pointer;
+} */
+
+/* .material-icons.test {
+  color: blue;
+  background-color: black;
+  border-radius: 5px;;
+} */
+
 
 footer {
   display: flex;
