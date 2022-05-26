@@ -13,93 +13,67 @@ body {
 
 header {
   display: flex;
-  flex-direction: column;
   border: 3px solid black;
   padding: 30px;
 }
+
 h1 {
   font-size: 40px;
 }
 
-main {
+#content-wrapper {
   display: flex;
   flex: 1;
 }
-#control-panel {
-  display: flex;
-  flex-direction: column;
 
-  min-width: 220px;
+nav {
+  border: solid 2px rgb(131, 131, 238);
+  width: 30%;
 
 }
-#controls {
+
+#tasks-panel {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border-right: 3px solid gray;
-  border-bottom: 3px solid gray;
   padding: 20px;
+  border-bottom: solid 2px rgb(131, 131, 238);
 }
-#projects {
+
+#projects-panel {
+  /* width: 30%; */
+  /* min-width: 250px; */
+  margin: 50px auto;
   display: flex;
   flex-direction: column;
   flex: 1;
-  border-right: 3px solid gray;
   padding: 20px;
   gap: 20px;
 }
-.project-form {
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  gap: 10px;
-  align-items: center;
-  border: 2px solid blue;
-}
-.hidden {
-  display: none;
-}
 
-.indiv-proj {
+.project {
   display: flex;
   justify-content: space-between;
-
-  padding: 5px;;
-}
-.indiv-proj:hover {
-  cursor: pointer;
-}
-.proj-title-cont {
-  display: flex;
   align-items: center;
-  gap: 5px;
 }
-.material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
+
+.delete {
+  width: 50px;
+  height: 25px;
 }
-/* .proj-edit:hover {
-  cursor: pointer;
-} */
 
-/* .material-icons.test {
-  color: blue;
-  background-color: black;
-  border-radius: 5px;;
-} */
-
+.hidden {
+  display: none !important;
+}
 
 footer {
   display: flex;
   border: 3px solid black;
   padding: 30px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
