@@ -52,6 +52,30 @@ const projectsDataController = (() => {
   return { updateProjects };
 })();
 
+const createProjectContent = (projectObj) => {
+  const projectListItem = document.createElement('li');
+
+  const projectContainer = document.createElement('div');
+  projectContainer.classList.add('project');
+  projectContainer.id = projectObj.id;
+
+  const projectTitle = document.createElement('h3');
+  projectTitle.textContent = projectObj.name
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.classList.add('delete');
+  deleteBtn.textContent = 'X';
+  
+  deleteBtn.addEventListener('click', (e) => {
+    projectsDataController.updateProjects(e);
+    projectsDisplayController.displayProjects();
+  })
+  
+  projectContainer.append(projectTitle, deleteBtn);
+  projectListItem.append(projectContainer);
+  return projectListItem;
+};
+
 const projectsDisplayController = (() => {
   const projectForm = document.querySelector("#project-form");
   const projectTextInput = document.querySelector("#project-text-input");
@@ -70,49 +94,25 @@ const projectsDisplayController = (() => {
     addProjectButton.classList.remove("hidden");
   };
 
-  const createProjectContent = (projectObj) => {
-    const projectListItem = document.createElement('li');
-
-    const projectContainer = document.createElement('div');
-    projectContainer.classList.add('project');
-    projectContainer.id = projectObj.id;
-  
-    const projectTitle = document.createElement('h3');
-    projectTitle.textContent = projectObj.name
-  
-    const deleteBtn = document.createElement('button');
-    deleteBtn.classList.add('delete');
-    deleteBtn.textContent = 'X';
-    
-    deleteBtn.addEventListener('click', (e) => {
-      projectsDataController.updateProjects(e);
-      displayProjects();
-    })
-    
-    projectContainer.append(projectTitle, deleteBtn);
-    projectListItem.append(projectContainer);
-    return projectListItem;
-  };
-
   const remove = (container, element) => {
     container.removeChild(element);
   }
 
   const displayProjects = () => {
     let activeProjects = JSON.parse(localStorage.getItem('projects'));
-    const projectsList = document.querySelector('#projects-list');
+    const oldProjectsList = document.querySelector('#projects-list');
 
     if (activeProjects) {
-      if (projectsPanel.contains(projectsList)) {
-        remove(projectsPanel, projectsList);
+      if (projectsPanel.contains(oldProjectsList)) {
+        remove(projectsPanel, oldProjectsList);
       }
   
-      const subContnr = document.createElement('ul');
-      subContnr.id = 'projects-list';
+      const projectsList = document.createElement('ul');
+      projectsList.id = 'projects-list';
       activeProjects.forEach(proj => {
-        subContnr.append(createProjectContent(proj));
+        projectsList.append(createProjectContent(proj));
       })
-      projectsPanel.insertBefore(subContnr, projectForm);
+      projectsPanel.insertBefore(projectsList, projectForm);
     }
   };
 
