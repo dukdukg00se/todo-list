@@ -19,38 +19,38 @@
     <h1>Do<span>II</span>Done</h1>
   </header>
 
-  <main>
-    <div id="control-panel">
-      <div id="controls">
-        <h2>Home</h2>
+  <div id="content-wrapper">
+    <nav>
+      <section id="tasks-panel">
+        <h2>Tasks</h2>
         <button type="button">All Tasks</button>
         <button type="button">Today</button>
         <button type="button">Next 7 Days</button>
         <button type="button">Important</button>
-      </div>
+      </section>
 
-      <div id="projects">
-        <h2>Projects</h2>
-
-        <form class="project-form hidden">
-          <!-- set button types to button as not submitting data to a server -->
-          <input type="text" id="project-name" name="project-name" placeholder="Project Name" required>
+      <section id="projects-panel">
+        <h2 id="projects-panel-header">Projects</h2>
+        
+        <form class="form hidden" id="project-form">
+          <input id="project-text-input" type="text" placeholder="Project Name">
+    
           <div>
-            <button type="button" id="submit-project">Submit</button>
-            <button type="button" id="cancel">Cancel</button>
+            <button class="add-project-buttons" id="submit-project" type="button">Submit</button>
+            <button class="add-project-buttons" id="cancel-project" type="button">Cancel</button>
           </div>
         </form>
+    
+        <button class="add-project-buttons" id="add-project" type="button">+ Add Project</button>
+      </section>
+    </nav>
 
-        <button type="button" id="add-project">+ Add Project</button>
-      </div>
-    </div>
-
-    <div id="taskview">
+    <main id="main-panel">
       <h2 id="taskview-header">All Tasks</h2>
       <!-- <button type="button">+ Add Task</button> -->
-    </div>
-  </main>
-  
+    </main>
+  </div>
+
   <footer>
     <div id="credits"> 
       dukdukg00se
