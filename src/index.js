@@ -122,3 +122,29 @@ const projectsDisplayController = (() => {
     displayProjects
   };
 })();
+
+
+
+const projectsPanelController = (e) => {
+  if (e.target.id === 'add-project') {
+    projectsDisplayController.showForm();
+  }
+
+  if (e.target.id === 'cancel-project') {
+    projectsDisplayController.hideForm();
+  }
+
+  if (e.target.id === 'submit-project') {
+    projectsDataController.updateProjects(e);
+    projectsDisplayController.displayProjects();
+    projectsDisplayController.hideForm();
+  }
+}
+
+projectsDisplayController.displayProjects();
+
+const addProjectButtonsGroup = document.querySelectorAll('.add-project-buttons');
+addProjectButtonsGroup.forEach(btn => {
+  btn.addEventListener('click', projectsPanelController);
+})
+
