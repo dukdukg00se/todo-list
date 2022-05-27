@@ -16,17 +16,17 @@
 
 <body>
   <header>
-    <h1>Do<span>II</span>Done</h1>
+    <h2 id="application-name">Do<span>II</span>Done</h1>
   </header>
 
   <div id="content-wrapper">
     <nav>
       <section id="tasks-panel">
         <h2>Tasks</h2>
-        <button type="button">All Tasks</button>
-        <button type="button">Today</button>
-        <button type="button">Next 7 Days</button>
-        <button type="button">Important</button>
+        <button class="task" type="button">All Tasks</button>
+        <button class="task" type="button">Today</button>
+        <button class="task" type="button">Next 7 Days</button>
+        <button class="task" type="button">Important</button>
       </section>
 
       <section id="projects-panel">
@@ -36,17 +36,17 @@
           <input id="project-text-input" type="text" placeholder="Project Name">
     
           <div>
-            <button class="add-project-buttons" id="submit-project" type="button">Submit</button>
-            <button class="add-project-buttons" id="cancel-project" type="button">Cancel</button>
+            <button class="project add-project" id="submit-project" type="button">Submit</button>
+            <button class="project add-project" id="cancel-project" type="button">Cancel</button>
           </div>
         </form>
     
-        <button class="add-project-buttons" id="add-project" type="button">+ Add Project</button>
+        <button class="project add-project" id="add-project" type="button">+ Add Project</button>
       </section>
     </nav>
 
-    <main id="main-panel">
-      <h2 id="taskview-header">All Tasks</h2>
+    <main>
+      <h1>All Tasks</h2>
       <!-- <button type="button">+ Add Task</button> -->
     </main>
   </div>
