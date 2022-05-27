@@ -17,7 +17,7 @@ header {
   padding: 30px;
 }
 
-h1 {
+#application-name {
   font-size: 40px;
 }
 
@@ -43,7 +43,6 @@ nav {
 #projects-panel {
   /* width: 30%; */
   /* min-width: 250px; */
-  margin: 50px auto;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -51,7 +50,7 @@ nav {
   gap: 20px;
 }
 
-.project {
+.project-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
