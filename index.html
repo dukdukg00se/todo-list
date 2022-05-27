@@ -33,7 +33,7 @@
         <h2 id="projects-panel-header">Projects</h2>
         
         <form class="form hidden" id="project-form">
-          <input id="project-text-input" type="text" placeholder="Project Name">
+          <input id="project-name-input" type="text" placeholder="Enter project name">
     
           <div>
             <button class="project add-project" id="submit-project" type="button">Submit</button>
@@ -46,8 +46,25 @@
     </nav>
 
     <main>
-      <h1>All Tasks</h2>
-      <!-- <button type="button">+ Add Task</button> -->
+      <h1>All Tasks</h1>
+
+      <form class="hidden" id="task-form">
+        <label for="task-name-input">Task name (required):</label>
+        <input id="task-name-input" type="text" placeholder="E.g., Buy groceries" required>
+
+        <label for="task-details-input">Details (optional):</label>
+        <input id="task-details-input" type="text" placeholder="Fruit, milk, bread">
+
+        <label for="task-date-input">Date due (optional):</label>
+        <input id="task-date-input" type="date">
+
+        <div>
+          <button class="task add-task" id="submit-task" type="button">Submit</button>
+          <button class="task add-task" id="cancel-task" type="button">Cancel</button>
+        </div>
+      </form>
+      
+      <button class="task" id="add-task" type="button">+ Add Task</button>
     </main>
   </div>
 
