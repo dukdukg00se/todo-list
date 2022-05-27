@@ -1,159 +1,96 @@
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
 /******/ (() => { // webpackBootstrap
-var __webpack_exports__ = {};
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-const projectsDataController = (() => {
-  // Define projects container on start
-  const projects = (() => {
-    let container = !localStorage.length
-      ? []
-      : JSON.parse(localStorage.getItem("projects"));
-    return { container };
-  })();
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-  const createProject = (name) => {
-    const tasks = [];
-    return { name, tasks };
-  };
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _modules_projects_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/projects.js */ \"./src/modules/projects.js\");\n\n\n\n_modules_projects_js__WEBPACK_IMPORTED_MODULE_0__.projectsDisplayController.displayProjects();\n\n// const addProjectButtonsGroup = document.querySelectorAll('.add-project');\n// addProjectButtonsGroup.forEach(btn => {\n//   btn.addEventListener('click', projectsPanelController);\n// })\n\n\nconst applicationController = (() => {\n\n  const applicationButtons = document.querySelectorAll('button');\n  applicationButtons.forEach(btn => {\n    btn.addEventListener('click', (e) => {\n      if (e.target.classList.contains('project')) {\n        (0,_modules_projects_js__WEBPACK_IMPORTED_MODULE_0__.projectsPanelController)(e);\n      }\n    })\n  })\n\n  const projectsList = document.querySelectorAll('.project-item');\n  projectsList.forEach(project => {\n    project.addEventListener('click', (e) => {\n      // console.log(e);\n      console.log(e.target.firstChild.textContent);\n    })\n  })\n\n})();\n\n\n/*****************************/\nconst tasksDisplayController = () => {\n  const mainPanel = document.querySelector('main');\n  const mainHeader = document.querySelector('h1');\n}\n\n\nconst taskPanelController = () => {\n\n}\n\n//# sourceURL=webpack://todo-list/./src/index.js?");
 
-  const saveProject = (name) => {
-    name = createProject(name);
-    projects.container.push(name);
-  };
+/***/ }),
 
-  const removeProject = (projectId, projectContainer) => {
-    for (let i = 0; i < projectContainer.length; i++) {
-      if (projectContainer[i].id === projectId) {
-        projectContainer.splice(i, 1);
-      }
-    }
-  };
+/***/ "./src/modules/projects.js":
+/*!*********************************!*\
+  !*** ./src/modules/projects.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-  const setProjectId = (projectsArr) => {
-    for (let i = 0; i < projectsArr.length; i++) {
-      projectsArr[i].id = "project-" + i;
-    }
-  };
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"projectsDisplayController\": () => (/* binding */ projectsDisplayController),\n/* harmony export */   \"projectsPanelController\": () => (/* binding */ projectsPanelController)\n/* harmony export */ });\nconst createProjectContent = (projectObj) => {\n  const projectListItem = document.createElement('li');\n\n  const projectContainer = document.createElement('div');\n  projectContainer.classList.add('project-item');\n  projectContainer.id = projectObj.id;\n\n  const projectTitle = document.createElement('h3');\n  projectTitle.textContent = projectObj.name\n\n  const deleteBtn = document.createElement('button');\n  deleteBtn.classList.add('delete');\n  deleteBtn.textContent = 'X';\n  \n  deleteBtn.addEventListener('click', (e) => {\n    projectsDataController.updateProjects(e);\n    projectsDisplayController.displayProjects();\n  })\n  \n  projectContainer.append(projectTitle, deleteBtn);\n  projectListItem.append(projectContainer);\n  return projectListItem;\n};\n\nconst projectsDataController = (() => {\n  // Define projects container on start\n  const projects = (() => {\n    let container = !localStorage.length\n      ? []\n      : JSON.parse(localStorage.getItem(\"projects\"));\n    return { container };\n  })();\n\n  const createProject = (name) => {\n    const tasks = [];\n    return { name, tasks };\n  };\n\n  const saveProject = (name) => {\n    name = createProject(name);\n    projects.container.push(name);\n  };\n\n  const removeProject = (projectId, projectContainer) => {\n    for (let i = 0; i < projectContainer.length; i++) {\n      if (projectContainer[i].id === projectId) {\n        projectContainer.splice(i, 1);\n      }\n    }\n  };\n\n  const setProjectId = (projectsArr) => {\n    for (let i = 0; i < projectsArr.length; i++) {\n      projectsArr[i].id = \"project-\" + i;\n    }\n  };\n\n  const populateLocalStorage = (projectsArr) => {\n    localStorage.setItem(\"projects\", JSON.stringify(projectsArr));\n  };\n\n  const updateProjects = (e) => {\n    if (e.target.classList.contains(\"delete\")) {\n      let projectToDelete = e.target.parentElement.id;\n      removeProject(projectToDelete, projects.container);\n    } else {\n      const projectTextInput = document.querySelector('#project-text-input');\n      let projectName = projectTextInput.value;\n      saveProject(projectName);\n    }\n\n    setProjectId(projects.container);\n    populateLocalStorage(projects.container);\n  };\n\n  return { updateProjects };\n})();\n\nconst projectsDisplayController = (() => {\n  const projectForm = document.querySelector(\"#project-form\");\n  const projectTextInput = document.querySelector(\"#project-text-input\");\n  const addProjectButton = document.querySelector(\"#add-project\");\n  const projectsPanel = document.querySelector('#projects-panel');\n\n  const showForm = () => {\n    projectForm.classList.remove(\"hidden\");\n    projectTextInput.focus();\n    addProjectButton.classList.add(\"hidden\");\n  };\n\n  const hideForm = () => {\n    projectForm.reset();\n    projectForm.classList.add(\"hidden\");\n    addProjectButton.classList.remove(\"hidden\");\n  };\n\n  const remove = (container, element) => {\n    container.removeChild(element);\n  }\n\n  const displayProjects = () => {\n    let activeProjects = JSON.parse(localStorage.getItem('projects'));\n    const oldProjectsList = document.querySelector('#projects-list');\n\n    if (activeProjects) {\n      if (projectsPanel.contains(oldProjectsList)) {\n        remove(projectsPanel, oldProjectsList);\n      }\n  \n      const projectsList = document.createElement('ul');\n      projectsList.id = 'projects-list';\n      activeProjects.forEach(proj => {\n        projectsList.append(createProjectContent(proj));\n      })\n      projectsPanel.insertBefore(projectsList, projectForm);\n    }\n  };\n\n  return {\n    showForm,\n    hideForm,\n    displayProjects\n  };\n})();\n\nconst projectsPanelController = (e) => {\n\n  if (e.target.id === 'add-project') {\n    projectsDisplayController.showForm();\n  }\n\n  if (e.target.id === 'cancel-project') {\n    projectsDisplayController.hideForm();\n  }\n\n  if (e.target.id === 'submit-project') {\n    projectsDataController.updateProjects(e);\n    projectsDisplayController.displayProjects();\n    projectsDisplayController.hideForm();\n  }\n}\n\n\n\n//# sourceURL=webpack://todo-list/./src/modules/projects.js?");
 
-  const populateLocalStorage = (projectsArr) => {
-    localStorage.setItem("projects", JSON.stringify(projectsArr));
-  };
+/***/ })
 
-  const updateProjects = (e) => {
-    if (e.target.classList.contains("delete")) {
-      let projectToDelete = e.target.parentElement.id;
-      removeProject(projectToDelete, projects.container);
-    } else {
-      const projectTextInput = document.querySelector('#project-text-input');
-      let projectName = projectTextInput.value;
-      saveProject(projectName);
-    }
-
-    setProjectId(projects.container);
-    populateLocalStorage(projects.container);
-  };
-
-  return { updateProjects };
-})();
-
-const createProjectContent = (projectObj) => {
-  const projectListItem = document.createElement('li');
-
-  const projectContainer = document.createElement('div');
-  projectContainer.classList.add('project');
-  projectContainer.id = projectObj.id;
-
-  const projectTitle = document.createElement('h3');
-  projectTitle.textContent = projectObj.name
-
-  const deleteBtn = document.createElement('button');
-  deleteBtn.classList.add('delete');
-  deleteBtn.textContent = 'X';
-  
-  deleteBtn.addEventListener('click', (e) => {
-    projectsDataController.updateProjects(e);
-    projectsDisplayController.displayProjects();
-  })
-  
-  projectContainer.append(projectTitle, deleteBtn);
-  projectListItem.append(projectContainer);
-  return projectListItem;
-};
-
-const projectsDisplayController = (() => {
-  const projectForm = document.querySelector("#project-form");
-  const projectTextInput = document.querySelector("#project-text-input");
-  const addProjectButton = document.querySelector("#add-project");
-  const projectsPanel = document.querySelector('#projects-panel');
-
-  const showForm = () => {
-    projectForm.classList.remove("hidden");
-    projectTextInput.focus();
-    addProjectButton.classList.add("hidden");
-  };
-
-  const hideForm = () => {
-    projectForm.reset();
-    projectForm.classList.add("hidden");
-    addProjectButton.classList.remove("hidden");
-  };
-
-  const remove = (container, element) => {
-    container.removeChild(element);
-  }
-
-  const displayProjects = () => {
-    let activeProjects = JSON.parse(localStorage.getItem('projects'));
-    const oldProjectsList = document.querySelector('#projects-list');
-
-    if (activeProjects) {
-      if (projectsPanel.contains(oldProjectsList)) {
-        remove(projectsPanel, oldProjectsList);
-      }
-  
-      const projectsList = document.createElement('ul');
-      projectsList.id = 'projects-list';
-      activeProjects.forEach(proj => {
-        projectsList.append(createProjectContent(proj));
-      })
-      projectsPanel.insertBefore(projectsList, projectForm);
-    }
-  };
-
-  return {
-    showForm,
-    hideForm,
-    displayProjects
-  };
-})();
-
-
-
-const projectsPanelController = (e) => {
-  if (e.target.id === 'add-project') {
-    projectsDisplayController.showForm();
-  }
-
-  if (e.target.id === 'cancel-project') {
-    projectsDisplayController.hideForm();
-  }
-
-  if (e.target.id === 'submit-project') {
-    projectsDataController.updateProjects(e);
-    projectsDisplayController.displayProjects();
-    projectsDisplayController.hideForm();
-  }
-}
-
-projectsDisplayController.displayProjects();
-
-const addProjectButtonsGroup = document.querySelectorAll('.add-project-buttons');
-addProjectButtonsGroup.forEach(btn => {
-  btn.addEventListener('click', projectsPanelController);
-})
-
-
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/index.js");
+/******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibWFpbi5qcyIsIm1hcHBpbmdzIjoiOzs7OztBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGFBQWE7QUFDYixHQUFHOztBQUVIO0FBQ0E7QUFDQSxhQUFhO0FBQ2I7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSxvQkFBb0IsNkJBQTZCO0FBQ2pEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSxvQkFBb0Isd0JBQXdCO0FBQzVDO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQSxNQUFNO0FBQ047QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBOztBQUVBLFdBQVc7QUFDWCxDQUFDOztBQUVEO0FBQ0E7O0FBRUE7QUFDQTtBQUNBOztBQUVBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxHQUFHO0FBQ0g7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLE9BQU87QUFDUDtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLENBQUM7Ozs7QUFJRDtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBOztBQUVBO0FBQ0E7QUFDQTtBQUNBLENBQUMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly90b2RvLWxpc3QvLi9zcmMvaW5kZXguanMiXSwic291cmNlc0NvbnRlbnQiOlsiY29uc3QgcHJvamVjdHNEYXRhQ29udHJvbGxlciA9ICgoKSA9PiB7XG4gIC8vIERlZmluZSBwcm9qZWN0cyBjb250YWluZXIgb24gc3RhcnRcbiAgY29uc3QgcHJvamVjdHMgPSAoKCkgPT4ge1xuICAgIGxldCBjb250YWluZXIgPSAhbG9jYWxTdG9yYWdlLmxlbmd0aFxuICAgICAgPyBbXVxuICAgICAgOiBKU09OLnBhcnNlKGxvY2FsU3RvcmFnZS5nZXRJdGVtKFwicHJvamVjdHNcIikpO1xuICAgIHJldHVybiB7IGNvbnRhaW5lciB9O1xuICB9KSgpO1xuXG4gIGNvbnN0IGNyZWF0ZVByb2plY3QgPSAobmFtZSkgPT4ge1xuICAgIGNvbnN0IHRhc2tzID0gW107XG4gICAgcmV0dXJuIHsgbmFtZSwgdGFza3MgfTtcbiAgfTtcblxuICBjb25zdCBzYXZlUHJvamVjdCA9IChuYW1lKSA9PiB7XG4gICAgbmFtZSA9IGNyZWF0ZVByb2plY3QobmFtZSk7XG4gICAgcHJvamVjdHMuY29udGFpbmVyLnB1c2gobmFtZSk7XG4gIH07XG5cbiAgY29uc3QgcmVtb3ZlUHJvamVjdCA9IChwcm9qZWN0SWQsIHByb2plY3RDb250YWluZXIpID0+IHtcbiAgICBmb3IgKGxldCBpID0gMDsgaSA8IHByb2plY3RDb250YWluZXIubGVuZ3RoOyBpKyspIHtcbiAgICAgIGlmIChwcm9qZWN0Q29udGFpbmVyW2ldLmlkID09PSBwcm9qZWN0SWQpIHtcbiAgICAgICAgcHJvamVjdENvbnRhaW5lci5zcGxpY2UoaSwgMSk7XG4gICAgICB9XG4gICAgfVxuICB9O1xuXG4gIGNvbnN0IHNldFByb2plY3RJZCA9IChwcm9qZWN0c0FycikgPT4ge1xuICAgIGZvciAobGV0IGkgPSAwOyBpIDwgcHJvamVjdHNBcnIubGVuZ3RoOyBpKyspIHtcbiAgICAgIHByb2plY3RzQXJyW2ldLmlkID0gXCJwcm9qZWN0LVwiICsgaTtcbiAgICB9XG4gIH07XG5cbiAgY29uc3QgcG9wdWxhdGVMb2NhbFN0b3JhZ2UgPSAocHJvamVjdHNBcnIpID0+IHtcbiAgICBsb2NhbFN0b3JhZ2Uuc2V0SXRlbShcInByb2plY3RzXCIsIEpTT04uc3RyaW5naWZ5KHByb2plY3RzQXJyKSk7XG4gIH07XG5cbiAgY29uc3QgdXBkYXRlUHJvamVjdHMgPSAoZSkgPT4ge1xuICAgIGlmIChlLnRhcmdldC5jbGFzc0xpc3QuY29udGFpbnMoXCJkZWxldGVcIikpIHtcbiAgICAgIGxldCBwcm9qZWN0VG9EZWxldGUgPSBlLnRhcmdldC5wYXJlbnRFbGVtZW50LmlkO1xuICAgICAgcmVtb3ZlUHJvamVjdChwcm9qZWN0VG9EZWxldGUsIHByb2plY3RzLmNvbnRhaW5lcik7XG4gICAgfSBlbHNlIHtcbiAgICAgIGNvbnN0IHByb2plY3RUZXh0SW5wdXQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcjcHJvamVjdC10ZXh0LWlucHV0Jyk7XG4gICAgICBsZXQgcHJvamVjdE5hbWUgPSBwcm9qZWN0VGV4dElucHV0LnZhbHVlO1xuICAgICAgc2F2ZVByb2plY3QocHJvamVjdE5hbWUpO1xuICAgIH1cblxuICAgIHNldFByb2plY3RJZChwcm9qZWN0cy5jb250YWluZXIpO1xuICAgIHBvcHVsYXRlTG9jYWxTdG9yYWdlKHByb2plY3RzLmNvbnRhaW5lcik7XG4gIH07XG5cbiAgcmV0dXJuIHsgdXBkYXRlUHJvamVjdHMgfTtcbn0pKCk7XG5cbmNvbnN0IGNyZWF0ZVByb2plY3RDb250ZW50ID0gKHByb2plY3RPYmopID0+IHtcbiAgY29uc3QgcHJvamVjdExpc3RJdGVtID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnbGknKTtcblxuICBjb25zdCBwcm9qZWN0Q29udGFpbmVyID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7XG4gIHByb2plY3RDb250YWluZXIuY2xhc3NMaXN0LmFkZCgncHJvamVjdCcpO1xuICBwcm9qZWN0Q29udGFpbmVyLmlkID0gcHJvamVjdE9iai5pZDtcblxuICBjb25zdCBwcm9qZWN0VGl0bGUgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdoMycpO1xuICBwcm9qZWN0VGl0bGUudGV4dENvbnRlbnQgPSBwcm9qZWN0T2JqLm5hbWVcblxuICBjb25zdCBkZWxldGVCdG4gPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdidXR0b24nKTtcbiAgZGVsZXRlQnRuLmNsYXNzTGlzdC5hZGQoJ2RlbGV0ZScpO1xuICBkZWxldGVCdG4udGV4dENvbnRlbnQgPSAnWCc7XG4gIFxuICBkZWxldGVCdG4uYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCAoZSkgPT4ge1xuICAgIHByb2plY3RzRGF0YUNvbnRyb2xsZXIudXBkYXRlUHJvamVjdHMoZSk7XG4gICAgcHJvamVjdHNEaXNwbGF5Q29udHJvbGxlci5kaXNwbGF5UHJvamVjdHMoKTtcbiAgfSlcbiAgXG4gIHByb2plY3RDb250YWluZXIuYXBwZW5kKHByb2plY3RUaXRsZSwgZGVsZXRlQnRuKTtcbiAgcHJvamVjdExpc3RJdGVtLmFwcGVuZChwcm9qZWN0Q29udGFpbmVyKTtcbiAgcmV0dXJuIHByb2plY3RMaXN0SXRlbTtcbn07XG5cbmNvbnN0IHByb2plY3RzRGlzcGxheUNvbnRyb2xsZXIgPSAoKCkgPT4ge1xuICBjb25zdCBwcm9qZWN0Rm9ybSA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIjcHJvamVjdC1mb3JtXCIpO1xuICBjb25zdCBwcm9qZWN0VGV4dElucHV0ID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIiNwcm9qZWN0LXRleHQtaW5wdXRcIik7XG4gIGNvbnN0IGFkZFByb2plY3RCdXR0b24gPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiI2FkZC1wcm9qZWN0XCIpO1xuICBjb25zdCBwcm9qZWN0c1BhbmVsID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignI3Byb2plY3RzLXBhbmVsJyk7XG5cbiAgY29uc3Qgc2hvd0Zvcm0gPSAoKSA9PiB7XG4gICAgcHJvamVjdEZvcm0uY2xhc3NMaXN0LnJlbW92ZShcImhpZGRlblwiKTtcbiAgICBwcm9qZWN0VGV4dElucHV0LmZvY3VzKCk7XG4gICAgYWRkUHJvamVjdEJ1dHRvbi5jbGFzc0xpc3QuYWRkKFwiaGlkZGVuXCIpO1xuICB9O1xuXG4gIGNvbnN0IGhpZGVGb3JtID0gKCkgPT4ge1xuICAgIHByb2plY3RGb3JtLnJlc2V0KCk7XG4gICAgcHJvamVjdEZvcm0uY2xhc3NMaXN0LmFkZChcImhpZGRlblwiKTtcbiAgICBhZGRQcm9qZWN0QnV0dG9uLmNsYXNzTGlzdC5yZW1vdmUoXCJoaWRkZW5cIik7XG4gIH07XG5cbiAgY29uc3QgcmVtb3ZlID0gKGNvbnRhaW5lciwgZWxlbWVudCkgPT4ge1xuICAgIGNvbnRhaW5lci5yZW1vdmVDaGlsZChlbGVtZW50KTtcbiAgfVxuXG4gIGNvbnN0IGRpc3BsYXlQcm9qZWN0cyA9ICgpID0+IHtcbiAgICBsZXQgYWN0aXZlUHJvamVjdHMgPSBKU09OLnBhcnNlKGxvY2FsU3RvcmFnZS5nZXRJdGVtKCdwcm9qZWN0cycpKTtcbiAgICBjb25zdCBvbGRQcm9qZWN0c0xpc3QgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcjcHJvamVjdHMtbGlzdCcpO1xuXG4gICAgaWYgKGFjdGl2ZVByb2plY3RzKSB7XG4gICAgICBpZiAocHJvamVjdHNQYW5lbC5jb250YWlucyhvbGRQcm9qZWN0c0xpc3QpKSB7XG4gICAgICAgIHJlbW92ZShwcm9qZWN0c1BhbmVsLCBvbGRQcm9qZWN0c0xpc3QpO1xuICAgICAgfVxuICBcbiAgICAgIGNvbnN0IHByb2plY3RzTGlzdCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3VsJyk7XG4gICAgICBwcm9qZWN0c0xpc3QuaWQgPSAncHJvamVjdHMtbGlzdCc7XG4gICAgICBhY3RpdmVQcm9qZWN0cy5mb3JFYWNoKHByb2ogPT4ge1xuICAgICAgICBwcm9qZWN0c0xpc3QuYXBwZW5kKGNyZWF0ZVByb2plY3RDb250ZW50KHByb2opKTtcbiAgICAgIH0pXG4gICAgICBwcm9qZWN0c1BhbmVsLmluc2VydEJlZm9yZShwcm9qZWN0c0xpc3QsIHByb2plY3RGb3JtKTtcbiAgICB9XG4gIH07XG5cbiAgcmV0dXJuIHtcbiAgICBzaG93Rm9ybSxcbiAgICBoaWRlRm9ybSxcbiAgICBkaXNwbGF5UHJvamVjdHNcbiAgfTtcbn0pKCk7XG5cblxuXG5jb25zdCBwcm9qZWN0c1BhbmVsQ29udHJvbGxlciA9IChlKSA9PiB7XG4gIGlmIChlLnRhcmdldC5pZCA9PT0gJ2FkZC1wcm9qZWN0Jykge1xuICAgIHByb2plY3RzRGlzcGxheUNvbnRyb2xsZXIuc2hvd0Zvcm0oKTtcbiAgfVxuXG4gIGlmIChlLnRhcmdldC5pZCA9PT0gJ2NhbmNlbC1wcm9qZWN0Jykge1xuICAgIHByb2plY3RzRGlzcGxheUNvbnRyb2xsZXIuaGlkZUZvcm0oKTtcbiAgfVxuXG4gIGlmIChlLnRhcmdldC5pZCA9PT0gJ3N1Ym1pdC1wcm9qZWN0Jykge1xuICAgIHByb2plY3RzRGF0YUNvbnRyb2xsZXIudXBkYXRlUHJvamVjdHMoZSk7XG4gICAgcHJvamVjdHNEaXNwbGF5Q29udHJvbGxlci5kaXNwbGF5UHJvamVjdHMoKTtcbiAgICBwcm9qZWN0c0Rpc3BsYXlDb250cm9sbGVyLmhpZGVGb3JtKCk7XG4gIH1cbn1cblxucHJvamVjdHNEaXNwbGF5Q29udHJvbGxlci5kaXNwbGF5UHJvamVjdHMoKTtcblxuY29uc3QgYWRkUHJvamVjdEJ1dHRvbnNHcm91cCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJy5hZGQtcHJvamVjdC1idXR0b25zJyk7XG5hZGRQcm9qZWN0QnV0dG9uc0dyb3VwLmZvckVhY2goYnRuID0+IHtcbiAgYnRuLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgcHJvamVjdHNQYW5lbENvbnRyb2xsZXIpO1xufSlcblxuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9
