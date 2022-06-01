@@ -111,9 +111,10 @@ const projectsDisplayController = (() => {
     addProjectButton.classList.remove("hidden");
   };
 
-  const remove = (container, element) => {
-    container.removeChild(element);
-  }
+  //Use built in remove method
+  // const remove = (container, element) => {
+  //   container.removeChild(element);
+  // }
 
   const displayProjects = () => {
     let activeProjects = JSON.parse(localStorage.getItem('projects'));
@@ -121,7 +122,9 @@ const projectsDisplayController = (() => {
 
     if (activeProjects) {
       if (projectsPanel.contains(oldProjectsList)) {
-        remove(projectsPanel, oldProjectsList);
+        // instead of using custom function, use the built in remove method
+        // remove(projectsPanel, oldProjectsList); 
+        oldProjectsList.remove();
       }
   
       const projectsList = document.createElement('ul');

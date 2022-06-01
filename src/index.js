@@ -1,7 +1,66 @@
 import {projectsDataController, projectsPanelController, projectsDisplayController} from './modules/projects.js';
 
-
 projectsDisplayController.displayProjects();
+
+
+const createTaskContent = (obj) => {
+  const taskListItem = document.createElement('li');
+  taskListItem.classList.add('task-item');
+  const taskItemWrapper = document.createElement('div');
+  taskItemWrapper.classList.add('task-wrapper');
+  const taskInfoWrapper = document.createElement('div');
+  const taskName = document.createElement('h3');
+  const taskDetails = document.createElement('p');
+  const taskSpanWrapper = document.createElement('div');
+  const taskDate = document.createElement('span');
+  const taskUrgent = document.createElement('span');
+
+  taskName.textContent = obj.name;
+  taskDetails.textContent = obj.details;
+  taskDate.textContent = obj.due;
+  taskUrgent.textContent = obj.urgent;
+
+  taskSpanWrapper.append(taskDate, taskUrgent);
+  taskInfoWrapper.append(taskName, taskDetails);
+  taskItemWrapper.append(taskInfoWrapper, taskSpanWrapper);
+  taskListItem.append(taskItemWrapper);
+  
+  return taskListItem;
+}
+const displayTaskContent = (e) => {
+  if (e.target.nodeName === 'H3') {
+    const mainPanel = document.querySelector('main');
+    const mainHeader = document.querySelector('h1');
+    const mainForm = document.querySelector('main > form');
+    const oldTaskList = document.querySelector('.task-list');
+
+    let activeProjects = JSON.parse(localStorage.getItem('projects'));
+    let projectToDisplay = e.target.parentElement.id;
+
+    activeProjects.forEach(proj => {
+      if (proj.id === projectToDisplay) {
+        mainHeader.textContent = proj.name;
+
+        if (proj.tasks) {
+
+          if (mainPanel.contains(oldTaskList)) {
+            console.log(mainPanel);
+            // remove(mainPanel, oldTaskList);
+            oldTaskList.remove();
+          }
+
+          const taskContainer = document.createElement('ul');
+          taskContainer.classList.add('task-list');
+
+          proj.tasks.forEach(task => {
+            taskContainer.append(createTaskContent(task));
+          })
+          mainPanel.insertBefore(taskContainer, mainForm);
+        }
+      }
+    })
+  }
+}
 
 
 
@@ -37,10 +96,6 @@ const applicationController = (() => {
 
           let target = e.target.parentElement.parentElement.previousElementSibling.textContent;
 
-
-
-
-          
         }
       }
     })
@@ -50,62 +105,7 @@ const applicationController = (() => {
 
   const projectsList = document.querySelectorAll('.project-item');
   projectsList.forEach(project => {
-    project.addEventListener('click', (e) => {
-
-      if (e.target.nodeName === 'H3') {
-
-        // Display project in main panel
-        let activeProjects = JSON.parse(localStorage.getItem('projects'));
-        let projectToDisplay = e.target.parentElement.id;
-
-        activeProjects.forEach(proj => {
-          if (proj.id === projectToDisplay) {
-
-            const mainPanel = document.querySelector('main');
-            const mainHeader = document.querySelector('h1');
-            const mainForm = document.querySelector('main > form');
-
-            mainHeader.textContent = proj.name;
-
-            const taskContainer = document.createElement('ul');
-
-            if (!mainPanel.contains(taskContainer)) {
-            mainPanel.insertBefore(taskContainer, mainForm);
-            }
-
-            if (proj.tasks) {
-              // console.log(proj.tasks);
-              proj.tasks.forEach(task => {
-                const taskListItem = document.createElement('li');
-                taskListItem.classList.add('task-item');
-                const taskItemWrapper = document.createElement('div');
-                const taskName = document.createElement('h3');
-                const taskDetails = document.createElement('p');
-                const taskDate = document.createElement('span');
-                const taskUrgent = document.createElement('span');
-
-                taskName.textContent = task.name;
-                taskDetails.textContent = task.details;
-                taskDate.textContent = task.due;
-                taskUrgent.textContent = task.urgent;
-
-                taskItemWrapper.append(taskName, taskDetails, taskDate, taskUrgent);
-                taskListItem.append(taskItemWrapper);
-                
-                taskContainer.append(taskListItem);
-              })
-
-            }
-
-
-
-          }
-        })
-
-
-      }
-
-    })
+    project.addEventListener('click', displayTaskContent);
   })
 
 })();
@@ -113,12 +113,6 @@ const applicationController = (() => {
 
 /*****************************/
 
-// let testTask = {
-//   name: 'Shop',
-//   details: 'Carrots, milk, bread',
-//   due: '10-11-2022',
-//   urgent: false
-// }
 
 const createTask = (name, details, date) => {
   return { name, details, date }
@@ -127,34 +121,6 @@ const createTask = (name, details, date) => {
 
 
 
-// const createTaskContent = (obj) => {
-//   const taskWrapper = document.createElement('div');
 
-//   const taskName = document.createElement('h3');
-
-//   const taskDetails = document.createElement('p');
-
-//   const dueDate = document.createElement('span');
-
-//   const star = document.createElement('span');
-
-// }
-
-
-
-
-const tasksDisplayController = (e) => {
-  const mainPanel = document.querySelector('main');
-  const mainHeader = document.querySelector('h1');
-  
-  const displayTasks = () => {
-    let activeProjects = JSON.parse(localStorage.getItem('projects'));
-    
-
-
-
-  }
-
-}
 
 
