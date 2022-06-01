@@ -52,6 +52,17 @@ nav {
   justify-content: space-between;
   align-items: center;
 }
+.project-item:hover {
+  background-color: rgb(96, 119, 237);
+}
+.project-item:active {
+  background-color: rgb(56, 27, 245);
+}
+
+
+h3 {
+  width: 100%;
+}
 
 
 main {
@@ -75,6 +86,14 @@ h1 {
 #add-task {
   margin: 20px 0;
 }
+
+
+.task-item {
+  border: solid 2px blue;
+  margin: 10px;
+  padding: 10px;
+}
+
 
 
 footer {

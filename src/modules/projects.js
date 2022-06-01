@@ -32,10 +32,27 @@ const projectsDataController = (() => {
   })();
 
   const createProject = (name) => {
-    const tasks = [];
+
+    // Add example task for testing
+    const tasks = [
+      {
+        name: 'Shop',
+        details: 'Carrots, milk, bread',
+        due: '10-11-2022',
+        urgent: false
+      },
+      {
+        name: 'work',
+        details: 'paper',
+        due: '10-11-2022',
+        urgent: false
+      }
+    ];
+
     return { name, tasks };
   };
 
+  
   const saveProject = (name) => {
     name = createProject(name);
     projects.container.push(name);
@@ -64,7 +81,7 @@ const projectsDataController = (() => {
       let projectToDelete = e.target.parentElement.id;
       removeProject(projectToDelete, projects.container);
     } else {
-      const projectTextInput = document.querySelector('#project-text-input');
+      const projectTextInput = document.querySelector('#project-name-input');
       let projectName = projectTextInput.value;
       saveProject(projectName);
     }
@@ -78,7 +95,7 @@ const projectsDataController = (() => {
 
 const projectsDisplayController = (() => {
   const projectForm = document.querySelector("#project-form");
-  const projectTextInput = document.querySelector("#project-text-input");
+  const projectTextInput = document.querySelector("#project-name-input");
   const addProjectButton = document.querySelector("#add-project");
   const projectsPanel = document.querySelector('#projects-panel');
 
@@ -141,6 +158,7 @@ const projectsPanelController = (e) => {
 }
 
 export {
+  projectsDataController,
   projectsDisplayController, 
   projectsPanelController
 }
