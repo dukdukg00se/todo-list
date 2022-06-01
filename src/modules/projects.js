@@ -90,7 +90,7 @@ const projectsDataController = (() => {
     populateLocalStorage(projects.container);
   };
 
-  return { updateProjects };
+  return { updateProjects, populateLocalStorage, projects };
 })();
 
 const projectsDisplayController = (() => {
