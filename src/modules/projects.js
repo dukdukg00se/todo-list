@@ -22,6 +22,7 @@ const createProjectContent = (projectObj) => {
   return projectListItem;
 };
 
+
 const projectsDataController = (() => {
   // Define projects container on start
   const projects = (() => {
@@ -93,6 +94,7 @@ const projectsDataController = (() => {
   return { updateProjects, populateLocalStorage, projects };
 })();
 
+
 const projectsDisplayController = (() => {
   const projectForm = document.querySelector("#project-form");
   const projectTextInput = document.querySelector("#project-name-input");
@@ -142,6 +144,7 @@ const projectsDisplayController = (() => {
     displayProjects
   };
 })();
+
 
 const projectsPanelController = (e) => {
 

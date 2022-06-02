@@ -14,20 +14,26 @@ const createTaskContent = (obj) => {
   const taskSpanWrapper = document.createElement('div');
   const taskDate = document.createElement('span');
   const taskUrgent = document.createElement('span');
+  const taskDeleteBtn = document.createElement('button');
+
 
   taskName.textContent = obj.name;
   taskDetails.textContent = obj.details;
   taskDate.textContent = obj.due;
   taskUrgent.textContent = obj.urgent;
+  taskDeleteBtn.textContent = 'X';
+  taskDeleteBtn.addEventListener('click', (e) => {
+    console.log(e.target);
+  })
+
 
   taskSpanWrapper.append(taskDate, taskUrgent);
   taskInfoWrapper.append(taskName, taskDetails);
-  taskItemWrapper.append(taskInfoWrapper, taskSpanWrapper);
+  taskItemWrapper.append(taskInfoWrapper, taskSpanWrapper, taskDeleteBtn);
   taskListItem.append(taskItemWrapper);
   
   return taskListItem;
 }
-
 
 const displayTaskContent = (e) => {
   let activeProjects = JSON.parse(localStorage.getItem('projects'));
@@ -90,6 +96,28 @@ const displayTaskContent = (e) => {
 
 
 
+
+const createTask = (name, details, date) => {
+  return { name, details, date }
+}
+
+const removeTask = (taskId, taskContainer) => {
+  for (let i = 0; i < taskContainer.length; i++) {
+    if (taskContainer[i].id === taskId) {
+      taskContainer.splice(i, 1);
+    }
+  }
+}
+
+const setTaskId = (taskArr) => {
+  for (let i = 0; i < taskArr.length; i++) {
+    taskArr[i].id = "task-" + i;
+  }
+}
+
+
+
+
 const applicationButtons = document.querySelectorAll('button');
 applicationButtons.forEach(btn => {
   btn.addEventListener('click', (e) => {
@@ -136,6 +164,9 @@ applicationButtons.forEach(btn => {
 
             projectsDataController.populateLocalStorage(projectsDataController.projects.container);
 
+            console.log(proj.tasks);
+            setTaskId(proj.tasks);
+
             taskForm.reset();
             taskForm.classList.add('hidden');
             addTaskButton.classList.remove('hidden');
@@ -150,6 +181,8 @@ applicationButtons.forEach(btn => {
 })
 
 
+
+
 const addTaskBtn = document.querySelector('#add-task');
 const projectsList = document.querySelectorAll('.project-item');
 projectsList.forEach(project => {
@@ -162,12 +195,10 @@ projectsList.forEach(project => {
 
 
 
-/*****************************/
 
 
-const createTask = (name, details, date) => {
-  return { name, details, date }
-}
+
+
 
 
 
