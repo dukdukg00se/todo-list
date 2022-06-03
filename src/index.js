@@ -1,4 +1,4 @@
-
+// Data stuff
 let projectContainer = !localStorage.length
   ? []
   : JSON.parse(localStorage.getItem("projects"));
@@ -8,7 +8,6 @@ function Project(name) {
   this.name = name
   this.tasks = [];
 }
-
 Project.prototype = {
   constructor: Project,
 
@@ -26,7 +25,7 @@ Project.prototype = {
 
   setItemId: function (item, container) {
     for (let i = 0; i < container.length; i++) {
-      item === 'project'
+      item === Project
         ? (container[i].id = 'project-' + i)
         : (container[i].id = 'task-' + i);
     }
@@ -38,11 +37,91 @@ function Task(name, details, date) {
   this.details = details;
   this.date = date;
 }
-
 Task.prototype = Object.create(Project.prototype);
 
+const populateLocalStorage = (projects) => {
+  localStorage.setItem('projects', JSON.stringify(projects));
+};
 
 
+// Display stuff
+const updateProjects = (e) => {
+  if (e.target.classList.contains("delete")) {
+    let projectToDelete = e.target.parentElement.id;
+    // removeProject(projectToDelete, projects.container);
+
+    console.log(projectToDelete);
+    // console.log(projectContainer);
+
+    projectContainer.forEach(project => {
+      project.prototype = Object.create(Project.prototype);
+      project.prototype.removeItem(projectToDelete, projectContainer);
+
+    });
+    console.log(projectContainer);
+    populateLocalStorage(projectContainer);
+    displayProjects();
+
+
+  } 
+  
+  
+  // else {
+  //   const projectTextInput = document.querySelector('#project-name-input');
+  //   let projectName = projectTextInput.value;
+  //   saveProject(projectName);
+  // }
+
+  // setProjectId(projects.container);
+  // populateLocalStorage(projects.container);
+};
+
+
+const createProjectContent = (projectObj) => {
+  const projectListItem = document.createElement('li');
+
+  const projectContainer = document.createElement('div');
+  projectContainer.classList.add('project-item');
+  projectContainer.id = projectObj.id;
+
+  const projectTitle = document.createElement('h3');
+  projectTitle.textContent = projectObj.name
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.classList.add('delete');
+  deleteBtn.textContent = 'X';
+  
+  deleteBtn.addEventListener('click', (e) => {
+    updateProjects(e);
+    // projectsDisplayController.displayProjects();
+  })
+  
+  projectContainer.append(projectTitle, deleteBtn);
+  projectListItem.append(projectContainer);
+  return projectListItem;
+};
+
+const displayProjects = () => {
+  let activeProjects = JSON.parse(localStorage.getItem('projects'));
+  const oldProjectsList = document.querySelector('#projects-list');
+  
+  // Refactor this later
+  const projectsPanel = document.querySelector('#projects-panel');
+  const projectForm = document.querySelector("#projects-panel form");
+
+  if (activeProjects) {
+    if (projectsPanel.contains(oldProjectsList)) {
+      oldProjectsList.remove();
+    }
+
+    const projectsList = document.createElement('ul');
+    projectsList.id = 'projects-list';
+    activeProjects.forEach(proj => {
+      projectsList.append(createProjectContent(proj));
+    })
+    projectsPanel.insertBefore(projectsList, projectForm);
+  }
+};
 
 const addListeners = () => {
   const applicationButtons = document.querySelectorAll('button');
@@ -78,9 +157,10 @@ const addListeners = () => {
           let projectName = projectTextInput.value;
           projectName = new Project(projectName);
           projectName.addItem(projectContainer);
-          projectName.setItemId('project', projectContainer);
+          projectName.setItemId(projectName.constructor, projectContainer);
+          populateLocalStorage(projectContainer);
 
-          console.log(projectContainer);
+          displayProjects();
 
         }
 
@@ -90,3 +170,4 @@ const addListeners = () => {
 }
 
 addListeners();
+displayProjects();
