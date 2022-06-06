@@ -17,7 +17,7 @@ header {
   border: 3px solid black;
   padding: 30px;
 }
-#application-name {
+#application-logo {
   font-size: 40px;
 }
 
@@ -47,15 +47,25 @@ nav {
   padding: 20px;
   gap: 20px;
 }
-.project-item {
+
+#projects-list li {
+  margin: 5px 0;
+}
+
+.project-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
 }
-.project-item:hover {
+
+/* .project-container h3 {
+  background-color: blueviolet;
+} */
+
+.project-container h3:hover {
   background-color: rgb(96, 119, 237);
 }
-.project-item:active {
+.project-container h3:active {
   background-color: rgb(56, 27, 245);
 }
 
