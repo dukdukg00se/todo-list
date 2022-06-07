@@ -52,10 +52,9 @@ const updateCurrentProjects = (e) => {
     let projectName = projectTextInput.value;
     addItem(new Project(projectName), currentProjects);
   }
-
+  
   setItemId(e, currentProjects);
   populateLocalStorage(currentProjects);
-
 }
 
 
@@ -95,6 +94,7 @@ const createProjectContent = (projectObj) => {
   deleteBtn.addEventListener('click', (e) => {
     updateCurrentProjects(e);
     displayProjects(currentProjects);
+    addProjectListeners();
   })
   
   projectContainer.append(projectTitle, deleteBtn);
@@ -102,11 +102,41 @@ const createProjectContent = (projectObj) => {
   return projectListItem;
 };
 
-const displayProjects = (projects) => {
-  // let activeProjects = JSON.parse(localStorage.getItem('projects'));
-  const oldProjectsList = document.querySelector('#projects-list');
+const createTaskContent = (obj) => {
+  const taskListItem = document.createElement('li');
+  taskListItem.classList.add('task-item');
+  const taskItemWrapper = document.createElement('div');
+  taskItemWrapper.classList.add('task-wrapper');
+  const taskInfoWrapper = document.createElement('div');
+  const taskName = document.createElement('h3');
+  const taskDetails = document.createElement('p');
+  const taskSpanWrapper = document.createElement('div');
+  const taskDate = document.createElement('span');
+  const taskUrgent = document.createElement('span');
+  const taskDeleteBtn = document.createElement('button');
+
+
+  taskName.textContent = obj.name;
+  taskDetails.textContent = obj.details;
+  taskDate.textContent = obj.due;
+  taskUrgent.textContent = obj.urgent;
+  taskDeleteBtn.textContent = 'X';
+  taskDeleteBtn.addEventListener('click', (e) => {
+    console.log(e.target);
+  })
+
+
+  taskSpanWrapper.append(taskDate, taskUrgent);
+  taskInfoWrapper.append(taskName, taskDetails);
+  taskItemWrapper.append(taskInfoWrapper, taskSpanWrapper, taskDeleteBtn);
+  taskListItem.append(taskItemWrapper);
   
+  return taskListItem;
+}
+
+const displayProjects = (projects) => {
   if (projects) {
+    const oldProjectsList = document.querySelector('#projects-list');
     if (projectsPanel.contains(oldProjectsList)) {
       oldProjectsList.remove();
     }
@@ -120,15 +150,30 @@ const displayProjects = (projects) => {
   }
 };
 
+///////////////////vvvvvvvv
 const displayTasks = (e, projects) => {
   let selectedProject = e.target.parentElement.id;
 
   projects.forEach(proj => {
     if (proj.id === selectedProject) {
       mainHeader.textContent = proj.name;
+
+      if (proj.tasks) {
+        const oldTaskList = document.querySelector('.task-list');
+        if (mainPanel.contains(oldTaskList)) {
+          oldTaskList.remove();
+        }
+
+        const currentTasks = document.createElement('ul');
+        currentTasks.classList.add('task-list');
+
+        proj.tasks.forEach(task => {
+          currentTasks.append(createTaskContent(task));
+        })
+        mainPanel.insertBefore(currentTasks, mainForm);
+      }
     }
   })
-
 }
 
 const displayTaskContent = (e) => {
@@ -193,7 +238,7 @@ const displayTaskContent = (e) => {
 
 
 // Panel controller
-const addListeners = () => {
+const addButtonListeners = () => {
   const applicationButtons = document.querySelectorAll('button');
   applicationButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -212,26 +257,26 @@ const addListeners = () => {
           updateCurrentProjects(e);
           displayProjects(currentProjects);
           hideForm();
+
+          addProjectListeners();
         }
-
-
       }
-
     })
   })
+}
 
+const addProjectListeners = () => {
   const projects = document.querySelectorAll('.project-container h3');
   projects.forEach(proj => {
     proj.addEventListener('click', (e) => {
-      console.log(e.target);
       displayTasks(e, currentProjects);
     })
   })
-
 }
 
 
 displayProjects(currentProjects);
-addListeners();
+addButtonListeners();
+addProjectListeners();
 
 
