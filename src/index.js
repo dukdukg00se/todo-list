@@ -7,6 +7,8 @@ const projectsPanel = document.querySelector('#projects-panel');
 const mainPanel = document.querySelector('main');
 const mainHeader = document.querySelector('h1');
 const mainForm = document.querySelector('main > form');
+const addTaskButton = document.querySelector('main > button');
+
 
 // Data stuff
 let currentProjects = !localStorage.length
@@ -72,16 +74,26 @@ const populateLocalStorage = (projects) => {
 
 
 // Display stuff
-const showForm = () => {
-  projectForm.classList.toggle("hidden");
-  projectTextInput.focus();
-  addProjectButton.classList.toggle("hidden");
+const showForm = (form, input, initBtn) => {
+  form.classList.remove("hidden");
+  input.focus();
+  initBtn.classList.add("hidden");
 };
-const hideForm = () => {
-  projectForm.reset();
-  projectForm.classList.toggle("hidden");
-  addProjectButton.classList.toggle("hidden");
+const hideForm = (form, initBtn) => {
+  form.reset();
+  form.classList.add("hidden");
+  initBtn.classList.remove("hidden");
 };
+// const showForm = () => {
+//   projectForm.classList.toggle("hidden");
+//   projectTextInput.focus();
+//   addProjectButton.classList.toggle("hidden");
+// };
+// const hideForm = () => {
+//   projectForm.reset();
+//   projectForm.classList.toggle("hidden");
+//   addProjectButton.classList.toggle("hidden");
+// };
 
 const createProjectContent = (projectObj) => {
   const projectListItem = document.createElement('li');
@@ -160,7 +172,7 @@ const displayProjects = (projects) => {
 ///////////////////vvvvvvvv
 const displayTasks = (tasks) => {
   if (tasks) {
-    const oldTaskList = document.querySelector('.task-list');
+    const oldTaskList = document.querySelector('#task-list');
     if (mainPanel.contains(oldTaskList)) {
       oldTaskList.remove();
     }
@@ -269,19 +281,35 @@ const addButtonListeners = () => {
       if (e.target.classList.contains('project')) {
 
         if (e.target.id === 'add-project') {
-          showForm();
+          showForm(projectForm, projectTextInput, addProjectButton);
         }
 
         if (e.target.id === 'cancel-project') {
-          hideForm();
+          hideForm(projectForm, addProjectButton);
         }
 
         if (e.target.id === 'submit-project') {
           updateCurrentProjects(e);
           displayProjects(currentProjects);
-          hideForm();
+          hideForm(projectForm, addProjectButton);
 
           addProjectListeners();
+        }
+      }
+
+      if (e.target.classList.contains('task')) {
+
+        if (e.target.id === 'add-task') {
+          //vvvvvv
+          // showForm()
+
+          mainForm.classList.toggle('hidden');
+          addTaskButton.classList.toggle('hidden');
+        }
+
+        if (e.target.id === 'cancel-task') {
+          mainForm.classList.toggle('hidden');
+          addTaskButton.classList.toggle('hidden');
         }
       }
     })
@@ -295,7 +323,9 @@ const addProjectListeners = () => {
       projectToDisplay = e.target.parentElement.id;
       currentProjects.forEach(proj => {
         if (proj.id === projectToDisplay) {
+          mainHeader.textContent = proj.name;
           displayTasks(proj.tasks);
+          addTaskButton.classList.remove('hidden');
         }
       })
 
