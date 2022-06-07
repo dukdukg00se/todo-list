@@ -16,7 +16,13 @@ let currentProjects = !localStorage.length
 
 function Project(name) {
   this.name = name
-  this.tasks = [];
+  this.tasks = [
+    {
+      name: 'work',
+      details: '',
+      date: '1-1-2019'
+    }
+  ];
 }
 function Task(name, details, date) {
   this.name = name;
@@ -35,9 +41,9 @@ const removeItem = (itemId, container) => {
     }
   }
 }
-const setItemId = (e, container) => {
+const setItemId = (action, container) => {
   for (let i = 0; i < container.length; i++) {
-    e.target.parentElement.id === 'submit-project'
+    action === 'submit-project'
       ? (container[i].id = 'project-' + i)
       : (container[i].id = 'task-' + i);
   }
@@ -53,7 +59,8 @@ const updateCurrentProjects = (e) => {
     addItem(new Project(projectName), currentProjects);
   }
   
-  setItemId(e, currentProjects);
+  let action = e.target.parentElement.id;
+  setItemId(action, currentProjects);
   populateLocalStorage(currentProjects);
 }
 
@@ -102,7 +109,7 @@ const createProjectContent = (projectObj) => {
   return projectListItem;
 };
 
-const createTaskContent = (obj) => {
+const createTaskContent = (taskObj) => {
   const taskListItem = document.createElement('li');
   taskListItem.classList.add('task-item');
   const taskItemWrapper = document.createElement('div');
@@ -116,10 +123,10 @@ const createTaskContent = (obj) => {
   const taskDeleteBtn = document.createElement('button');
 
 
-  taskName.textContent = obj.name;
-  taskDetails.textContent = obj.details;
-  taskDate.textContent = obj.due;
-  taskUrgent.textContent = obj.urgent;
+  taskName.textContent = taskObj.name;
+  taskDetails.textContent = taskObj.details;
+  taskDate.textContent = taskObj.due;
+  taskUrgent.textContent = taskObj.urgent;
   taskDeleteBtn.textContent = 'X';
   taskDeleteBtn.addEventListener('click', (e) => {
     console.log(e.target);
@@ -136,13 +143,13 @@ const createTaskContent = (obj) => {
 
 const displayProjects = (projects) => {
   if (projects) {
-    const oldProjectsList = document.querySelector('#projects-list');
+    const oldProjectsList = document.querySelector('#project-list');
     if (projectsPanel.contains(oldProjectsList)) {
       oldProjectsList.remove();
     }
 
     const currentProjects = document.createElement('ul');
-    currentProjects.id = 'projects-list';
+    currentProjects.id = 'project-list';
     projects.forEach(proj => {
       currentProjects.append(createProjectContent(proj));
     })
@@ -151,30 +158,46 @@ const displayProjects = (projects) => {
 };
 
 ///////////////////vvvvvvvv
-const displayTasks = (e, projects) => {
-  let selectedProject = e.target.parentElement.id;
-
-  projects.forEach(proj => {
-    if (proj.id === selectedProject) {
-      mainHeader.textContent = proj.name;
-
-      if (proj.tasks) {
-        const oldTaskList = document.querySelector('.task-list');
-        if (mainPanel.contains(oldTaskList)) {
-          oldTaskList.remove();
-        }
-
-        const currentTasks = document.createElement('ul');
-        currentTasks.classList.add('task-list');
-
-        proj.tasks.forEach(task => {
-          currentTasks.append(createTaskContent(task));
-        })
-        mainPanel.insertBefore(currentTasks, mainForm);
-      }
+const displayTasks = (tasks) => {
+  if (tasks) {
+    const oldTaskList = document.querySelector('.task-list');
+    if (mainPanel.contains(oldTaskList)) {
+      oldTaskList.remove();
     }
-  })
+
+    const currentTasks = document.createElement('ul');
+    currentTasks.id = 'task-list';
+    tasks.forEach(task => {
+      currentTasks.append(createTaskContent(task));
+    })
+    mainPanel.insertBefore(currentTasks, mainForm);
+  }
 }
+
+// const displayTasks = (e, projects) => {
+//   let selectedProject = e.target.parentElement.id;
+
+//   projects.forEach(proj => {
+//     if (proj.id === selectedProject) {
+//       mainHeader.textContent = proj.name;
+
+//       if (proj.tasks) {
+//         const oldTaskList = document.querySelector('.task-list');
+//         if (mainPanel.contains(oldTaskList)) {
+//           oldTaskList.remove();
+//         }
+
+//         const currentTasks = document.createElement('ul');
+//         currentTasks.classList.add('task-list');
+
+//         proj.tasks.forEach(task => {
+//           currentTasks.append(createTaskContent(task));
+//         })
+//         mainPanel.insertBefore(currentTasks, mainForm);
+//       }
+//     }
+//   })
+// }
 
 const displayTaskContent = (e) => {
   let activeProjects = JSON.parse(localStorage.getItem('projects'));
@@ -269,7 +292,13 @@ const addProjectListeners = () => {
   const projects = document.querySelectorAll('.project-container h3');
   projects.forEach(proj => {
     proj.addEventListener('click', (e) => {
-      displayTasks(e, currentProjects);
+      projectToDisplay = e.target.parentElement.id;
+      currentProjects.forEach(proj => {
+        if (proj.id === projectToDisplay) {
+          displayTasks(proj.tasks);
+        }
+      })
+
     })
   })
 }
