@@ -1,3 +1,5 @@
+// import { container } from "webpack";
+
 // Varaiables. Move later
 const projectForm = document.querySelector("#projects-panel form");
 const projectTextInput = document.querySelector("#project-name-input");
@@ -6,7 +8,8 @@ const projectsPanel = document.querySelector('#projects-panel');
 
 const mainPanel = document.querySelector('main');
 const mainHeader = document.querySelector('h1');
-const mainForm = document.querySelector('main > form');
+const taskForm = document.querySelector('main > form');
+const taskTextInput = document.querySelector('#task-name-input');
 const addTaskButton = document.querySelector('main > button');
 
 
@@ -43,9 +46,9 @@ const removeItem = (itemId, container) => {
     }
   }
 }
-const setItemId = (action, container) => {
+const setItemId = (type, container) => {
   for (let i = 0; i < container.length; i++) {
-    action === 'submit-project'
+    type === 'submit-project'
       ? (container[i].id = 'project-' + i)
       : (container[i].id = 'task-' + i);
   }
@@ -61,49 +64,26 @@ const updateCurrentProjects = (e) => {
     addItem(new Project(projectName), currentProjects);
   }
   
-  let action = e.target.parentElement.id;
-  setItemId(action, currentProjects);
+  let type = e.target.id;
+  setItemId(type, currentProjects);
   populateLocalStorage(currentProjects);
 }
-
 
 const populateLocalStorage = (projects) => {
   localStorage.setItem('projects', JSON.stringify(projects));
 };
 
 
-
-// Display stuff
-const showForm = (form, input, initBtn) => {
-  form.classList.remove("hidden");
-  input.focus();
-  initBtn.classList.add("hidden");
-};
-const hideForm = (form, initBtn) => {
-  form.reset();
-  form.classList.add("hidden");
-  initBtn.classList.remove("hidden");
-};
-// const showForm = () => {
-//   projectForm.classList.toggle("hidden");
-//   projectTextInput.focus();
-//   addProjectButton.classList.toggle("hidden");
-// };
-// const hideForm = () => {
-//   projectForm.reset();
-//   projectForm.classList.toggle("hidden");
-//   addProjectButton.classList.toggle("hidden");
-// };
-
-const createProjectContent = (projectObj) => {
+// Content creators
+const createProjectContent = (projObj) => {
   const projectListItem = document.createElement('li');
 
   const projectContainer = document.createElement('div');
   projectContainer.classList.add('project-container');
-  projectContainer.id = projectObj.id;
+  projectContainer.id = projObj.id;
 
   const projectTitle = document.createElement('h3');
-  projectTitle.textContent = projectObj.name
+  projectTitle.textContent = projObj.name
 
   const deleteBtn = document.createElement('button');
   deleteBtn.classList.add('delete');
@@ -112,7 +92,8 @@ const createProjectContent = (projectObj) => {
   
   deleteBtn.addEventListener('click', (e) => {
     updateCurrentProjects(e);
-    displayProjects(currentProjects);
+    // displayProjects(currentProjects);
+    display(currentProjects);
     addProjectListeners();
   })
   
@@ -153,126 +134,133 @@ const createTaskContent = (taskObj) => {
   return taskListItem;
 }
 
-const displayProjects = (projects) => {
-  if (projects) {
-    const oldProjectsList = document.querySelector('#project-list');
-    if (projectsPanel.contains(oldProjectsList)) {
-      oldProjectsList.remove();
-    }
 
-    const currentProjects = document.createElement('ul');
-    currentProjects.id = 'project-list';
-    projects.forEach(proj => {
-      currentProjects.append(createProjectContent(proj));
-    })
-    projectsPanel.insertBefore(currentProjects, projectForm);
-  }
+// Display controllers
+const showForm = (form, input, initBtn) => {
+  form.classList.remove("hidden");
+  input.focus();
+  initBtn.classList.add("hidden");
+};
+const hideForm = (form, initBtn) => {
+  form.reset();
+  form.classList.add("hidden");
+  initBtn.classList.remove("hidden");
 };
 
-///////////////////vvvvvvvv
-const displayTasks = (tasks) => {
-  if (tasks) {
-    const oldTaskList = document.querySelector('#task-list');
-    if (mainPanel.contains(oldTaskList)) {
-      oldTaskList.remove();
-    }
-
-    const currentTasks = document.createElement('ul');
-    currentTasks.id = 'task-list';
-    tasks.forEach(task => {
-      currentTasks.append(createTaskContent(task));
-    })
-    mainPanel.insertBefore(currentTasks, mainForm);
-  }
-}
-
-// const displayTasks = (e, projects) => {
-//   let selectedProject = e.target.parentElement.id;
-
-//   projects.forEach(proj => {
-//     if (proj.id === selectedProject) {
-//       mainHeader.textContent = proj.name;
-
-//       if (proj.tasks) {
-//         const oldTaskList = document.querySelector('.task-list');
-//         if (mainPanel.contains(oldTaskList)) {
-//           oldTaskList.remove();
-//         }
-
-//         const currentTasks = document.createElement('ul');
-//         currentTasks.classList.add('task-list');
-
-//         proj.tasks.forEach(task => {
-//           currentTasks.append(createTaskContent(task));
-//         })
-//         mainPanel.insertBefore(currentTasks, mainForm);
-//       }
+// const displayProjects = (projects) => {
+//   // console.log(projects);
+//   if (projects) {
+//     const oldProjectsList = document.querySelector('#project-list');
+//     if (projectsPanel.contains(oldProjectsList)) {
+//       oldProjectsList.remove();
 //     }
-//   })
+
+//     const currentProjects = document.createElement('ul');
+//     currentProjects.id = 'project-list';
+//     projects.forEach(proj => {
+//       currentProjects.append(createProjectContent(proj));
+//     })
+//     projectsPanel.insertBefore(currentProjects, projectForm);
+//   }
+// };
+
+// const displayTasks = (tasks) => {
+//   if (tasks) {
+//     const oldTaskList = document.querySelector('#task-list');
+//     if (mainPanel.contains(oldTaskList)) {
+//       oldTaskList.remove();
+//     }
+
+//     const currentTasks = document.createElement('ul');
+//     currentTasks.id = 'task-list';
+//     tasks.forEach(task => {
+//       currentTasks.append(createTaskContent(task));
+//     })
+//     mainPanel.insertBefore(currentTasks, taskForm);
+//   }
 // }
 
-const displayTaskContent = (e) => {
-  let activeProjects = JSON.parse(localStorage.getItem('projects'));
-  let projectToDisplay;
+const display = (list) => {
 
+  if (list) {
+    // Check if list is a list of projects by checking if first item contains a tasks property
+    let isProject = !!list[0].tasks;
+    let oldList;
+    let listId;
+    let container;
+    let form;
 
-  const oldTaskList = document.querySelector('.task-list');
+    if (isProject) {
+      oldList = document.querySelector('#project-list');
+      listId = 'project-list';
+      container = projectsPanel;
+      form = projectForm;
+    } else {
+      oldList = document.querySelector('#task-list');
+      listId = 'task-list';
+      container = mainPanel;
+      form = taskForm;
+    }
 
-  if (e.target.nodeName === 'H3') {
-    projectToDisplay = e.target.parentElement.id;
+    if (container.contains(oldList)) {
+      oldList.remove();
+    }
 
-    activeProjects.forEach(proj => {
-      if (proj.id === projectToDisplay) {
-        mainHeader.textContent = proj.name;
-
-        if (proj.tasks) {
-
-          if (mainPanel.contains(oldTaskList)) {
-            oldTaskList.remove();
-          }
-
-          const taskContainer = document.createElement('ul');
-          taskContainer.classList.add('task-list');
-
-          proj.tasks.forEach(task => {
-            taskContainer.append(createTaskContent(task));
-          })
-          mainPanel.insertBefore(taskContainer, mainForm);
-        }
-      }
+    const currentList = document.createElement('ul');
+    currentList.id = listId;
+    list.forEach(item => { 
+      currentList.append(
+        isProject ? createProjectContent(item) : createTaskContent(item)
+      );
     })
-  }
 
-  if (e.target.id === 'submit-task') {
-    projectToDisplay = e.target.parentElement.parentElement.parentElement.firstElementChild.textContent;
-
-    activeProjects.forEach(proj => {
-      if (proj.name === projectToDisplay) {
-
-        if (proj.tasks) {
-
-          if (mainPanel.contains(oldTaskList)) {
-            oldTaskList.remove();
-          }
-
-          const taskContainer = document.createElement('ul');
-          taskContainer.classList.add('task-list');
-
-          proj.tasks.forEach(task => {
-            taskContainer.append(createTaskContent(task));
-          })
-          mainPanel.insertBefore(taskContainer, mainForm);
-        }
-      }
-    })
+    container.insertBefore(currentList, form);
   }
 }
 
+// const display = (list, e) => {
+//   console.log(list);
+//   if (list) {
+//     let isProject= e.target.classList.contains('project');
+//     let oldList;
+//     let listId;
+//     let container;
+//     let form;
+
+//     if (isProject) {
+//       oldList = document.querySelector('#project-list');
+//       listId = 'project-list';
+//       container = projectsPanel;
+//       form = projectForm;
+//     } else {
+//       oldList = document.querySelector('#task-list');
+//       listId = 'task-list';
+//       container = mainPanel;
+//       form = taskForm;
+//     }
+
+//     if (container.contains(oldList)) {
+//       oldList.remove();
+//     }
+
+//     const currentList = document.createElement('ul');
+//     currentList.id = listId;
+//     list.forEach(item => { 
+//       currentList.append(
+//         isProject ? createProjectContent(item) : createTaskContent(item)
+//       );
+//     })
+
+//     container.insertBefore(currentList, form);
+//   }
+// }
+
+
+// Listeners
 
 
 
 
-// Panel controller
 const addButtonListeners = () => {
   const applicationButtons = document.querySelectorAll('button');
   applicationButtons.forEach(btn => {
@@ -290,9 +278,9 @@ const addButtonListeners = () => {
 
         if (e.target.id === 'submit-project') {
           updateCurrentProjects(e);
-          displayProjects(currentProjects);
+          // displayProjects(currentProjects);
+          display(currentProjects)
           hideForm(projectForm, addProjectButton);
-
           addProjectListeners();
         }
       }
@@ -300,16 +288,11 @@ const addButtonListeners = () => {
       if (e.target.classList.contains('task')) {
 
         if (e.target.id === 'add-task') {
-          //vvvvvv
-          // showForm()
-
-          mainForm.classList.toggle('hidden');
-          addTaskButton.classList.toggle('hidden');
+          showForm(taskForm, taskTextInput, addTaskButton);
         }
 
         if (e.target.id === 'cancel-task') {
-          mainForm.classList.toggle('hidden');
-          addTaskButton.classList.toggle('hidden');
+          hideForm(taskForm, addTaskButton);
         }
       }
     })
@@ -324,17 +307,16 @@ const addProjectListeners = () => {
       currentProjects.forEach(proj => {
         if (proj.id === projectToDisplay) {
           mainHeader.textContent = proj.name;
-          displayTasks(proj.tasks);
-          addTaskButton.classList.remove('hidden');
+          display(proj.tasks);
+          hideForm(taskForm, addTaskButton);
         }
       })
-
     })
   })
 }
 
 
-displayProjects(currentProjects);
+display(currentProjects);
 addButtonListeners();
 addProjectListeners();
 
