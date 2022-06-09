@@ -148,7 +148,13 @@ const createProjectContent = (projObj) => {
   
   projectDeleteBtn.addEventListener('click', (e) => {
     updateCurrentProjects(e);
+    // Reset project Id's after deleting project
     setItemId('project-', currentProjects);
+    //Reset task Id's within each project after deleting project
+    currentProjects.forEach(proj => {
+      let itemIdPrefix = `${proj.id}-task-`;
+      setItemId(itemIdPrefix, proj.tasks);
+    })
     populateLocalStorage(currentProjects);
     
     display(currentProjects);
