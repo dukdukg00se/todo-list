@@ -23,7 +23,7 @@
     <nav>
       <section id="tasks-panel">
         <h2>Tasks</h2>
-        <button class="task" type="button">All Tasks</button>
+        <button class="task" id="view-all" type="button">All Tasks</button>
         <button class="task" type="button">Today</button>
         <button class="task" type="button">Next 7 Days</button>
         <button class="task" type="button">Important</button>
@@ -57,6 +57,9 @@
 
         <label for="task-date-input">Date due:</label>
         <input id="task-date-input" type="date">
+
+        <label for="task-urgent-input">Urgent:<input id="task-urgent-input" type="checkbox"></label>
+        
 
         <div>
           <button class="task add" id="submit-task" type="button">Submit</button>
