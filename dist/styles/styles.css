@@ -52,20 +52,20 @@ nav {
   margin: 5px 0;
 }
 
-.project-container {
+.project-wrapper {
   display: flex;
   justify-content: space-between;
   /* align-items: center; */
 }
 
-/* .project-container h3 {
+/* .project-wrapper h3 {
   background-color: blueviolet;
 } */
 
-.project-container h3:hover {
+.project-wrapper h3:hover {
   background-color: rgb(96, 119, 237);
 }
-.project-container h3:active {
+.project-wrapper h3:active {
   background-color: rgb(56, 27, 245);
 }
 
