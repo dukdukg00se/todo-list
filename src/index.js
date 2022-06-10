@@ -65,14 +65,6 @@ const setItemId = (prefix, container) => {
   }
 }
 
-// const setItemId = (isProject, container) => {
-//   for (let i = 0; i < container.length; i++) {
-//     isProject === true
-//       ? (container[i].id = 'project-' + i)
-//       : (container[i].id = container[i].id + '-task-' + i); 
-//   }
-// }
-
 const updateCurrentProjects = (e) => {
   if (e.target.classList.contains('delete')) {
     let projectToDelete = e.target.parentElement.id;
@@ -81,7 +73,7 @@ const updateCurrentProjects = (e) => {
     let projectName = projectNameInput.value;
     addItem(new Project(projectName), currentProjects);
   }
-  
+  console.log(e.target);
   // let isProject = e.target.classList.contains('project');
   // setItemId(isProject, currentProjects);
   // populateLocalStorage(currentProjects);
@@ -192,10 +184,16 @@ const createTaskContent = (taskObj) => {
 
   taskDeleteBtn.addEventListener('click', (e) => {
     let taskToDelete = e.target.dataset.delete;
+
+    // currentProjects.forEach(proj => {
+    //   removeItem(taskToDelete, proj.tasks); 
+    // })
+
     currentProjects.forEach(proj => {
-      proj.tasks.forEach(tasks => {
-        if (tasks.id === taskToDelete) {
-          removeItem(taskToDelete, proj.tasks);
+      proj.tasks.forEach(task => {
+        if (task.id === taskToDelete) {
+          proj.tasks.splice(task, 1);
+
           let itemIdPrefix = `${proj.id}-task-`;
           setItemId(itemIdPrefix, proj.tasks);
           populateLocalStorage(currentProjects);
@@ -318,6 +316,9 @@ const addButtonListeners = () => {
             }
           })
         }
+
+
+        
       }
     })
   })
@@ -337,7 +338,8 @@ const addProjectListeners = () => {
           taskSubmitButton.dataset.submitTaskTo = proj.id;
 
           display(proj.tasks, false);
-          hideForm(taskForm, addTaskButton);
+          // hideForm(taskForm, addTaskButton);
+          addTaskButton.classList.remove('hidden');
         }
       })
     })
