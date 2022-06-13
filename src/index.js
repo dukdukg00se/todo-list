@@ -19,6 +19,30 @@ let currentProjects = !localStorage.length
   ? []
   : JSON.parse(localStorage.getItem("projects"));
 
+// Adding methods to projects
+// This saves getId for each proj; inefficient
+// currentProjects.forEach(proj => {
+//   proj.getId = function () {
+//     console.log(this.id);
+//   }
+// })
+
+// This doesn't work
+// "this" points to index.js
+// const getId = () => {
+//   console.log(this);
+// }
+// currentProjects.forEach(proj => {
+//   proj.getId = getId;
+// })
+// console.log(currentProjects);
+
+
+
+
+function getName() {
+  console.log(this.name);
+}
 
 function Project(name) {
   this.name = name;
@@ -73,7 +97,7 @@ const updateCurrentProjects = (e) => {
     let projectName = projectNameInput.value;
     addItem(new Project(projectName), currentProjects);
   }
-  console.log(e.target);
+  // console.log(e.target);
   // let isProject = e.target.classList.contains('project');
   // setItemId(isProject, currentProjects);
   // populateLocalStorage(currentProjects);
@@ -140,6 +164,9 @@ const createProjectContent = (projObj) => {
   
   projectDeleteBtn.addEventListener('click', (e) => {
     updateCurrentProjects(e);
+
+
+
     // Reset project Id's after deleting project
     setItemId('project-', currentProjects);
     //Reset task Id's within each project after deleting project
@@ -183,25 +210,69 @@ const createTaskContent = (taskObj) => {
   taskDeleteBtn.dataset.delete = taskObj.id;
 
   taskDeleteBtn.addEventListener('click', (e) => {
+    // Can also use e.target.parentElement.id
+    // This is the way when deleting projects
     let taskToDelete = e.target.dataset.delete;
 
     // currentProjects.forEach(proj => {
     //   removeItem(taskToDelete, proj.tasks); 
     // })
 
-    currentProjects.forEach(proj => {
-      proj.tasks.forEach(task => {
-        if (task.id === taskToDelete) {
-          proj.tasks.splice(task, 1);
+    // currentProjects.forEach(proj => {
+    //   proj.tasks.forEach(task => {
+    //     if (task.id === taskToDelete) {
 
-          let itemIdPrefix = `${proj.id}-task-`;
-          setItemId(itemIdPrefix, proj.tasks);
+    //       console.log(task)
+
+    //       proj.tasks.splice(task, 1);
+
+    //       // let itemIdPrefix = `${proj.id}-task-`;
+    //       // setItemId(itemIdPrefix, proj.tasks);
+    //       // populateLocalStorage(currentProjects);
+
+    //       console.log(proj.tasks);
+
+    //       // if (mainPanel.classList.contains('project')) {
+    //       //   display(proj.tasks, false);
+    //       // }
+
+    //       display(proj.tasks, false);
+    //     }
+    //   })
+    // })
+
+    for (let i = 0; i < currentProjects.length; i++) {
+
+      for (let j = 0; j < currentProjects[i].tasks.length; j++) {
+
+        if (currentProjects[i].tasks[j].id === taskToDelete) {
+
+          currentProjects[i].tasks.splice(j, 1);
+
           populateLocalStorage(currentProjects);
-
-          display(proj.tasks, false);
+          display(currentProjects[i].tasks, false);
         }
-      })
-    })
+
+      }
+    } 
+
+
+    // currentProjects.forEach(proj => {
+    //   proj.tasks.forEach(task => {
+    //     if (task.id === taskToDelete) {
+    //       proj.tasks.splice(task, 1);
+
+    //       let itemIdPrefix = `${proj.id}-task-`;
+    //       setItemId(itemIdPrefix, proj.tasks);
+    //       populateLocalStorage(currentProjects);
+
+    //       display(proj.tasks, false);
+
+    //     }
+    //   })
+    // })
+
+
   })
 
   taskSpanWrapper.append(taskDue, taskUrgent);
@@ -317,7 +388,22 @@ const addButtonListeners = () => {
           })
         }
 
+        if (e.target.id === 'view-all') {
+          mainHeader.textContent = 'All Tasks';
 
+          console.log(currentProjects);
+
+          let allTasks = [];
+          currentProjects.forEach(proj => {
+            proj.tasks.forEach(task => {
+              allTasks.push(task)
+              // console.log(task);
+            })
+          })
+
+          if (mainHeader.textContent)
+          display(allTasks, false);
+        }
         
       }
     })
@@ -333,7 +419,9 @@ const addProjectListeners = () => {
       projectToDisplay = e.target.parentElement.id;
       currentProjects.forEach(proj => {
         if (proj.id === projectToDisplay) {
+          mainPanel.classList.add('project');
           mainHeader.textContent = proj.name;
+
 
           taskSubmitButton.dataset.submitTaskTo = proj.id;
 
