@@ -252,7 +252,36 @@ const createTaskContent = (taskObj) => {
             display(todayTasks, false);
           }
 
+          if (mainPanel.dataset.shownTasks === 'week') {
 
+            let weekTasks = [];
+            currentProjects.forEach(proj => {
+              proj.tasks.forEach(task => {
+  
+                if (task.due) {
+                  if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
+                    weekTasks.push(task)
+                  }
+                }
+  
+              })
+            })
+  
+            display(weekTasks, false);
+          }
+
+          if (mainPanel.dataset.shownTasks === 'important') {
+            let importantTasks = [];
+            currentProjects.forEach(proj => {
+              proj.tasks.forEach(task => {
+                if (task.urgent) {
+                  importantTasks.push(task);
+                }
+              })
+            })
+  
+            display(importantTasks, false);
+          }
         }
       }
     } 
@@ -433,7 +462,7 @@ const addButtonListeners = () => {
         }
 
         if (e.target.id === 'today') {
-          mainHeader.textContent = 'Tasks Due Today';
+          mainHeader.textContent = 'Today';
           mainPanel.dataset.shownTasks = e.target.id;
           // const date = new Date();
           // const [month, day, year] = [
@@ -484,7 +513,44 @@ const addButtonListeners = () => {
           display(todayTasks, false);
         }
 
+        if (e.target.id === 'week') {
+          mainHeader.textContent = 'Next 7 Days';
+          mainPanel.dataset.shownTasks = e.target.id;
 
+          let weekTasks = [];
+          currentProjects.forEach(proj => {
+            proj.tasks.forEach(task => {
+
+              if (task.due) {
+                if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
+                  weekTasks.push(task)
+                }
+              }
+
+            })
+          })
+
+          display(weekTasks, false);
+        }
+
+        if (e.target.id === 'important') {
+          mainHeader.textContent = 'Important';
+          mainPanel.dataset.shownTasks = e.target.id;
+
+          let importantTasks = [];
+          currentProjects.forEach(proj => {
+            proj.tasks.forEach(task => {
+              if (task.urgent) {
+                importantTasks.push(task);
+              }
+            })
+          })
+
+          display(importantTasks, false);
+        }
+
+        addTaskButton.classList.add('hidden');
+        taskForm.classList.add('hidden');
       }
     })
   })
