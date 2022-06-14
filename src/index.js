@@ -1,4 +1,8 @@
-import {getDay, isThisWeek, isToday, isThisISOWeek, formatDistanceToNowStrict, differenceInCalendarDays, parse, parseISO, compareAsc, toDate, formatISO} from 'date-fns';
+import {
+  getDay,
+  isThisWeek,
+  isToday,
+} from "date-fns";
 
 // Varaiables. Move later
 const projectsPanel = document.querySelector('#projects-panel');
@@ -40,8 +44,6 @@ let currentProjects = !localStorage.length
 // console.log(currentProjects);
 
 
-
-
 function getName() {
   console.log(this.name);
 }
@@ -49,20 +51,7 @@ function getName() {
 function Project(name) {
   this.name = name;
   this.tasks = [
-    // {
-    //   name: 'work',
-    //   details: 'carrots, eggs, milk',
-    //   due: '1-1-2019',
-    //   urgent: false,
-    //   id: 'work-task-0'
-    // },
-    // {
-    //   name: 'shop',
-    //   details: '',
-    //   due: '',
-    //   urgent: false,
-    //   id: 'shop-task-1'
-    // }
+
   ];
 }
 function Task(name, details, due, urgent) {
@@ -171,7 +160,7 @@ const createProjectContent = (projObj) => {
 
     // Reset project Id's after deleting project
     setItemId('project-', currentProjects);
-    //Reset task Id's within each project after deleting project
+    // Reset task Id's within each project after deleting project
     currentProjects.forEach(proj => {
       let itemIdPrefix = `${proj.id}-task-`;
       setItemId(itemIdPrefix, proj.tasks);
@@ -286,48 +275,6 @@ const createTaskContent = (taskObj) => {
         }
       }
     } 
-
-    // currentProjects.forEach(proj => {
-    //   removeItem(taskToDelete, proj.tasks); 
-    // })
-
-    // currentProjects.forEach(proj => {
-    //   proj.tasks.forEach(task => {
-    //     if (task.id === taskToDelete) {
-
-    //       console.log(task)
-
-    //       proj.tasks.splice(task, 1);
-
-    //       // let itemIdPrefix = `${proj.id}-task-`;
-    //       // setItemId(itemIdPrefix, proj.tasks);
-    //       // populateLocalStorage(currentProjects);
-
-    //       console.log(proj.tasks);
-
-    //       // if (mainPanel.classList.contains('project')) {
-    //       //   display(proj.tasks, false);
-    //       // }
-
-    //       display(proj.tasks, false);
-    //     }
-    //   })
-    // })
-
-    // currentProjects.forEach(proj => {
-    //   proj.tasks.forEach(task => {
-    //     if (task.id === taskToDelete) {
-    //       proj.tasks.splice(task, 1);
-
-    //       let itemIdPrefix = `${proj.id}-task-`;
-    //       setItemId(itemIdPrefix, proj.tasks);
-    //       populateLocalStorage(currentProjects);
-
-    //       display(proj.tasks, false);
-
-    //     }
-    //   })
-    // })
 
   })
 
