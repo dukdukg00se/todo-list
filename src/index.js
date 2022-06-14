@@ -1,4 +1,4 @@
-import {parse, parseISO, compareAsc, toDate, formatISO} from 'date-fns';
+import {getDay, isThisWeek, isThisISOWeek, formatDistanceToNowStrict, differenceInCalendarDays, parse, parseISO, compareAsc, toDate, formatISO} from 'date-fns';
 
 // Varaiables. Move later
 const projectsPanel = document.querySelector('#projects-panel');
@@ -237,7 +237,20 @@ const createTaskContent = (taskObj) => {
             display(allTasks, false);
           }
 
-          
+          if (mainPanel.dataset.shownTasks === 'today') {
+            const date = formatISO(new Date(), {representation: 'date'});
+  
+            let todayTasks = [];
+            currentProjects.forEach(proj => {
+              proj.tasks.forEach(task => {  
+                if (task.due === date) {
+                  todayTasks.push(task);
+                }
+              })
+            })
+  
+            display(todayTasks, false);
+          }
 
 
         }
@@ -406,7 +419,6 @@ const addButtonListeners = () => {
 
         if (e.target.id === 'all') {
           mainHeader.textContent = 'All Tasks';
-          ('view');
           mainPanel.dataset.shownTasks = e.target.id;
 
           let allTasks = [];
@@ -421,6 +433,7 @@ const addButtonListeners = () => {
         }
 
         if (e.target.id === 'today') {
+          mainHeader.textContent = 'Tasks Due Today';
           mainPanel.dataset.shownTasks = e.target.id;
           // const date = new Date();
           // const [month, day, year] = [
@@ -430,7 +443,7 @@ const addButtonListeners = () => {
           // ];
 
           const date = formatISO(new Date(), {representation: 'date'});
-          // console.log(date);
+          console.log(date);
 
           // console.log(date);
           // console.log(month, day, year);
@@ -470,6 +483,8 @@ const addButtonListeners = () => {
 
           display(todayTasks, false);
         }
+
+
       }
     })
   })
@@ -482,7 +497,7 @@ const addProjectListeners = () => {
       // console.log('test');
 
       let projectToDisplay = e.target.parentElement.id;
-      console.log(projectToDisplay);
+      // console.log(projectToDisplay);
       currentProjects.forEach(proj => {
         if (proj.id === projectToDisplay) {
           // mainPanel.classList.add('project');
