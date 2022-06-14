@@ -1,4 +1,4 @@
-import {getDay, isThisWeek, isThisISOWeek, formatDistanceToNowStrict, differenceInCalendarDays, parse, parseISO, compareAsc, toDate, formatISO} from 'date-fns';
+import {getDay, isThisWeek, isToday, isThisISOWeek, formatDistanceToNowStrict, differenceInCalendarDays, parse, parseISO, compareAsc, toDate, formatISO} from 'date-fns';
 
 // Varaiables. Move later
 const projectsPanel = document.querySelector('#projects-panel');
@@ -238,14 +238,15 @@ const createTaskContent = (taskObj) => {
           }
 
           if (mainPanel.dataset.shownTasks === 'today') {
-            const date = formatISO(new Date(), {representation: 'date'});
   
             let todayTasks = [];
             currentProjects.forEach(proj => {
-              proj.tasks.forEach(task => {  
-                if (task.due === date) {
+              proj.tasks.forEach(task => {
+  
+                if (isToday(parseISO(task.due))) {
                   todayTasks.push(task);
                 }
+  
               })
             })
   
@@ -464,49 +465,15 @@ const addButtonListeners = () => {
         if (e.target.id === 'today') {
           mainHeader.textContent = 'Today';
           mainPanel.dataset.shownTasks = e.target.id;
-          // const date = new Date();
-          // const [month, day, year] = [
-          //   date.getMonth(), 
-          //   date.getDate(), 
-          //   date.getFullYear()
-          // ];
-
-          const date = formatISO(new Date(), {representation: 'date'});
-          console.log(date);
-
-          // console.log(date);
-          // console.log(month, day, year);
-
-          // let test = parse('2016-01-01', 'yyyy-MM-dd', new Date());
-          // console.log(test);
-
-          // let test2 = toDate(new Date(+year, +month, +day))
-          // console.log(test2)
 
           let todayTasks = [];
           currentProjects.forEach(proj => {
             proj.tasks.forEach(task => {
-              // let test3 = parseISO(task.due, 'yyyy-MM-dd', new Date());
 
-              // console.log(parse(task.due, 'yyyy-MM-dd', new Date()));
-
-              // let test3 = parse(task.due, 'yyyy-MM-dd', new Date())
-
-              // let test3 = formatISO(task.due, {representation: 'date'})
-
-              // console.log(test3)
-
-              // let test4 = compareAsc(test3, test2);
-              // console.log(test4);
-
-              // if (compareAsc(test3, date) === 0) {
-              //   console.log(task);
-              // }
-
-              if (task.due === date) {
-                // console.log(task);
+              if (isToday(parseISO(task.due))) {
                 todayTasks.push(task);
               }
+
             })
           })
 
