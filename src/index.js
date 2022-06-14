@@ -1,3 +1,5 @@
+import {parse, parseISO, compareAsc, toDate, formatISO} from 'date-fns';
+
 // Varaiables. Move later
 const projectsPanel = document.querySelector('#projects-panel');
 const projectForm = document.querySelector("#projects-panel form");
@@ -214,6 +216,34 @@ const createTaskContent = (taskObj) => {
     // This is the way when deleting projects
     let taskToDelete = e.target.dataset.delete;
 
+    for (let i = 0; i < currentProjects.length; i++) {
+      for (let j = 0; j < currentProjects[i].tasks.length; j++) {
+        if (currentProjects[i].tasks[j].id === taskToDelete) {
+          currentProjects[i].tasks.splice(j, 1);
+          populateLocalStorage(currentProjects);
+
+          if (mainPanel.dataset.shownTasks === 'project') {
+            display(currentProjects[i].tasks, false);
+          }
+
+          if (mainPanel.dataset.shownTasks === 'all') {
+            let allTasks = [];
+            currentProjects.forEach(proj => {
+              proj.tasks.forEach(task => {
+                allTasks.push(task)
+                // console.log(task);
+              })
+            })
+            display(allTasks, false);
+          }
+
+          
+
+
+        }
+      }
+    } 
+
     // currentProjects.forEach(proj => {
     //   removeItem(taskToDelete, proj.tasks); 
     // })
@@ -241,22 +271,6 @@ const createTaskContent = (taskObj) => {
     //   })
     // })
 
-    for (let i = 0; i < currentProjects.length; i++) {
-
-      for (let j = 0; j < currentProjects[i].tasks.length; j++) {
-
-        if (currentProjects[i].tasks[j].id === taskToDelete) {
-
-          currentProjects[i].tasks.splice(j, 1);
-
-          populateLocalStorage(currentProjects);
-          display(currentProjects[i].tasks, false);
-        }
-
-      }
-    } 
-
-
     // currentProjects.forEach(proj => {
     //   proj.tasks.forEach(task => {
     //     if (task.id === taskToDelete) {
@@ -271,7 +285,6 @@ const createTaskContent = (taskObj) => {
     //     }
     //   })
     // })
-
 
   })
 
@@ -386,12 +399,15 @@ const addButtonListeners = () => {
               hideForm(taskForm, addTaskButton);
             }
           })
-        }
+        }        
+      }
 
-        if (e.target.id === 'view-all') {
+      if (e.target.classList.contains('view')) {
+
+        if (e.target.id === 'all') {
           mainHeader.textContent = 'All Tasks';
-
-          console.log(currentProjects);
+          ('view');
+          mainPanel.dataset.shownTasks = e.target.id;
 
           let allTasks = [];
           currentProjects.forEach(proj => {
@@ -401,10 +417,59 @@ const addButtonListeners = () => {
             })
           })
 
-          if (mainHeader.textContent)
           display(allTasks, false);
         }
-        
+
+        if (e.target.id === 'today') {
+          mainPanel.dataset.shownTasks = e.target.id;
+          // const date = new Date();
+          // const [month, day, year] = [
+          //   date.getMonth(), 
+          //   date.getDate(), 
+          //   date.getFullYear()
+          // ];
+
+          const date = formatISO(new Date(), {representation: 'date'});
+          // console.log(date);
+
+          // console.log(date);
+          // console.log(month, day, year);
+
+          // let test = parse('2016-01-01', 'yyyy-MM-dd', new Date());
+          // console.log(test);
+
+          // let test2 = toDate(new Date(+year, +month, +day))
+          // console.log(test2)
+
+          let todayTasks = [];
+          currentProjects.forEach(proj => {
+            proj.tasks.forEach(task => {
+              // let test3 = parseISO(task.due, 'yyyy-MM-dd', new Date());
+
+              // console.log(parse(task.due, 'yyyy-MM-dd', new Date()));
+
+              // let test3 = parse(task.due, 'yyyy-MM-dd', new Date())
+
+              // let test3 = formatISO(task.due, {representation: 'date'})
+
+              // console.log(test3)
+
+              // let test4 = compareAsc(test3, test2);
+              // console.log(test4);
+
+              // if (compareAsc(test3, date) === 0) {
+              //   console.log(task);
+              // }
+
+              if (task.due === date) {
+                // console.log(task);
+                todayTasks.push(task);
+              }
+            })
+          })
+
+          display(todayTasks, false);
+        }
       }
     })
   })
@@ -416,17 +481,20 @@ const addProjectListeners = () => {
     proj.addEventListener('click', (e) => {
       // console.log('test');
 
-      projectToDisplay = e.target.parentElement.id;
+      let projectToDisplay = e.target.parentElement.id;
+      console.log(projectToDisplay);
       currentProjects.forEach(proj => {
         if (proj.id === projectToDisplay) {
-          mainPanel.classList.add('project');
+          // mainPanel.classList.add('project');
+          // mainPanel.classList.remove('view');
+          mainPanel.dataset.shownTasks = 'project';
           mainHeader.textContent = proj.name;
 
 
           taskSubmitButton.dataset.submitTaskTo = proj.id;
 
           display(proj.tasks, false);
-          // hideForm(taskForm, addTaskButton);
+          hideForm(taskForm, addTaskButton);
           addTaskButton.classList.remove('hidden');
         }
       })
