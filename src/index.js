@@ -154,17 +154,19 @@ const createProjectContent = (projObj) => {
   projectDeleteBtn.textContent = 'X';
   
   projectDeleteBtn.addEventListener('click', (e) => {
-    updateCurrentProjects(e);
+    // updateCurrentProjects(e);
+
+    let projectToDelete = e.target.parentElement.id;
+    removeItem(projectToDelete, currentProjects);
 
 
-
-    // Reset project Id's after deleting project
-    setItemId('project-', currentProjects);
-    // Reset task Id's within each project after deleting project
-    currentProjects.forEach(proj => {
-      let itemIdPrefix = `${proj.id}-task-`;
-      setItemId(itemIdPrefix, proj.tasks);
-    })
+    // // Reset project Id's after deleting project
+    // setItemId('project-', currentProjects);
+    // // Reset task Id's within each project after deleting project
+    // currentProjects.forEach(proj => {
+    //   let itemIdPrefix = `${proj.id}-task-`;
+    //   setItemId(itemIdPrefix, proj.tasks);
+    // })
     populateLocalStorage(currentProjects);
     
     display(currentProjects);
@@ -197,6 +199,8 @@ const createTaskContent = (taskObj) => {
   taskDetails.textContent = taskObj.details;
   taskDue.textContent = taskObj.due;
   taskUrgent.textContent = taskObj.urgent;
+
+
   taskDeleteBtn.textContent = 'X';
   taskDeleteBtn.dataset.delete = taskObj.id;
 
