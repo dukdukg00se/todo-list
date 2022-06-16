@@ -6,10 +6,55 @@ html, body {
   height: 100%;
 }
 
+html {
+  /* Set base font size equivalent to 10px for easy rem calculations */
+  /* Use percentages for accessibility */
+  font-size: 62.5%;
+}
+
 body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.6rem;
   display: flex;
   flex-direction: column;
 }
+
+
+/* For google icons */
+.material-symbols-rounded {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 700,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+.logo-icon {
+  display: inline-block;
+  vertical-align: bottom;
+  position: relative;
+  top: 1px;
+  font-size: 6.5rem;
+  color: rgba(0, 0, 211, 1);
+  border-radius: 50%;
+
+}
+.logo-span {
+  color: rgba(0, 0, 211, 1);
+}
+
+header > h2 {
+  color: rgb(43, 43, 49);
+  font-size: 6rem;
+  font-weight: 700;
+}
+
+
+.project-item:hover {
+  background-color: blueviolet;
+}
+
+
 
 
 header {
@@ -17,9 +62,9 @@ header {
   border: 3px solid black;
   padding: 30px;
 }
-#application-logo {
+/* #application-logo {
   font-size: 40px;
-}
+} */
 
 
 #content-wrapper {
@@ -62,12 +107,12 @@ nav {
   background-color: blueviolet;
 } */
 
-.project-wrapper h3:hover {
+/* .project-wrapper h3:hover {
   background-color: rgb(96, 119, 237);
 }
 .project-wrapper h3:active {
   background-color: rgb(56, 27, 245);
-}
+} */
 
 
 h3 {
