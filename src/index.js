@@ -148,17 +148,19 @@ const createProjectContent = (projObj) => {
   const projectTitle = document.createElement('h3');
   projectTitle.textContent = projObj.name
 
+  const editMenu = document.createElement('span');
+  editMenu.classList.add('material-symbols-rounded');
+  editMenu.textContent = 'more_vert';
+
+
+
   const projectDeleteBtn = document.createElement('button');
-  projectDeleteBtn.classList.add('delete');
-  projectDeleteBtn.classList.add('project');
   projectDeleteBtn.textContent = 'X';
-  
   projectDeleteBtn.addEventListener('click', (e) => {
     // updateCurrentProjects(e);
 
     let projectToDelete = e.target.parentElement.id;
     removeItem(projectToDelete, currentProjects);
-
 
     // // Reset project Id's after deleting project
     // setItemId('project-', currentProjects);
@@ -173,10 +175,11 @@ const createProjectContent = (projObj) => {
     addProjectListeners();
   })
   
-  projectWrapper.append(projectTitle, projectDeleteBtn);
+  projectWrapper.append(projectTitle, editMenu);
   projectListItem.append(projectWrapper);
   return projectListItem;
 };
+
 const createTaskContent = (taskObj) => {
   const taskListItem = document.createElement('li');
   taskListItem.classList.add('task-item');
