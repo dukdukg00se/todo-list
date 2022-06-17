@@ -15,6 +15,7 @@ html {
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 1.6rem;
+  color: rgb(30 36 99);
   display: flex;
   flex-direction: column;
 }
@@ -29,42 +30,74 @@ body {
   'opsz' 48
 }
 
-.logo-icon {
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 3px rgb(133 184 250);
+  padding: 1.5rem 3rem;
+}
+
+header > h2 {
+  font-size: 6rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+header > h2 .icon {
   display: inline-block;
   vertical-align: bottom;
   position: relative;
   top: 1px;
-  font-size: 6.5rem;
-  color: rgba(0, 0, 211, 1);
-  border-radius: 50%;
-
-}
-.logo-span {
-  color: rgba(0, 0, 211, 1);
-}
-
-header > h2 {
-  color: rgb(43, 43, 49);
   font-size: 6rem;
-  font-weight: 700;
+  color: rgb(133 184 250);
 }
+
+header div .icon {
+  font-size: 3.5rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+header div .icon:hover {
+  cursor: pointer;
+  background-color: rgb(229 229 229);
+}
+header div .icon:active {
+  background-color: rgb(210 210 210);
+}
+
+#mode-icon-wrapper .icon {
+  font-variation-settings:
+  'FILL' 1;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 10;
+  top: 7.7rem;
+  padding: 5px 10px;
+  border-radius: 15px;
+  background-color: rgb(30 36 99);
+  color: white;
+}
+
+.icon:hover + .tooltip-text {
+  visibility: visible;
+}
+
+#menu-icon-wrapper .tooltip-text {
+  left: 1rem;
+}
+#mode-icon-wrapper .tooltip-text {
+  right: 1rem;
+}
+
 
 
 .project-item:hover {
   background-color: blueviolet;
 }
-
-
-
-
-header {
-  display: flex;
-  border: 3px solid black;
-  padding: 30px;
-}
-/* #application-logo {
-  font-size: 40px;
-} */
 
 
 #content-wrapper {
