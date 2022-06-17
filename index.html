@@ -42,11 +42,31 @@
   <div id="content-wrapper">
     <nav>
       <section id="tasks-panel">
-        <h2>Tasks</h2>
-        <button class="view" id="all" type="button">All Tasks</button>
-        <button class="view" id="today" type="button">Today</button>
-        <button class="view" id="week" type="button">Next 7 Days</button>
-        <button class="view" id="important" type="button">Important</button>
+        <h2>View</h2>
+        <button class="view" id="all" type="button">
+          <span class="material-symbols-rounded icon">
+            inbox
+          </span>
+          All Tasks
+        </button>
+        <button class="view" id="today" type="button">
+          <span class="material-symbols-rounded icon">
+            today
+          </span>
+          Today
+        </button>
+        <button class="view" id="week" type="button">
+          <span class="material-symbols-rounded icon">
+            date_range
+          </span>
+          Next 7 Days
+        </button>
+        <button class="view" id="important" type="button">
+          <span class="material-symbols-rounded icon">
+            flag
+          </span>
+          Important
+        </button>
       </section>
 
       <section id="projects-panel">
@@ -64,6 +84,7 @@
         <button class="project add" id="add-project" type="button">+ Add Project</button>
       </section>
     </nav>
+
 
     <main>
       <h1>All Tasks</h1>
