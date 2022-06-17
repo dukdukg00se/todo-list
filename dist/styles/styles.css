@@ -18,8 +18,8 @@ body {
   color: rgb(30 36 99);
   display: flex;
   flex-direction: column;
+  background-color: rgba(229 229 229 / 0.5);
 }
-
 
 /* For google icons */
 .material-symbols-rounded {
@@ -30,6 +30,7 @@ body {
   'opsz' 48
 }
 
+/* Header content  */
 header {
   display: flex;
   justify-content: space-between;
@@ -38,13 +39,13 @@ header {
   padding: 1.5rem 3rem;
 }
 
-header > h2 {
+header h2 {
   font-size: 6rem;
   font-weight: 700;
   letter-spacing: 2px;
 }
 
-header > h2 .icon {
+header h2 .icon {
   display: inline-block;
   vertical-align: bottom;
   position: relative;
@@ -60,10 +61,10 @@ header div .icon {
 }
 header div .icon:hover {
   cursor: pointer;
-  background-color: rgb(229 229 229);
+  background-color: rgba(220 220 220 / 0.5);
 }
 header div .icon:active {
-  background-color: rgb(210 210 210);
+  background-color: rgba(220 220 220 / 1);
 }
 
 #mode-icon-wrapper .icon {
@@ -72,7 +73,7 @@ header div .icon:active {
 }
 
 .tooltip-text {
-  visibility: hidden;
+  /* visibility: hidden; */
   position: absolute;
   z-index: 10;
   top: 7.7rem;
@@ -80,12 +81,13 @@ header div .icon:active {
   border-radius: 15px;
   background-color: rgb(30 36 99);
   color: white;
+  opacity: 0;
+  transition: opacity .4s;
 }
-
 .icon:hover + .tooltip-text {
-  visibility: visible;
+  /* visibility: visible; */
+  opacity: 1;
 }
-
 #menu-icon-wrapper .tooltip-text {
   left: 1rem;
 }
