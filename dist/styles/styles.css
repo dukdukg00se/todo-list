@@ -21,6 +21,10 @@ body {
   background-color: rgba(229 229 229 / 0.5);
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 /* For google icons */
 .material-symbols-rounded {
   font-variation-settings:
@@ -112,7 +116,7 @@ nav {
 nav > section > h2 {
   font-size: 2.2rem;
   font-weight: 700;
-  border-bottom: solid 1.5px rgb(30 36 99);
+  /* border-bottom: solid 1.5px rgb(133 184 250); */
   padding-bottom: 1rem;
 }
 
@@ -126,6 +130,13 @@ nav > section button {
   padding: 0.4rem 0.7rem;
   background-color: white;
   border: none;
+  border-radius: 5px;
+}
+nav > section button:hover {
+  background-color: rgba(229 229 229 / 0.7);
+}
+nav > section button:active {
+  background-color: rgba(229 229 229 / 1);
 }
 
 nav > section button .icon {
@@ -134,12 +145,23 @@ nav > section button .icon {
   'FILL' 1;
 }
 
+.highlight {
+  background-color: rgba(133 184 250 / 0.3);
+  border-bottom: solid 2px rgba(133 184 250 / 1);
+}
+.highlight:hover {
+  background-color: rgba(105, 142, 189, 0.3);
+}
+.highlight:active {
+  background-color: rgba(105, 142, 189, 0.5);
+}
+
 #tasks-panel {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  padding: 20px;
-  border-bottom: solid 1px rgb(133 184 250);
+  padding: 2rem;
+  border-bottom: solid 1px rgb(30 36 99);
 }
 #projects-panel {
   /* width: 30%; */
@@ -147,7 +169,7 @@ nav > section button .icon {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 20px;
+  padding: 2rem;
   gap: 20px;
 }
 
