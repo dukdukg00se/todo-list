@@ -14,13 +14,14 @@ html {
 
 body {
   font-family: 'Roboto', sans-serif;
-  font-size: 1.6rem;
+  font-size: 1.7rem;
   color: rgb(30 36 99);
   display: flex;
   flex-direction: column;
   background-color: rgba(229 229 229 / 0.5);
 }
 
+ul li:hover,
 button:hover {
   cursor: pointer;
 }
@@ -28,7 +29,7 @@ button:hover {
 /* For google icons */
 .material-symbols-rounded {
   font-variation-settings:
-  'FILL' 0,
+  'FILL' 1,
   'wght' 700,
   'GRAD' 0,
   'opsz' 48
@@ -71,10 +72,10 @@ header div .icon:active {
   background-color: rgba(220 220 220 / 1);
 }
 
-#mode-icon-wrapper .icon {
+/* #mode-icon-wrapper .icon {
   font-variation-settings:
   'FILL' 1;
-}
+} */
 
 .tooltip-text {
   /* visibility: hidden; */
@@ -116,8 +117,6 @@ nav {
 nav > section > h2 {
   font-size: 2.2rem;
   font-weight: 700;
-  /* border-bottom: solid 1.5px rgb(133 184 250); */
-  padding-bottom: 1rem;
 }
 
 nav > section button {
@@ -132,30 +131,29 @@ nav > section button {
   border: none;
   border-radius: 5px;
 }
+
+nav > section li div:hover,
 nav > section button:hover {
-  background-color: rgba(229 229 229 / 0.7);
+  background-color: rgba(194 219 251 / 0.5);
 }
+nav > section li div:active,
 nav > section button:active {
-  background-color: rgba(229 229 229 / 1);
+  background-color: rgb(194 219 251);
 }
 
-nav > section button .icon {
+nav > section .icon {
   font-size: 3.3rem;
-  font-variation-settings:
-  'FILL' 1;
+  /* font-variation-settings:
+  'FILL' 1; */
 }
 
 .highlight {
-  background-color: rgba(133 184 250 / 0.3);
-  border-bottom: solid 2px rgba(133 184 250 / 1);
-}
-.highlight:hover {
-  background-color: rgba(105, 142, 189, 0.3);
-}
-.highlight:active {
-  background-color: rgba(105, 142, 189, 0.5);
+  background-color: rgb(194 219 251);
+  box-shadow: 0 0 0 2px rgba(30 36 99);
 }
 
+
+/* Combine both panels */
 #tasks-panel {
   display: flex;
   flex-direction: column;
@@ -164,44 +162,53 @@ nav > section button .icon {
   border-bottom: solid 1px rgb(30 36 99);
 }
 #projects-panel {
-  /* width: 30%; */
-  /* min-width: 250px; */
   display: flex;
   flex-direction: column;
-  flex: 1;
+  gap: 1.5rem;
   padding: 2rem;
-  gap: 20px;
 }
+/* Combine both panels */
 
-#projects-list li {
-  margin: 5px 0;
-}
 
-.project-wrapper {
+nav > section ul {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 5px;
+  /* font-family: 'Roboto', sans-serif; */
+  /* font-size: 1.7rem; */
+  /* color:rgb(30 36 99); */
   /* align-items: center; */
+  /* background-color: white; */
+  /* border: none; */
 }
 
-.project-item:hover {
-  background-color: blueviolet;
+nav > section li div {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 5px;
 }
-
-/* .project-wrapper h3 {
-  background-color: blueviolet;
-} */
-
-/* .project-wrapper h3:hover {
-  background-color: rgb(96, 119, 237);
-}
-.project-wrapper h3:active {
-  background-color: rgb(56, 27, 245);
-} */
-
 
 h3 {
   width: 100%;
 }
+
+.edit {
+  border-radius: 50%;
+  padding: 0.5rem;
+}
+.edit:hover {
+  background-color: rgba(220 220 220 / 0.5);
+}
+.edit:active {
+  background-color: rgba(220 220 220 / 1);
+}
+
+
+
 
 
 main {
