@@ -66,10 +66,10 @@ header div .icon {
 }
 header div .icon:hover {
   cursor: pointer;
-  background-color: rgba(220 220 220 / 0.5);
+  background-color: rgb(230 230 230);
 }
 header div .icon:active {
-  background-color: rgba(220 220 220 / 1);
+  background-color: rgb(220 220 220);
 }
 
 /* #mode-icon-wrapper .icon {
@@ -176,18 +176,18 @@ nav > section ul {
   gap: 1rem;
   padding: 0.4rem 0.7rem;
   border-radius: 5px;
-  /* font-family: 'Roboto', sans-serif; */
-  /* font-size: 1.7rem; */
-  /* color:rgb(30 36 99); */
-  /* align-items: center; */
-  /* background-color: white; */
-  /* border: none; */
+  /* font-family: 'Roboto', sans-serif;
+  font-size: 1.7rem;
+  color:rgb(30 36 99);
+  align-items: center;
+  background-color: white;
+  border: none; */
 }
 
 nav > section li div {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 1rem;
   padding: 0.4rem 0.7rem;
   border-radius: 5px;
 }
@@ -207,6 +207,65 @@ h3 {
   background-color: rgba(220 220 220 / 1);
 }
 
+button.project {
+  align-self: center;
+  gap: 0.3rem;
+  border: solid 2px;
+  justify-content: center;
+  padding: 0.4rem;
+  background-color: rgba(229 229 229 / 0.5);
+  width: 16rem;
+  margin-top: 1rem;
+}
+button.project:hover {
+  background-color: rgb(230 230 220);
+}
+button.project:active {
+  background-color: rgb(220 220 220);
+}
+button.project > span {
+  font-size: 2.5rem;
+  color: rgb(133 184 250);
+}
+
+nav form {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(30 36 99);
+  border-radius: 5px;
+  padding: 1.2rem;
+  width: 17rem;
+}
+nav form div {
+  display: flex;
+  gap: 1rem;
+  width: min-content;
+}
+nav form button.project {
+  background-color: white;
+  width: 7rem;
+}
+nav form button.project:hover {
+  background-color: rgb(230 230 220);
+}
+nav form button.project:active {
+  background-color: rgb(220 220 220);
+}
+
+input[type = "text"] {
+  border: none;
+  padding: 1px 4px;
+  height: 3.4rem;
+  width: 100%;
+  font-size: 1.7rem;
+  border-radius: 5px;
+}
+input::placeholder {
+  font-size: 1.7rem;
+}
 
 
 
