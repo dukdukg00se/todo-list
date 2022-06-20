@@ -145,11 +145,16 @@ const createProjectContent = (projObj) => {
   projectWrapper.classList.add('project-wrapper');
   projectWrapper.id = projObj.id;
 
+  const projectIcon = document.createElement('span');
+  projectIcon.classList.add('material-symbols-rounded', 'icon');
+  projectIcon.textContent = 'tools_power_drill';
+
+
   const projectTitle = document.createElement('h3');
   projectTitle.textContent = projObj.name
 
   const editMenu = document.createElement('span');
-  editMenu.classList.add('material-symbols-rounded');
+  editMenu.classList.add('material-symbols-rounded', 'edit');
   editMenu.textContent = 'more_vert';
 
 
@@ -175,7 +180,7 @@ const createProjectContent = (projObj) => {
     addProjectListeners();
   })
   
-  projectWrapper.append(projectTitle, editMenu);
+  projectWrapper.append(projectIcon, projectTitle, editMenu);
   projectListItem.append(projectWrapper);
   return projectListItem;
 };
