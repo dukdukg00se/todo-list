@@ -2,6 +2,7 @@ import {
   getDay,
   isThisWeek,
   isToday,
+  parseISO
 } from "date-fns";
 
 // Varaiables. Move later
@@ -153,14 +154,20 @@ const createProjectContent = (projObj) => {
   const projectTitle = document.createElement('h3');
   projectTitle.textContent = projObj.name
 
-  const editMenu = document.createElement('span');
-  editMenu.classList.add('material-symbols-rounded', 'edit');
-  editMenu.textContent = 'more_vert';
+  // const editWrapper = document.createElement('div');
+  // editWrapper.classList.add('edit-wrapper');
+
+  // const editIcon = document.createElement('span');
+  // editIcon.classList.add('material-symbols-rounded', 'edit');
+  // editIcon.textContent = 'more_vert';
 
 
+  // const editMenu = document.createElement('div');
+  // editMenu.classList.add('hidden');
 
   const projectDeleteBtn = document.createElement('button');
-  projectDeleteBtn.textContent = 'X';
+  projectDeleteBtn.classList.add('material-symbols-rounded', 'delete');
+  projectDeleteBtn.textContent = 'close';
   projectDeleteBtn.addEventListener('click', (e) => {
     // updateCurrentProjects(e);
 
@@ -179,8 +186,13 @@ const createProjectContent = (projObj) => {
     display(currentProjects);
     addProjectListeners();
   })
+
+
+
+
+  // editWrapper.append(editIcon, editMenu);
   
-  projectWrapper.append(projectIcon, projectTitle, editMenu);
+  projectWrapper.append(projectIcon, projectTitle, projectDeleteBtn);
   projectListItem.append(projectWrapper);
   return projectListItem;
 };
