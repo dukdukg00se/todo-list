@@ -205,106 +205,146 @@ const createTaskContent = (taskObj) => {
   taskWrapper.classList.add('task-wrapper');
   taskWrapper.id = taskObj.id;
 
-  const taskInfoWrapper = document.createElement('div');
+  const taskDescrWrapper = document.createElement('div');
+  taskDescrWrapper.classList.add('task-descr-wrapper');
   const taskName = document.createElement('h3');
   const taskDetails = document.createElement('p');
-  const taskSpanWrapper = document.createElement('div');
-  const taskDue = document.createElement('span');
-  const taskUrgent = document.createElement('span');
-  const taskDeleteBtn = document.createElement('button');
-  taskDeleteBtn.classList.add('delete');
-  taskDeleteBtn.classList.add('task');
+
+  const taskEditWrapper = document.createElement('div');
+  taskEditWrapper.classList.add('task-edit-wrapper');
+  const taskDueDate = document.createElement('span');
+  taskDueDate.classList.add('task-due-date');
+  if (taskObj.due) {
+    taskDueDate.textContent = taskObj.due;
+  } else {
+    taskDueDate.textContent = 'No due date';
+  }
+
+  const taskUrgentIcon = document.createElement('span');
+  taskUrgentIcon.classList.add('material-symbols-rounded', 'urgent-icon');
+  taskUrgentIcon.textContent = 'flag';
+  if (taskObj.urgent) {
+    taskUrgentIcon.classList.add('urgent');
+  }
+  taskUrgentIcon.addEventListener('click', () => {
+
+    if (taskObj.urgent) {
+      taskObj.urgent = false;
+    } else {
+      taskObj.urgent = true;
+    }
+
+    taskUrgentIcon.classList.toggle('urgent');
+  })
+
+
+  const editIcon = document.createElement('span');
+  editIcon.classList.add('material-symbols-rounded', 'edit-icon');
+  editIcon.textContent = 'more_vert';
+  
+
 
   taskName.textContent = taskObj.name;
   taskDetails.textContent = taskObj.details;
-  taskDue.textContent = taskObj.due;
-  taskUrgent.textContent = taskObj.urgent;
+  // taskDueDate.textContent = taskObj.due;
+  // taskUrgent.textContent = taskObj.urgent;
 
 
-  taskDeleteBtn.textContent = 'X';
-  taskDeleteBtn.dataset.delete = taskObj.id;
 
-  taskDeleteBtn.addEventListener('click', (e) => {
-    // Can also use e.target.parentElement.id
-    // This is the way when deleting projects
-    let taskToDelete = e.target.dataset.delete;
 
-    for (let i = 0; i < currentProjects.length; i++) {
-      for (let j = 0; j < currentProjects[i].tasks.length; j++) {
-        if (currentProjects[i].tasks[j].id === taskToDelete) {
-          currentProjects[i].tasks.splice(j, 1);
-          populateLocalStorage(currentProjects);
 
-          if (mainPanel.dataset.shownTasks === 'project') {
-            display(currentProjects[i].tasks, false);
-          }
 
-          if (mainPanel.dataset.shownTasks === 'all') {
-            let allTasks = [];
-            currentProjects.forEach(proj => {
-              proj.tasks.forEach(task => {
-                allTasks.push(task)
-                // console.log(task);
-              })
-            })
-            display(allTasks, false);
-          }
+  // const taskDeleteBtn = document.createElement('button');
+  // taskDeleteBtn.classList.add('delete');
+  // taskDeleteBtn.classList.add('task');
 
-          if (mainPanel.dataset.shownTasks === 'today') {
+  // taskDeleteBtn.textContent = 'X';
+  // taskDeleteBtn.dataset.delete = taskObj.id;
+
+  // taskDeleteBtn.addEventListener('click', (e) => {
+  //   // Can also use e.target.parentElement.id
+  //   // This is the way when deleting projects
+  //   let taskToDelete = e.target.dataset.delete;
+
+  //   for (let i = 0; i < currentProjects.length; i++) {
+  //     for (let j = 0; j < currentProjects[i].tasks.length; j++) {
+  //       if (currentProjects[i].tasks[j].id === taskToDelete) {
+  //         currentProjects[i].tasks.splice(j, 1);
+  //         populateLocalStorage(currentProjects);
+
+  //         if (mainPanel.dataset.shownTasks === 'project') {
+  //           display(currentProjects[i].tasks, false);
+  //         }
+
+  //         if (mainPanel.dataset.shownTasks === 'all') {
+  //           let allTasks = [];
+  //           currentProjects.forEach(proj => {
+  //             proj.tasks.forEach(task => {
+  //               allTasks.push(task)
+  //               // console.log(task);
+  //             })
+  //           })
+  //           display(allTasks, false);
+  //         }
+
+  //         if (mainPanel.dataset.shownTasks === 'today') {
   
-            let todayTasks = [];
-            currentProjects.forEach(proj => {
-              proj.tasks.forEach(task => {
+  //           let todayTasks = [];
+  //           currentProjects.forEach(proj => {
+  //             proj.tasks.forEach(task => {
   
-                if (isToday(parseISO(task.due))) {
-                  todayTasks.push(task);
-                }
+  //               if (isToday(parseISO(task.due))) {
+  //                 todayTasks.push(task);
+  //               }
   
-              })
-            })
+  //             })
+  //           })
   
-            display(todayTasks, false);
-          }
+  //           display(todayTasks, false);
+  //         }
 
-          if (mainPanel.dataset.shownTasks === 'week') {
+  //         if (mainPanel.dataset.shownTasks === 'week') {
 
-            let weekTasks = [];
-            currentProjects.forEach(proj => {
-              proj.tasks.forEach(task => {
+  //           let weekTasks = [];
+  //           currentProjects.forEach(proj => {
+  //             proj.tasks.forEach(task => {
   
-                if (task.due) {
-                  if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
-                    weekTasks.push(task)
-                  }
-                }
+  //               if (task.due) {
+  //                 if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
+  //                   weekTasks.push(task)
+  //                 }
+  //               }
   
-              })
-            })
+  //             })
+  //           })
   
-            display(weekTasks, false);
-          }
+  //           display(weekTasks, false);
+  //         }
 
-          if (mainPanel.dataset.shownTasks === 'important') {
-            let importantTasks = [];
-            currentProjects.forEach(proj => {
-              proj.tasks.forEach(task => {
-                if (task.urgent) {
-                  importantTasks.push(task);
-                }
-              })
-            })
+  //         if (mainPanel.dataset.shownTasks === 'important') {
+  //           let importantTasks = [];
+  //           currentProjects.forEach(proj => {
+  //             proj.tasks.forEach(task => {
+  //               if (task.urgent) {
+  //                 importantTasks.push(task);
+  //               }
+  //             })
+  //           })
   
-            display(importantTasks, false);
-          }
-        }
-      }
-    } 
+  //           display(importantTasks, false);
+  //         }
+  //       }
+  //     }
+  //   } 
 
-  })
+  // })
 
-  taskSpanWrapper.append(taskDue, taskUrgent);
-  taskInfoWrapper.append(taskName, taskDetails);
-  taskWrapper.append(taskInfoWrapper, taskSpanWrapper, taskDeleteBtn);
+
+  taskEditWrapper.append(taskDueDate, taskUrgentIcon, editIcon);
+  taskDescrWrapper.append(taskName, taskDetails);
+  // taskWrapper.append(taskDescrWrapper, taskEditWrapper, taskDeleteBtn);
+
+  taskWrapper.append(taskDescrWrapper, taskEditWrapper);
   taskListItem.append(taskWrapper);
   
   return taskListItem;
@@ -509,7 +549,7 @@ const addProjectListeners = () => {
           mainPanel.dataset.shownTasks = 'project';
           mainHeader.textContent = proj.name;
 
-
+          // console.log(proj.id)
           taskSubmitButton.dataset.submitTaskTo = proj.id;
 
           display(proj.tasks, false);

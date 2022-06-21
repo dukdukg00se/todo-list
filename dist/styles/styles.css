@@ -21,6 +21,7 @@ body {
   background-color: rgba(229 229 229 / 0.5);
 }
 
+/* Page buttons, list items (projects, tasks) */
 ul li:hover,
 button:hover {
   cursor: pointer;
@@ -46,12 +47,12 @@ header {
   padding: 1.5rem 3rem;
 }
 
+/* Logo */
 header h2 {
   font-size: 6rem;
   font-weight: 700;
   letter-spacing: 2px;
 }
-
 header h2 .icon {
   display: inline-block;
   vertical-align: bottom;
@@ -61,6 +62,7 @@ header h2 .icon {
   color: rgb(133 184 250);
 }
 
+/* header action icons */
 header div .icon {
   font-size: 3.5rem;
   padding: 0.5rem;
@@ -103,7 +105,7 @@ header div .icon:active {
 }
 
 
-
+/* Container holding nav and main panel */
 #content-wrapper {
   display: flex;
   flex: 1;
@@ -119,6 +121,7 @@ nav {
   min-width: 21rem;
 }
 
+/* Nav panel headers */
 nav > section > h2 {
   font-size: 2.2rem;
   font-weight: 700;
@@ -207,18 +210,6 @@ button.delete {
   padding: 0.4rem;
 }
 
-/* .edit {
-  border-radius: 50%;
-  padding: 0.5rem 0;
-}
-.edit:hover {
-  background-color: rgba(220 220 220 / 0.5);
-}
-.edit:active {
-  background-color: rgba(220 220 220 / 1);
-} */
-
-
 button.project {
   align-self: center;
   gap: 0.3rem;
@@ -234,10 +225,12 @@ button.task:hover,
 button.delete:hover,
 button.project:hover {
   background-color: rgb(230 230 220);
+
 }
 button.task:active,
 button.delete:active,
 button.project:active {
+  box-shadow: 1px 1px 1px;
   background-color: rgb(220 220 220);
 }
 
@@ -283,6 +276,14 @@ input {
   font-size: 1.7rem;
 } */
 
+textarea {
+  font-family: 'Roboto', sans-serif;
+  border: none;
+  padding: 4px;
+  font-size: 1.7rem;
+  border-radius: 5px;
+}
+
 label[for = task-urgent-input] {
   display: flex;
   align-items: center;
@@ -310,6 +311,78 @@ h1 {
   margin: 2rem;
 }
 
+
+/* Task list */
+main > ul {
+  width: 70%;
+}
+/* Task item */
+main > ul > li {
+  border: solid 2px rgb(30 36 99);
+  border-radius: 5px;
+  margin: 1rem;
+  padding: 1rem;
+}
+main > ul > li:hover {
+background-color: white;
+}
+
+/* Task wrapper */
+main li > div {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+/* Task header */
+main li h3 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.task-descr-wrapper {
+  width: 100%;
+}
+.task-edit-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.2rem;
+  min-width: fit-content;
+}
+.task-due-date {
+  border: solid 1px;
+  border-radius: 5px;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.urgent-icon {
+  font-variation-settings:
+  'FILL' 0;
+}
+.urgent-icon, 
+.edit-icon {
+  font-size: 3rem;
+  padding: 0.1rem;
+}
+.urgent-icon,
+.edit-icon {
+  border-radius: 50%;
+}
+.urgent-icon:hover,
+.edit-icon:hover {
+  background-color: rgba(220 220 220 / 0.5);
+}
+.urgent-icon:active,
+.edit-icon:active {
+  background-color: rgba(220 220 220 / 1);
+} 
+.urgent {
+  font-variation-settings:
+  'FILL' 1;
+}
+
+
+/* Add Task form */
 main form {
   /* display: flex;
   flex-direction: column;
@@ -326,13 +399,14 @@ main form {
   background-color: rgba(30 36 99);
   border-radius: 5px;
   padding: 1.2rem;
-  margin-top: 2rem;
+  margin: 2rem 0;
   /* align-items: center;
   align-self: center; */
 }
 /* #add-task {
   margin: 20px 0;
 } */
+
 
 button.task {
   /* align-self: center; */
@@ -342,7 +416,7 @@ button.task {
   padding: 0.4rem;
   background-color: rgba(229 229 229 / 0.5);
   width: 16rem;
-  margin-top: 2rem;
+  margin: 2rem;
 }
 
 main form div {
@@ -362,21 +436,22 @@ main form button.task:active {
   background-color: rgb(220 220 220);
 } */
 
+/* Add task icon for "Add Task" button */
 button.task > span {
   font-size: 2.5rem;
   color: rgb(133 184 250);
 }
 
-.task-item {
+/* .task-item {
   border: solid 2px blue;
   margin: 10px;
   padding: 10px;
-}
-.task-wrapper {
+} */
+/* .task-wrapper {
   display: flex;
   gap: 10px;
   align-items: center;
-}
+} */
 
 
 footer {
