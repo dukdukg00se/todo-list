@@ -138,6 +138,81 @@ const updateTasks = (e) => {
 
 
 // Content creators
+const createTaskForm = () => {
+  const form = document.createElement("form");
+
+  // const nameLabel = doument.createElement('label');
+
+  const [
+    nameLabel,
+    detailsLabel,
+    dateLabel,
+    urgentLabel
+  ] = doument.createElement("label");
+
+  [
+    nameLabel.htmlFor,
+    nameLabel.textContent,
+    detailsLabel.htmlFor,
+    detailsLabel.textContent,
+    dateLabel.htmlFor,
+    dateLabel.textContent,
+    urgentLabel.htmlFor,
+    urgentLabel.textContent
+  ] = [
+    "name-input",
+    "Task name:",
+    "details-input",
+    "Details:",
+    "date-input",
+    "Date due:",
+    "urgent-input",
+    "Important:"
+  ];
+
+  const [
+    nameInput,
+    dateInput,
+    urgentInput
+  ] = document.createElement("input");
+  const detailsInput = document.createElement('textarea');
+
+  [
+    nameInput.id, 
+    nameInput.type,
+    nameInput.placeholder,
+    detailsInput.id, 
+    detailsInput.rows,
+    detailsInput.cols,
+    detailsInput.wrap,
+    detailsInput.placeholder,
+    dateInput.id, 
+    dateInput.type,
+    urgentInput.id,
+    urgentInput.type
+  ] = [
+    "name-input",
+    "text",
+    "buy groceries",
+    "details-input",
+    "5",
+    '30',
+    'hard',
+    'Carrots, milk, bread',
+    "date-input",
+    "Date",
+    "urgent-input",
+    "checkbox"
+  ]
+
+  form.append(nameLabel, nameInput, detailsLabel, detailsInput, dateLabel, dateInput, urgentLabel, urgentInput);
+
+  return form
+
+  // nameLabel.htmlFor =
+};
+
+
 const createProjectContent = (projObj) => {
   const projectListItem = document.createElement('li');
   projectListItem.classList.add('project-item');
@@ -226,6 +301,12 @@ const createTaskContent = (taskObj) => {
   if (taskObj.urgent) {
     taskUrgentIcon.classList.add('urgent');
   }
+
+
+
+
+
+
   taskUrgentIcon.addEventListener('click', () => {
 
     if (taskObj.urgent) {
@@ -241,7 +322,10 @@ const createTaskContent = (taskObj) => {
   const editIcon = document.createElement('span');
   editIcon.classList.add('material-symbols-rounded', 'edit-icon');
   editIcon.textContent = 'more_vert';
-  
+  editIcon.addEventListener('click', () => {
+
+  })
+
 
 
   taskName.textContent = taskObj.name;
