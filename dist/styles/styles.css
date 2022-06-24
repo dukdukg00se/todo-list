@@ -315,6 +315,7 @@ h1 {
 /* Task list */
 main > ul {
   width: 70%;
+  margin-bottom: 2rem;
 }
 /* Task item */
 main > ul > li {
@@ -416,7 +417,7 @@ button.task {
   padding: 0.4rem;
   background-color: rgba(229 229 229 / 0.5);
   width: 16rem;
-  margin: 2rem;
+  margin: 0 2rem 2rem;
 }
 
 main form div {
