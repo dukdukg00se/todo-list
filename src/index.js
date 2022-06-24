@@ -148,7 +148,12 @@ const createTaskForm = () => {
     detailsLabel,
     dateLabel,
     urgentLabel
-  ] = doument.createElement("label");
+  ] = [
+    document.createElement("label"),
+    document.createElement("label"),
+    document.createElement("label"),
+    document.createElement("label")
+  ];
 
   [
     nameLabel.htmlFor,
@@ -171,22 +176,26 @@ const createTaskForm = () => {
   ];
 
   const [
-    nameInput,
-    dateInput,
+    nameInput, 
+    dateInput, 
     urgentInput
-  ] = document.createElement("input");
-  const detailsInput = document.createElement('textarea');
+  ] = [
+    document.createElement("input"),
+    document.createElement("input"),
+    document.createElement("input")
+  ];
+  const detailsInput = document.createElement("textarea");
 
   [
-    nameInput.id, 
+    nameInput.id,
     nameInput.type,
     nameInput.placeholder,
-    detailsInput.id, 
+    detailsInput.id,
     detailsInput.rows,
     detailsInput.cols,
     detailsInput.wrap,
     detailsInput.placeholder,
-    dateInput.id, 
+    dateInput.id,
     dateInput.type,
     urgentInput.id,
     urgentInput.type
@@ -196,18 +205,27 @@ const createTaskForm = () => {
     "buy groceries",
     "details-input",
     "5",
-    '30',
-    'hard',
-    'Carrots, milk, bread',
+    "30",
+    "hard",
+    "Carrots, milk, bread",
     "date-input",
     "Date",
     "urgent-input",
     "checkbox"
-  ]
+  ];
 
-  form.append(nameLabel, nameInput, detailsLabel, detailsInput, dateLabel, dateInput, urgentLabel, urgentInput);
+  form.append(
+    nameLabel,
+    nameInput,
+    detailsLabel,
+    detailsInput,
+    dateLabel,
+    dateInput,
+    urgentLabel,
+    urgentInput
+  );
 
-  return form
+  return form;
 
   // nameLabel.htmlFor =
 };
@@ -216,10 +234,11 @@ const createTaskForm = () => {
 const createProjectContent = (projObj) => {
   const projectListItem = document.createElement('li');
   projectListItem.classList.add('project-item');
+  projectListItem.id = projObj.id;
 
   const projectWrapper = document.createElement('div');
   projectWrapper.classList.add('project-wrapper');
-  projectWrapper.id = projObj.id;
+  // projectWrapper.id = projObj.id;
 
   const projectIcon = document.createElement('span');
   projectIcon.classList.add('material-symbols-rounded', 'icon');
@@ -246,7 +265,9 @@ const createProjectContent = (projObj) => {
   projectDeleteBtn.addEventListener('click', (e) => {
     // updateCurrentProjects(e);
 
-    let projectToDelete = e.target.parentElement.id;
+
+    let projectToDelete = e.target.parentElement.parentElement.id;
+    // let projectToDelete = e.target.parentElement.id;
     removeItem(projectToDelete, currentProjects);
 
     // // Reset project Id's after deleting project
@@ -301,12 +322,6 @@ const createTaskContent = (taskObj) => {
   if (taskObj.urgent) {
     taskUrgentIcon.classList.add('urgent');
   }
-
-
-
-
-
-
   taskUrgentIcon.addEventListener('click', () => {
 
     if (taskObj.urgent) {
@@ -322,7 +337,10 @@ const createTaskContent = (taskObj) => {
   const editIcon = document.createElement('span');
   editIcon.classList.add('material-symbols-rounded', 'edit-icon');
   editIcon.textContent = 'more_vert';
-  editIcon.addEventListener('click', () => {
+  editIcon.dataset.task = taskObj.id;
+  editIcon.addEventListener('click', (e) => {
+    console.log(e.target.dataset.task)
+
 
   })
 
@@ -619,31 +637,63 @@ const addButtonListeners = () => {
 }
 
 const addProjectListeners = () => {
-  const projects = document.querySelectorAll('.project-wrapper h3');
+  const projects = document.querySelectorAll('.project-item');
   projects.forEach(proj => {
     proj.addEventListener('click', (e) => {
-      // console.log('test');
+      if (e.target.nodeName !== 'BUTTON') {
 
-      let projectToDisplay = e.target.parentElement.id;
-      // console.log(projectToDisplay);
-      currentProjects.forEach(proj => {
-        if (proj.id === projectToDisplay) {
-          // mainPanel.classList.add('project');
-          // mainPanel.classList.remove('view');
-          mainPanel.dataset.shownTasks = 'project';
-          mainHeader.textContent = proj.name;
-
-          // console.log(proj.id)
-          taskSubmitButton.dataset.submitTaskTo = proj.id;
-
-          display(proj.tasks, false);
-          hideForm(taskForm, addTaskButton);
-          addTaskButton.classList.remove('hidden');
-        }
-      })
+        let projectToDisplay = e.currentTarget.id;
+        currentProjects.forEach(proj => {
+          if (proj.id === projectToDisplay) {
+            mainPanel.dataset.shownTasks = 'project';
+            mainHeader.textContent = proj.name;
+            taskSubmitButton.dataset.submitTaskTo = proj.id;
+  
+            display(proj.tasks, false);
+            hideForm(taskForm, addTaskButton);
+            addTaskButton.classList.remove('hidden');
+          }
+        })
+      }
     })
   })
 }
+
+// const addProjectListeners = () => {
+//   // const projects = document.querySelectorAll('.project-wrapper h3');
+//   const projects = document.querySelectorAll('.project-item');
+//   projects.forEach(proj => {
+//     proj.addEventListener('click', (e) => {
+
+//       // e.stopPropagation;
+//       // console.log(e);
+//       console.log(e.target.nodeName)
+//       console.log(e.currentTarget.id);
+      
+
+//       // let projectToDisplay = e.target.parentElement.id;
+
+//       let projectToDisplay = e.target.id;
+
+//       // console.log(projectToDisplay);
+//       currentProjects.forEach(proj => {
+//         if (proj.id === projectToDisplay) {
+//           // mainPanel.classList.add('project');
+//           // mainPanel.classList.remove('view');
+//           mainPanel.dataset.shownTasks = 'project';
+//           mainHeader.textContent = proj.name;
+
+//           // console.log(proj.id)
+//           taskSubmitButton.dataset.submitTaskTo = proj.id;
+
+//           display(proj.tasks, false);
+//           hideForm(taskForm, addTaskButton);
+//           addTaskButton.classList.remove('hidden');
+//         }
+//       })
+//     })
+//   })
+// }
 
 
 display(currentProjects);
