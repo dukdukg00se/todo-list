@@ -35,20 +35,7 @@ const projectsDataController = (() => {
   const createProject = (name) => {
 
     // Add example task for testing
-    const tasks = [
-      {
-        name: 'Shop',
-        details: 'Carrots, milk, bread',
-        due: '10-11-2022',
-        urgent: false
-      },
-      {
-        name: 'work',
-        details: 'paper',
-        due: '10-11-2022',
-        urgent: false
-      }
-    ];
+    const tasks = [];
 
     return { name, tasks };
   };
