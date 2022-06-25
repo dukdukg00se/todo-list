@@ -259,10 +259,10 @@ const createProjectContent = (projObj) => {
   // const editMenu = document.createElement('div');
   // editMenu.classList.add('hidden');
 
-  const projectDeleteBtn = document.createElement('button');
-  projectDeleteBtn.classList.add('material-symbols-rounded', 'delete');
-  projectDeleteBtn.textContent = 'close';
-  projectDeleteBtn.addEventListener('click', (e) => {
+  const deleteProjectIcon = document.createElement('span');
+  deleteProjectIcon.classList.add('material-symbols-rounded', 'delete-icon');
+  deleteProjectIcon.textContent = 'delete';
+  deleteProjectIcon.addEventListener('click', (e) => {
     // updateCurrentProjects(e);
 
 
@@ -283,12 +283,9 @@ const createProjectContent = (projObj) => {
     addProjectListeners();
   })
 
-
-
-
   // editWrapper.append(editIcon, editMenu);
   
-  projectWrapper.append(projectIcon, projectTitle, projectDeleteBtn);
+  projectWrapper.append(projectIcon, projectTitle, deleteProjectIcon);
   projectListItem.append(projectWrapper);
   return projectListItem;
 };
@@ -501,12 +498,17 @@ const display = (list, isProject = true) => {
 // Listeners
 const addButtonListeners = () => {
   const applicationButtons = document.querySelectorAll('button');
+
   // console.log(applicationButtons);
+
   applicationButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
-      // Buttons in the projects panel
-      if (e.target.classList.contains('project')) {
 
+
+
+
+      // Buttons in the projects panel
+      if (e.target.classList.contains('project-button')) {
         if (e.target.id === 'add-project') {
           showForm(projectForm, projectNameInput, addProjectButton);
         }
@@ -526,9 +528,10 @@ const addButtonListeners = () => {
         }
       }
 
-      if (e.target.classList.contains('task')) {
+      if (e.currentTarget.classList.contains('task-button')) {
 
-        if (e.target.id === 'add-task') {
+
+        if (e.currentTarget.id === 'add-task') {
           showForm(taskForm, taskNameInput, addTaskButton);
         }
 
@@ -636,64 +639,30 @@ const addButtonListeners = () => {
   })
 }
 
+
+
+
+
 const addProjectListeners = () => {
   const projects = document.querySelectorAll('.project-item');
   projects.forEach(proj => {
     proj.addEventListener('click', (e) => {
-      if (e.target.nodeName !== 'BUTTON') {
+      let projectToDisplay = e.currentTarget.id;
+      currentProjects.forEach(proj => {
+        if (proj.id === projectToDisplay) {
+          mainPanel.dataset.shownTasks = 'project';
+          mainHeader.textContent = proj.name;
+          taskSubmitButton.dataset.submitTaskTo = proj.id;
 
-        let projectToDisplay = e.currentTarget.id;
-        currentProjects.forEach(proj => {
-          if (proj.id === projectToDisplay) {
-            mainPanel.dataset.shownTasks = 'project';
-            mainHeader.textContent = proj.name;
-            taskSubmitButton.dataset.submitTaskTo = proj.id;
-  
-            display(proj.tasks, false);
-            hideForm(taskForm, addTaskButton);
-            addTaskButton.classList.remove('hidden');
-          }
-        })
-      }
+          display(proj.tasks, false);
+          hideForm(taskForm, addTaskButton);
+          // addTaskButton.classList.remove('hidden');
+        }
+      })
     })
   })
 }
 
-// const addProjectListeners = () => {
-//   // const projects = document.querySelectorAll('.project-wrapper h3');
-//   const projects = document.querySelectorAll('.project-item');
-//   projects.forEach(proj => {
-//     proj.addEventListener('click', (e) => {
-
-//       // e.stopPropagation;
-//       // console.log(e);
-//       console.log(e.target.nodeName)
-//       console.log(e.currentTarget.id);
-      
-
-//       // let projectToDisplay = e.target.parentElement.id;
-
-//       let projectToDisplay = e.target.id;
-
-//       // console.log(projectToDisplay);
-//       currentProjects.forEach(proj => {
-//         if (proj.id === projectToDisplay) {
-//           // mainPanel.classList.add('project');
-//           // mainPanel.classList.remove('view');
-//           mainPanel.dataset.shownTasks = 'project';
-//           mainHeader.textContent = proj.name;
-
-//           // console.log(proj.id)
-//           taskSubmitButton.dataset.submitTaskTo = proj.id;
-
-//           display(proj.tasks, false);
-//           hideForm(taskForm, addTaskButton);
-//           addTaskButton.classList.remove('hidden');
-//         }
-//       })
-//     })
-//   })
-// }
 
 
 display(currentProjects);
@@ -701,3 +670,9 @@ addButtonListeners();
 addProjectListeners();
 
 
+const test = document.querySelectorAll('li');
+test.forEach(list => {
+  list.addEventListener('click', (e) => {
+    // console.log(e.currentTarget);
+  })
+})
