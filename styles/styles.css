@@ -5,26 +5,18 @@
 html, body {
   height: 100%;
 }
-
 html {
   /* Set base font size equivalent to 10px for easy rem calculations */
   /* Use percentages for accessibility */
   font-size: 62.5%;
 }
-
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 1.7rem;
   color: rgb(30 36 99);
   display: flex;
   flex-direction: column;
-  background-color: rgba(229 229 229 / 0.5);
-}
-
-/* Page buttons, list items (projects, tasks) */
-ul li:hover,
-button:hover {
-  cursor: pointer;
+  background-color: rgb(243 243 243);
 }
 
 /* For google icons */
@@ -36,9 +28,50 @@ button:hover {
   'opsz' 48
 }
 
-/*  */
-/* Header content styles*/
-/*  */
+/* Icons next to list items, logo, buttons */
+.decor-icon {
+  font-size: 3.3rem;
+}
+
+button {
+  font-family: 'Roboto', sans-serif; 
+  font-size: 1.7rem;
+  color:rgb(30 36 99);
+  padding: 0.4rem;
+  border-radius: 5px;
+  border: solid 2px;
+}
+button:hover {
+  background-color: rgb(230 230 220);
+  cursor: pointer;
+}
+button:active {
+  box-shadow: 1px 1px 1px;
+  background-color: rgb(220 220 220);
+}
+button .decor-icon {
+  font-size: 2.5rem;
+}
+
+/* Task-view, projects, tasks lists */
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+li {
+  border-radius: 5px;;
+}
+li:hover {
+  cursor: pointer;
+}
+
+/* Used to hide target element */
+.hidden {
+  display: none;
+}
+
+
 header {
   display: flex;
   justify-content: space-between;
@@ -46,61 +79,57 @@ header {
   border-bottom: solid 3px rgb(30 36 99);
   padding: 1.5rem 3rem;
 }
-
-/* Logo */
+/* Page logo */
 header h2 {
   font-size: 6rem;
   font-weight: 700;
   letter-spacing: 2px;
 }
-header h2 .icon {
-  display: inline-block;
+/* Add task logo icon */
+/* .decor-icon overrides .material-symbols-rounded  */
+header .decor-icon {
   vertical-align: bottom;
   position: relative;
   top: 1px;
   font-size: 6rem;
   color: rgb(133 184 250);
 }
-
 /* header action icons */
-header div .icon {
+.menu-icon, 
+.theme-icon {
   font-size: 3.5rem;
   padding: 0.5rem;
   border-radius: 50%;
 }
-header div .icon:hover {
+.menu-icon:hover, 
+.theme-icon:hover {
   cursor: pointer;
   background-color: rgb(230 230 230);
 }
-header div .icon:active {
+.menu-icon:active, 
+.theme-icon:active {
   background-color: rgb(220 220 220);
 }
-
-/* #mode-icon-wrapper .icon {
-  font-variation-settings:
-  'FILL' 1;
-} */
-
+/* Icon tooltip text */
 .tooltip-text {
-  /* visibility: hidden; */
   position: absolute;
   z-index: 10;
   top: 7.7rem;
-  padding: 5px 10px;
+  padding: 0.5rem 1rem;
   border-radius: 15px;
   background-color: rgb(30 36 99);
   color: white;
   opacity: 0;
   transition: opacity .4s;
 }
-.icon:hover + .tooltip-text {
-  /* visibility: visible; */
+.menu-icon:hover + .tooltip-text,
+.theme-icon:hover + .tooltip-text {
   opacity: 1;
 }
 #menu-icon-wrapper .tooltip-text {
   left: 1rem;
 }
-#mode-icon-wrapper .tooltip-text {
+#theme-icon-wrapper .tooltip-text {
   right: 1rem;
 }
 
@@ -110,160 +139,93 @@ header div .icon:active {
   display: flex;
   flex: 1;
 }
-/*  */
-/* Nav panel content styles */
-/*  */
+
 nav {
   border-right: solid 1px rgb(30 36 99);
   background-color: white;
-  /* width: 30%; */
   flex: 1;
   min-width: 21rem;
 }
-
-/* Nav panel headers */
-nav > section > h2 {
+/* Nav sub-containers, main */
+main,
+nav section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+/* Nav sub-container headers */
+nav section h2 {
   font-size: 2.2rem;
   font-weight: 700;
 }
-
-
-main button, 
-nav > section button {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.7rem;
-  color:rgb(30 36 99);
-  padding: 0.4rem 0.7rem;
-  background-color: white;
-  border: none;
-  border-radius: 5px;
-}
-nav > section li > div:hover,
-nav > section button:hover {
-  background-color: rgba(194 219 251 / 0.5);
-}
-nav > section li > div:active,
-nav > section button:active {
-  background-color: rgb(194 219 251);
-}
-
-nav > section .icon {
-  font-size: 3.3rem;
-  /* font-variation-settings:
-  'FILL' 1; */
-}
-
-.highlight {
-  background-color: rgb(194 219 251);
-  box-shadow: 0 0 0 2px rgba(30 36 99);
-}
-
-
-/* Combine both panels */
-#tasks-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 2rem;
+/* tasks-panel */
+nav section:first-child {
   border-bottom: solid 1px rgb(30 36 99);
 }
-#projects-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 2rem;
+/* View, project items */
+nav li:hover {
+  background-color: rgba(194 219 251 / 0.5);
 }
-/* Combine both panels */
-
-
-nav > section ul {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 0.4rem 0.7rem;
-  border-radius: 5px;
-  /* font-family: 'Roboto', sans-serif;
-  font-size: 1.7rem;
-  color:rgb(30 36 99);
-  align-items: center;
-  background-color: white;
-  border: none; */
+nav li:active {
+  background-color: rgb(194 219 251);
 }
-
-nav > section li > div {
+/* Item content */
+/* View, projects, tasks items*/
+nav li > div,
+main li > div {
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 0.4rem 0.7rem;
-  border-radius: 5px;
 }
-
+/* Project titles */
 h3 {
   width: 100%;
 }
 
-button.delete {
-  border-radius: 50%;
-  padding: 0.4rem;
-}
-
-button.project {
-  align-self: center;
-  gap: 0.3rem;
+/* Use to show selected option in nav */
+.highlight {
+  background-color: rgb(194 219 251);
   border: solid 2px;
-  justify-content: center;
-  padding: 0.4rem;
-  background-color: rgba(229 229 229 / 0.5);
-  width: 16rem;
-  /* margin-top: 1rem; */
 }
 
-button.task:hover,
-button.delete:hover,
-button.project:hover {
-  background-color: rgb(230 230 220);
-
-}
-button.task:active,
-button.delete:active,
-button.project:active {
-  box-shadow: 1px 1px 1px;
-  background-color: rgb(220 220 220);
-}
-
-
-nav form {
+/* Add proj, add task button */
+nav section > button,
+main > button {
   align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+  width: 16rem;
+}
+
+/* Add project, task forms */
+form {
+  color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  gap: 1rem;
   background-color: rgba(30 36 99);
   border-radius: 5px;
   padding: 1.2rem;
-  gap: 1rem;
-  /* width: 17rem; */
-  /* min-width: 211px; */
 }
-nav form div {
+/* Form button container (Submit, Cancel) */
+form div {
   display: flex;
   gap: 1rem;
-  width: min-content;
 }
-nav form button.project {
-  background-color: white;
+form button {
   width: 7rem;
 }
-nav form button.project:hover {
-  background-color: rgb(230 230 220);
+/* Add project form */
+nav form {
+  align-self: center;
+  align-items: center;
 }
-nav form button.project:active {
-  background-color: rgb(220 220 220);
-}
-
+/* Input boxes */
 input {
   border: none;
   padding: 1px 4px;
@@ -272,10 +234,7 @@ input {
   font-size: 1.7rem;
   border-radius: 5px;
 }
-/* input::placeholder {
-  font-size: 1.7rem;
-} */
-
+/* Details input box */
 textarea {
   font-family: 'Roboto', sans-serif;
   border: none;
@@ -283,8 +242,8 @@ textarea {
   font-size: 1.7rem;
   border-radius: 5px;
 }
-
-label[for = task-urgent-input] {
+/* Important container */
+label[for = task-important-input] {
   display: flex;
   align-items: center;
   margin-top: 1rem;
@@ -294,55 +253,38 @@ input[type = "checkbox"] {
   width: 20%;
 }
 
-
-/*  */
-/* Main panel content styles */
-/*  */
 main {
   flex: 3;
-  display: flex;
-  flex-direction: column;
   align-items: center;
 }
-
+/* Main header */
 h1 {
   font-size: 5rem;
   font-weight: 700;
-  margin: 2rem;
 }
-
-
 /* Task list */
-main > ul {
+main ul {
   width: 70%;
-  margin-bottom: 2rem;
+  min-width: fit-content;
 }
-/* Task item */
-main > ul > li {
+/* Task items */
+main li {
   border: solid 2px rgb(30 36 99);
-  border-radius: 5px;
-  margin: 1rem;
   padding: 1rem;
 }
-main > ul > li:hover {
+main li:hover {
 background-color: white;
-}
-
-/* Task wrapper */
-main li > div {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
 }
 /* Task header */
 main li h3 {
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
-
+/* Wrapper for task name, details */
 .task-descr-wrapper {
   width: 100%;
 }
+/* Wrapper for task due date, flag, edit icons */
 .task-edit-wrapper {
   display: flex;
   justify-content: space-between;
@@ -356,103 +298,49 @@ main li h3 {
   margin-right: 0.5rem;
 }
 
-.urgent-icon {
+/* Page actionable icons */
+.delete-icon,
+.important-icon, 
+.edit-icon {
+  font-size: 3rem;
+  border-radius: 50%;
+}
+.delete-icon:hover,
+.important-icon:hover,
+.edit-icon:hover {
+  background-color: rgb(230 230 230);
+}
+.delete-icon:active,
+.important-icon:active,
+.edit-icon:active {
+  background-color: rgb(220 220 220);
+} 
+.important-icon, 
+.edit-icon {
+  padding: 0.1rem;
+}
+.delete-icon {
+  background-color: white;
+  padding: 0.4rem;
+}
+.important-icon {
   font-variation-settings:
   'FILL' 0;
 }
-.urgent-icon, 
-.edit-icon {
-  font-size: 3rem;
-  padding: 0.1rem;
-}
-.urgent-icon,
-.edit-icon {
-  border-radius: 50%;
-}
-.urgent-icon:hover,
-.edit-icon:hover {
-  background-color: rgba(220 220 220 / 0.5);
-}
-.urgent-icon:active,
-.edit-icon:active {
-  background-color: rgba(220 220 220 / 1);
-} 
-.urgent {
+/* Fill to indicate important task*/
+.important {
   font-variation-settings:
   'FILL' 1;
 }
 
-
-/* Add Task form */
-main form {
-  /* display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border: solid 2px green;
-  padding: 10px;
-  width: 50%; */
-
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1rem;
-  background-color: rgba(30 36 99);
-  border-radius: 5px;
-  padding: 1.2rem;
-  margin: 2rem 0;
-  /* align-items: center;
-  align-self: center; */
-}
-/* #add-task {
-  margin: 20px 0;
-} */
-
-
-button.task {
-  /* align-self: center; */
-  gap: 0.3rem;
-  border: solid 2px;
-  justify-content: center;
-  padding: 0.4rem;
-  background-color: rgba(229 229 229 / 0.5);
-  width: 16rem;
-  margin: 0 2rem 2rem;
-}
-
+/* Add task form buttons container (Submit, Cancel) */
 main form div {
-  display: flex;
-  gap: 1rem;
   justify-content: center;
 }
-main form button.task {
-  background-color: white;
-  width: 7rem;
-  margin: 0;
-}
-/* main form button.task:hover {
-  background-color: rgb(230 230 220);
-}
-main form button.task:active {
-  background-color: rgb(220 220 220);
-} */
-
-/* Add task icon for "Add Task" button */
-button.task > span {
-  font-size: 2.5rem;
+/* Add task icon for Add Task button */
+main > button > span {
   color: rgb(133 184 250);
 }
-
-/* .task-item {
-  border: solid 2px blue;
-  margin: 10px;
-  padding: 10px;
-} */
-/* .task-wrapper {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-} */
 
 
 footer {
@@ -462,18 +350,5 @@ footer {
 }
 
 
-/* .delete {
-  width: 50px;
-  height: 25px;
-} */
 
-.hidden {
-  display: none !important;
-}
-
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
 
