@@ -22,16 +22,16 @@
 
   <header>
     <div id="menu-icon-wrapper">
-      <span class="material-symbols-rounded icon">
+      <span class="material-symbols-rounded menu-icon">
         menu_open
       </span>
       <span class="tooltip-text">Collapse menu</span>
     </div>
   
-    <h2><span class="material-symbols-rounded icon">add_task</span>ToDo</h2>
+    <h2><span class="material-symbols-rounded decor-icon">add_task</span>ToDo</h2>
   
-    <div id="mode-icon-wrapper">
-      <span class="material-symbols-rounded icon">
+    <div id="theme-icon-wrapper">
+      <span class="material-symbols-rounded theme-icon">
         brightness_4
       </span>
       <span class="tooltip-text">Dark theme</span>
@@ -44,45 +44,78 @@
       <section id="tasks-panel">
         <h2>Tasks</h2>
 
-        <button class="view highlight" id="all" type="button">
-          <span class="material-symbols-rounded icon">
-            inbox
-          </span>
-          All
-        </button>
-        <button class="view" id="today" type="button">
-          <span class="material-symbols-rounded icon">
-            today
-          </span>
-          Today
-        </button>
-        <button class="view" id="week" type="button">
-          <span class="material-symbols-rounded icon">
-            date_range
-          </span>
-          Next 7 Days
-        </button>
-        <button class="view" id="important" type="button">
-          <span class="material-symbols-rounded icon">
-            flag
-          </span>
-          Important
-        </button>
+        <ul id="task-view-options">
+          <li class="view-item highlight" id="all">
+            <div>
+              <span class="material-symbols-rounded decor-icon">
+                inbox
+              </span>
+              All
+            </div>
+          </li>
+          <li class="view-item" id="today">
+            <div>
+              <span class="material-symbols-rounded decor-icon">
+                today
+              </span>
+              Today
+            </div>
+          </li>
+          <li class="view-item" id="week">
+            <div>
+              <span class="material-symbols-rounded decor-icon">
+                date_range
+              </span>
+              Next 7 Days
+            </div>
+          </li>
+          <li class="view-item" id="important">
+            <div>
+              <span class="material-symbols-rounded decor-icon">
+                flag
+              </span>
+              Important
+            </div>
+          </li>
+        </ul>
+
       </section>
 
       <section id="projects-panel">
         <h2>Projects</h2>
+
+
+        <!-- <ul id="projects-list">
+
+          <li class="project-item" id="project-0">
+            <div class="project-wrapper">
+              <span class="material-symbols-rounded decor-icon">tools_power_drill</span>
+              <h3>Work</h3>
+              <span class="material-symbols-rounded delete-icon">delete</span>
+            </div>
+          </li>
+
+          <li class="project-item" id="project-1">
+            <div class="project-wrapper">
+              <span class="material-symbols-rounded decor-icon">tools_power_drill</span>
+              <h3>Play</h3>
+              <span class="material-symbols-rounded delete-icon">delete</span>
+            </div>
+          </li>
+
+        </ul> -->
         
+
         <form class="form hidden">
           <input id="project-name-input" type="text" placeholder="Project name">
     
           <div>
-            <button class="project add" id="submit-project" type="button">Submit</button>
-            <button class="project add" id="cancel-project" type="button">Cancel</button>
+            <button class="project-button" id="submit-project" type="button">Submit</button>
+            <button class="project-button" id="cancel-project" type="button">Cancel</button>
           </div>
         </form>
     
-        <button class="project add" id="add-project" type="button"><span class="material-symbols-rounded">add</span>Add Project</button>
+        <button class="project-button" id="add-project" type="button"><span class="material-symbols-rounded .decor-icon">add</span>Add Project</button>
       </section>
     </nav>
 
@@ -90,26 +123,27 @@
     <main>
       <h1>All Tasks</h1>
 
+
+
       <form class="hidden" id="task-form">
         <label for="task-name-input">Task name:</label>
         <input id="task-name-input" type="text" placeholder="Buy groceries">
 
         <label for="task-details-input">Details:</label>
-        <textarea id="task-details-input" rows="5" cols="30" wrap="hard" placeholder="Carrots, milk, bread"></textarea>
+        <textarea id="task-details-input" rows="4" cols="30" wrap="hard" placeholder="Carrots, milk, bread"></textarea>
 
         <label for="task-date-input">Date due:</label>
         <input id="task-date-input" type="date">
 
-        <label for="task-urgent-input">Important:<input id="task-urgent-input" type="checkbox"></label>
+        <label for="task-important-input">Important:<input id="task-important-input" type="checkbox"></label>
         
-
         <div>
-          <button class="task add" id="submit-task" type="button">Submit</button>
-          <button class="task add" id="cancel-task" type="button">Cancel</button>
+          <button class="task-button" id="submit-task" type="button">Submit</button>
+          <button class="task-button" id="cancel-task" type="button">Cancel</button>
         </div>
       </form>
       
-      <button class="task hidden" id="add-task" type="button"><span class="material-symbols-rounded">add_task</span>Add Task</button>
+      <button class="task-button hidden" id="add-task" type="button"><span class="material-symbols-rounded decor-icon">add_task</span>Add Task</button>
     </main>
   </div>
 
