@@ -105,7 +105,25 @@
 
       <div id="tasks-list-container"></div>
       
-      <div id="task-form-container"></div>
+      <!-- <div id="task-form-container"></div> -->
+
+      <form class="" id="task-form">
+        <label for="task-name-input">Task name:</label>
+        <input id="task-name-input" type="text" placeholder="Buy groceries">
+
+        <label for="task-details-input">Details:</label>
+        <textarea id="task-details-input" rows="4" cols="30" wrap="hard" placeholder="Carrots, milk, bread"></textarea>
+
+        <label for="task-date-input">Date due:</label>
+        <input id="task-date-input" type="date">
+
+        <label for="task-important-input">Important:<input id="task-important-input" type="checkbox"></label>
+        
+        <div>
+          <button class="task-button" id="submit-task" type="button">Submit</button>
+          <button class="task-button" id="cancel-task" type="button">Cancel</button>
+        </div>
+      </form>
 
       <button class="task-button hidden" id="add-task" type="button"><span class="material-symbols-rounded decor-icon">add_task</span>Add Task</button>
     </main>
