@@ -270,10 +270,10 @@ main > h1 + div {
   width: 70%;
 }
 /* Task list */
-main ul {
+/* main ul {
   width: 70%;
   min-width: fit-content;
-}
+} */
 /* Task items */
 main li {
   border: solid 2px rgb(30 36 99);
