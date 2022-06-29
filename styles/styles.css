@@ -68,7 +68,7 @@ li:hover {
 
 /* Used to hide target element */
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 
@@ -135,7 +135,7 @@ header .decor-icon {
 
 
 /* Container holding nav and main panel */
-#content-wrapper {
+#content-container {
   display: flex;
   flex: 1;
 }
@@ -218,7 +218,8 @@ form div {
   gap: 1rem;
 }
 form button {
-  width: 7rem;
+  width: 30%;
+  min-width: 7rem;
 }
 /* Add project form */
 nav form {
@@ -245,11 +246,13 @@ textarea {
 /* Important container */
 label[for = task-important-input] {
   display: flex;
+  justify-content: space-evenly;
   align-items: center;
   margin-top: 1rem;
+  width: 50%;
 }
 input[type = "checkbox"] {
-  height: 2.1rem;
+  height: 2.4rem;
   width: 20%;
 }
 
@@ -261,6 +264,10 @@ main {
 h1 {
   font-size: 5rem;
   font-weight: 700;
+}
+/* Task list container */
+main > h1 + div {
+  width: 70%;
 }
 /* Task list */
 main ul {
@@ -283,6 +290,7 @@ main li h3 {
 /* Wrapper for task name, details */
 .task-descr-wrapper {
   width: 100%;
+  word-break: break-all;
 }
 /* Wrapper for task due date, flag, edit icons */
 .task-edit-wrapper {
@@ -333,9 +341,23 @@ main li h3 {
   'FILL' 1;
 }
 
-/* Add task form buttons container (Submit, Cancel) */
-main form div {
+/* Task form sub-container, buttons container */
+main form > div {
   justify-content: center;
+}
+/* Wrapper holding delete text and icon */
+.delete-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 1rem;
+  width: 50%;
+}
+/* Task form delete icon */
+.delete-wrapper .delete-icon {
+  color: rgb(30 36 99);
+  font-size: 2.7rem;
+
 }
 /* Add task icon for Add Task button */
 main > button > span {
