@@ -13,15 +13,12 @@ const projectNameInput = document.querySelector("#project-name-input");
 const mainPanel = document.querySelector('main');
 const mainHeader = document.querySelector('h1');
 const tasksListContainer = document.querySelector('#tasks-list-container');
-const taskFormContainer = document.querySelector('#task-form-container');
+// const taskFormContainer = document.querySelector('#task-form-container');
 const addTaskButton = document.querySelector('main > button');
-
 // const taskNameInput = document.querySelector('#task-name-input');
 // const taskDetailsInput = document.querySelector('#task-details-input');
 // const taskDateInput = document.querySelector('#task-date-input');
 // const taskImportantInput = document.querySelector('#task-important-input');
-
-const taskSubmitButton = document.querySelector('#submit-task');
 
 
 let currentProjects = !localStorage.length ? [] : JSON.parse(localStorage.getItem("projects"));
