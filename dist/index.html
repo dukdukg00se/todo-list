@@ -39,13 +39,13 @@
   </header>
 
 
-  <div id="content-wrapper">
+  <div id="content-container">
     <nav>
       <section id="tasks-panel">
         <h2>Tasks</h2>
 
-        <ul id="task-view-options">
-          <li class="view-item highlight" id="all">
+        <ul id="task-views-list">
+          <li class="task-view highlight" id="all">
             <div>
               <span class="material-symbols-rounded decor-icon">
                 inbox
@@ -53,7 +53,7 @@
               All
             </div>
           </li>
-          <li class="view-item" id="today">
+          <li class="task-view" id="today">
             <div>
               <span class="material-symbols-rounded decor-icon">
                 today
@@ -61,7 +61,7 @@
               Today
             </div>
           </li>
-          <li class="view-item" id="week">
+          <li class="task-view" id="week">
             <div>
               <span class="material-symbols-rounded decor-icon">
                 date_range
@@ -69,7 +69,7 @@
               Next 7 Days
             </div>
           </li>
-          <li class="view-item" id="important">
+          <li class="task-view" id="important">
             <div>
               <span class="material-symbols-rounded decor-icon">
                 flag
@@ -84,27 +84,7 @@
       <section id="projects-panel">
         <h2>Projects</h2>
 
-
-        <!-- <ul id="projects-list">
-
-          <li class="project-item" id="project-0">
-            <div class="project-wrapper">
-              <span class="material-symbols-rounded decor-icon">tools_power_drill</span>
-              <h3>Work</h3>
-              <span class="material-symbols-rounded delete-icon">delete</span>
-            </div>
-          </li>
-
-          <li class="project-item" id="project-1">
-            <div class="project-wrapper">
-              <span class="material-symbols-rounded decor-icon">tools_power_drill</span>
-              <h3>Play</h3>
-              <span class="material-symbols-rounded delete-icon">delete</span>
-            </div>
-          </li>
-
-        </ul> -->
-        
+        <div id="projects-list-container"></div> 
 
         <form class="form hidden">
           <input id="project-name-input" type="text" placeholder="Project name">
@@ -120,29 +100,13 @@
     </nav>
 
 
-    <main>
+    <main data-shown-tasks="all">
       <h1>All Tasks</h1>
 
-
-
-      <form class="hidden" id="task-form">
-        <label for="task-name-input">Task name:</label>
-        <input id="task-name-input" type="text" placeholder="Buy groceries">
-
-        <label for="task-details-input">Details:</label>
-        <textarea id="task-details-input" rows="4" cols="30" wrap="hard" placeholder="Carrots, milk, bread"></textarea>
-
-        <label for="task-date-input">Date due:</label>
-        <input id="task-date-input" type="date">
-
-        <label for="task-important-input">Important:<input id="task-important-input" type="checkbox"></label>
-        
-        <div>
-          <button class="task-button" id="submit-task" type="button">Submit</button>
-          <button class="task-button" id="cancel-task" type="button">Cancel</button>
-        </div>
-      </form>
+      <div id="tasks-list-container"></div>
       
+      <div id="task-form-container"></div>
+
       <button class="task-button hidden" id="add-task" type="button"><span class="material-symbols-rounded decor-icon">add_task</span>Add Task</button>
     </main>
   </div>
