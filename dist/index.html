@@ -44,7 +44,7 @@
       <section id="tasks-panel">
         <h2>Tasks</h2>
 
-        <ul id="task-views-list">
+        <ul id="view-options-list">
           <li class="task-view highlight" id="all">
             <div>
               <span class="material-symbols-rounded decor-icon">
@@ -100,19 +100,17 @@
     </nav>
 
 
-    <main data-shown-tasks="all">
+    <main data-selected="all">
       <h1>All Tasks</h1>
 
       <div id="tasks-list-container"></div>
-      
-      <!-- <div id="task-form-container"></div> -->
 
-      <form class="" id="task-form">
+      <form class="hidden" id="task-form">
         <label for="task-name-input">Task name:</label>
-        <input id="task-name-input" type="text" placeholder="Buy groceries">
+        <input id="task-name-input" type="text" placeholder="Get Dinner">
 
         <label for="task-details-input">Details:</label>
-        <textarea id="task-details-input" rows="4" cols="30" wrap="hard" placeholder="Carrots, milk, bread"></textarea>
+        <textarea id="task-details-input" rows="4" cols="30" wrap="hard" placeholder="Taco Bell"></textarea>
 
         <label for="task-date-input">Date due:</label>
         <input id="task-date-input" type="date">
