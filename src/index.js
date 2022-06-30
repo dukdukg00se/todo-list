@@ -34,6 +34,8 @@ function Task(name, details, due, important) {
   this.details = details;
   this.due = due;
   this.important = important;
+
+  this.completed = false;
 }
 
 const addItem = (item, container) => {
@@ -96,9 +98,10 @@ const createProjectContent = (projObj) => {
 const createTaskContent = (taskObj) => {
   const taskListItem = document.createElement('li');
   const taskWrapper = document.createElement('div');
+  const checkbox = document.createElement('div');
   const taskDescrWrapper = document.createElement('div');
   const taskName = document.createElement('h3');
-  const taskDetails = document.createElement('p');
+  const taskDetails = document.createElement('p');  
   const taskEditWrapper = document.createElement('div');
   const taskDueDate = document.createElement('span');
   const taskImportantIcon = document.createElement('span');
@@ -107,6 +110,7 @@ const createTaskContent = (taskObj) => {
   taskListItem.classList.add('task-item');
   taskListItem.id = taskObj.id;
   taskWrapper.classList.add('task-wrapper');
+  checkbox.classList.add('checkbox');
   taskDescrWrapper.classList.add('task-descr-wrapper');
   taskName.textContent = taskObj.name;
   taskDetails.textContent = taskObj.details;
@@ -118,6 +122,10 @@ const createTaskContent = (taskObj) => {
   editIcon.textContent = 'more_vert';
   editIcon.dataset.task = taskObj.id;
   
+  if (taskObj.completed) {
+    taskListItem.classList.add('completed');
+    taskDescrWrapper.classList.add('checked');
+  }
   if (taskObj.due) {
     taskDueDate.textContent = taskObj.due;
   } else {
@@ -150,7 +158,7 @@ const createTaskContent = (taskObj) => {
 
   taskEditWrapper.append(taskDueDate, taskImportantIcon, editIcon);
   taskDescrWrapper.append(taskName, taskDetails);
-  taskWrapper.append(taskDescrWrapper, taskEditWrapper);
+  taskWrapper.append(checkbox,  taskDescrWrapper, taskEditWrapper);
   taskListItem.append(taskWrapper);
   
   return taskListItem;
