@@ -165,7 +165,7 @@ const createTaskContent = (taskObj) => {
   return taskListItem;
 }
 
-const createTaskForm = (taskId) => {
+const createEditTaskForm = (task) => {
   const form = document.createElement("form");
   const nameLabel = document.createElement("label");
   const nameInput = document.createElement("input");
@@ -182,6 +182,7 @@ const createTaskForm = (taskId) => {
   const submitBtn = document.createElement("button");
   const cancelBtn = document.createElement("button");
 
+  form.id = 'edit-task-form';
   nameLabel.htmlFor = "edit-name-input";
   nameLabel.textContent = "Task name:";
   nameInput.id = "edit-name-input";
@@ -215,21 +216,10 @@ const createTaskForm = (taskId) => {
   cancelBtn.textContent = "Cancel";
   cancelBtn.type = "button";
 
-
-  let taskToEdit = taskId;
-  if (taskToEdit) {
-    currentProjects.forEach(proj => {
-      proj.tasks.forEach(task => {
-
-        if (task.id == taskToEdit) {
-          nameInput.value = task.name;
-          detailsInput.value = task.details;
-          dateInput.value = task.due;
-          importantInput.checked = task.important;
-        }
-      })
-    })
-  }
+  nameInput.value = task.name;
+  detailsInput.value = task.details;
+  dateInput.value = task.due;
+  importantInput.checked = task.important;
 
   importantLabel.append(importantInput);
   deleteWrapper.append(deleteIcon);
@@ -397,6 +387,7 @@ const addTasksListListener = () => {
     tasksList.addEventListener('click', (e) => {
       let selection = e.target.closest('li').id;
       let listItem = e.target.closest('li');
+      let wrapper = listItem.querySelector('.task-wrapper');
       let description = listItem.querySelector('.task-descr-wrapper');
       let checkbox = listItem.querySelector('.checkbox');
 
@@ -433,7 +424,9 @@ const addTasksListListener = () => {
 
             } else if (e.target.classList.contains('edit-icon')) {
 
+              listItem.append(createEditTaskForm(task));
 
+              wrapper.classList.toggle('hidden');
 
 
             }
