@@ -268,11 +268,7 @@ h1 {
 main > h1 + div {
   width: 70%;
 }
-/* Task list */
-/* main ul {
-  width: 70%;
-  min-width: fit-content;
-} */
+
 /* Task items */
 main li {
   border: solid 2px rgb(30 36 99);
@@ -363,7 +359,7 @@ main form > div {
   margin-top: 1rem;
   width: 50%;
 }
-/* Task form delete icon */
+/* Edit task form delete icon */
 .delete-wrapper .delete-icon {
   color: rgb(30 36 99);
   font-size: 2.7rem;
@@ -384,7 +380,7 @@ footer {
 
 
 
-/* Test */
+/* Task completed checkbox */
 .checkbox {
   align-self: flex-start;
   height: 2rem;
@@ -399,11 +395,7 @@ footer {
 .checkbox:active {
   background-color: rgb(220 220 220);
 }
-
-
-.checked {
-  text-decoration: line-through;
-}
+/* Adds check mark to checkbox */
 .checked::before {
   content: '';
   position: absolute;
@@ -416,9 +408,17 @@ footer {
   height: 12px;
   width: 5px;
 }
-
+/* Shade completed task items */
 .completed {
-  background-color:rgb(145 145 145);
+  background-color: rgb(145 145 145);
 }
+.completed:hover {
+  background-color: rgb(145 145 145);
+}
+/* Cross out task header and details */
+.crossed {
+  text-decoration: line-through;
+}
+
 
 /* One nuance with absolute positioning is that it will be locked relative to its closest positioned ancestor. If you forget to add a position rule to the parent item, (this is typically done using position: relative;), the browser will keep looking up the chain and ultimately default to the body tag. */

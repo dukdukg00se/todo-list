@@ -120,11 +120,12 @@ const createTaskContent = (taskObj) => {
   taskImportantIcon.textContent = 'flag';
   editIcon.classList.add('material-symbols-rounded', 'edit-icon');
   editIcon.textContent = 'more_vert';
-  editIcon.dataset.task = taskObj.id;
+  // editIcon.dataset.task = taskObj.id;
   
   if (taskObj.completed) {
+    checkbox.classList.add('checked');
     taskListItem.classList.add('completed');
-    taskDescrWrapper.classList.add('checked');
+    taskDescrWrapper.classList.add('crossed');
   }
   if (taskObj.due) {
     taskDueDate.textContent = taskObj.due;
@@ -340,8 +341,10 @@ const addFormButtonListeners = (e) => {
               addItem(new Task(taskName, taskDetails, taskDue, taskImportant), proj.tasks);
               setItemId(itemIdPrefix, proj.tasks);
               populateLocalStorage(currentProjects);
+
               display(proj.tasks, false);
-              // Add task icon listeners here
+              // Add task listeners here
+              addTasksListListener();
 
               taskForm.reset();
               taskForm.classList.add('hidden');
@@ -393,20 +396,44 @@ const addTasksListListener = () => {
   if (tasksList) {
     tasksList.addEventListener('click', (e) => {
       let selection = e.target.closest('li').id;
-
+      let listItem = e.target.closest('li');
+      let description = listItem.querySelector('.task-descr-wrapper');
+      let checkbox = listItem.querySelector('.checkbox');
 
       currentProjects.forEach(proj => {
         proj.tasks.forEach(task => {
           if (task.id === selection) {
 
-            if (e.target.classList.contains('important-icon')) {
+            if (e.target.classList.contains('checkbox') || e.target.classList.contains('checked')) {
+
+              (task.completed) ? task.completed = false : task.completed = true;
+              populateLocalStorage(currentProjects);
+
+              checkbox.classList.toggle('checked');
+              listItem.classList.toggle('completed');
+              description.classList.toggle('crossed');
+
+              // if (!task.completed) {
+              //   task.completed = true;
+              //   checkbox.classList.add('checked');
+              //   listItem.classList.add('completed');
+              //   description.classList.add('crossed');
+              // } else {
+              //   task.completed = false;
+              //   checkbox.classList.remove('checked');
+              //   listItem.classList.remove('completed');
+              //   description.classList.remove('crossed');
+              // }
+
+            } else if (e.target.classList.contains('important-icon')) {
 
               (task.important) ? task.important = false : task.important = true; 
               e.target.classList.toggle('important');
+              populateLocalStorage(currentProjects);
 
-            } else if (e.target.classList.contains('editt-icon')) {
+            } else if (e.target.classList.contains('edit-icon')) {
 
-              let selectedItem = e.target.closest('li');
+
 
 
             }
@@ -428,8 +455,6 @@ const addTasksListListener = () => {
       //   })
       // }
 
-
-
     })
   }
 
@@ -443,8 +468,6 @@ const addViewOptionsListListener = () => {
   const viewOptionsList = document.querySelector('#view-options-list');
   viewOptionsList.addEventListener('click', (e) => {
     let selection = e.target.closest('li').id;
-
-    console.log(selection)
 
     if (selection === 'all') {
       mainHeader.textContent = 'All Tasks';
