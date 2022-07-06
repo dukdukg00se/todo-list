@@ -269,6 +269,23 @@ const display = (list, isProject = true) => {
   container.append(currentList);
 }
 
+let selectedLi;
+
+const highlight = (li) => {
+
+  if (selectedLi) {
+    selectedLi.classList.remove('highlight');
+  }
+
+  selectedLi = li;
+  selectedLi.classList.add('highlight');
+
+}
+
+
+
+
+
 // Add listeners to Add, Submit, Cancel Project/Task buttons
 const addFormButtonListeners = () => {
   const formBtns = document.querySelectorAll('button');
@@ -387,7 +404,6 @@ const addFormButtonListeners = () => {
     })
   })
 }
-
 
 const addTasksListListener = () => {
   const tasksList = document.querySelector('#project-tasks-list');
@@ -603,9 +619,9 @@ const addViewOptionsListListener = () => {
   // May be more efficient?
   const viewOptionsList = document.querySelector('#view-options-list');
   viewOptionsList.addEventListener('click', (e) => {
-    let selection = e.target.closest('li').id;
+    let selection = e.target.closest('li');
 
-    if (selection === 'all') {
+    if (selection.id === 'all') {
       mainHeader.textContent = 'All Tasks';
       mainPanel.dataset.selected = selection;
 
@@ -619,7 +635,7 @@ const addViewOptionsListListener = () => {
       display(allTasks, false);
     }
 
-    if (selection === 'today') {
+    if (selection.id === 'today') {
       mainHeader.textContent = 'Today';
       mainPanel.dataset.selected = selection;
 
@@ -635,7 +651,7 @@ const addViewOptionsListListener = () => {
       display(todayTasks, false);
     }
 
-    if (selection === 'week') {
+    if (selection.id === 'week') {
       mainHeader.textContent = 'Next 7 Days';
       mainPanel.dataset.selected = selection;
 
@@ -653,7 +669,7 @@ const addViewOptionsListListener = () => {
       display(weekTasks, false);
     }
 
-    if (selection === 'important') {
+    if (selection.id === 'important') {
       mainHeader.textContent = 'Important';
       mainPanel.dataset.selected = selection;
 
@@ -672,6 +688,8 @@ const addViewOptionsListListener = () => {
     // Add task listeners
     addTasksListListener();
     addTaskButton.classList.add('hidden');
+
+    highlight(selection);
   })
 }
 
@@ -679,11 +697,11 @@ const addProjectsListListener = () => {
   const projectsPanelList = document.querySelector('#projects-list');
 
   projectsPanelList.addEventListener('click', (e) => {
-    let selection = e.target.closest('li').id;
+    let selection = e.target.closest('li');
     let addButton = document.querySelector('main > button');
 
     if (e.target.classList.contains('delete-icon')) {
-      removeItem(selection, currentProjects);
+      removeItem(selection.id, currentProjects);
       populateLocalStorage(currentProjects);
       display(currentProjects);
       addProjectsListListener();
@@ -692,7 +710,7 @@ const addProjectsListListener = () => {
 
     } else {
       currentProjects.forEach(proj => {
-        if (proj.id === selection) {
+        if (proj.id === selection.id) {
           mainPanel.dataset.selected = proj.id;
           mainHeader.textContent = proj.name;
   
@@ -703,6 +721,9 @@ const addProjectsListListener = () => {
         }
       })
     }
+
+    highlight(selection);
+
   })
 
 
@@ -719,139 +740,3 @@ addTasksListListener();
 
 
 
-
-
-
-
-
-
-
-
-// const addFormButtonListeners = (e) => {
-//   const coreBtns = document.querySelectorAll('button');
-
-//   coreBtns.forEach(btn => {
-//     btn.addEventListener('click', (e) => {
-//       // Buttons in the projects panel
-//       if (e.currentTarget.classList.contains('project-button')) {
-//         if (e.currentTarget.id === 'add-project') {
-//           projectForm.classList.remove('hidden');
-//           projectNameInput.focus();
-//           addProjectButton.classList.add('hidden');
-//         }
-
-//         if (e.target.id === 'cancel-project') {
-//           projectForm.reset();
-//           projectForm.classList.add('hidden');
-//           addProjectButton.classList.remove('hidden');
-//         }
-
-//         if (e.target.id === 'submit-project') {
-//           updateCurrentProjects(e);
-//           setItemId('project-', currentProjects);
-//           populateLocalStorage(currentProjects);
-
-//           display(currentProjects);
-//           addProjectsListListener();
-
-//           projectForm.reset();
-//           projectForm.classList.add('hidden');
-//           addProjectButton.classList.remove('hidden');
-//         }
-//       }
-
-//       if (e.currentTarget.classList.contains('task-button')) {
-//         let taskItem = e.target.closest('li');
-
-//         if (!taskItem) {
-
-//           if (e.currentTarget.id === 'add-task') {
-//             taskForm.classList.remove('hidden');
-//             taskNameInput.focus();
-//             addTaskButton.classList.add('hidden');
-//           }
-
-//           if (e.target.id === 'cancel-task') {
-//             taskForm.reset();
-//             taskForm.classList.add('hidden');
-//             addTaskButton.classList.remove('hidden');
-//           }
-
-//           if (e.target.id === 'submit-task') {
-//             // let taskName = document.querySelector('#task-name-input').value;
-//             // let taskDetails = document.querySelector('#task-details-input').value;
-//             // let taskDue = document.querySelector('#task-date-input').value;
-//             // let taskImportant = document.querySelector('#task-important-input').checked;
-
-//             let taskName = taskNameInput.value;
-//             let taskDetails = taskDetailsInput.value;
-//             let taskDue = taskDateInput.value;
-//             let taskImportant = taskImportantInput.checked;
-
-//             let targetProject = mainPanel.dataset.selected;
-//             currentProjects.forEach(proj => {
-//               if (proj.id === targetProject) {
-//                 addItem(new Task(taskName, taskDetails, taskDue, taskImportant), proj.tasks);
-
-//                 let itemIdPrefix = `${proj.id}-task-`;
-//                 setItemId(itemIdPrefix, proj.tasks);
-//                 populateLocalStorage(currentProjects);
-//                 display(proj.tasks, false);
-//                 // Add task icon listeners here
-
-//                 taskForm.reset();
-//                 taskForm.classList.add('hidden');
-//                 addTaskButton.classList.remove('hidden');
-//               }
-//             })
-//           }    
-
-//         }
-
-//         if (taskItem) {
-//           let task = taskItem.querySelector('.task-wrapper');
-//           let taskEditForm = taskItem.querySelector('form');
-
-//           if (e.target.id === 'cancel-task') {
-//             taskEditForm.remove();
-//             task.classList.remove('hidden');
-//           }
-//         }
-
-
-//         // if (e.target.id === 'cancel-task') {
-//         //   // task.classList.toggle('hidden');
-//         //   // taskForm.remove();
-
-//         //   let editTask = e.target.closest('li');
-//         //   const taskForm = document.querySelector('main form');
-
-
-//         //   taskForm.remove();
-//         // }
-
-
-//         // if (e.target.id === 'submit-task') {
-//         //   let taskName = taskNameInput.value;
-//         //   let taskDetails = taskDetailsInput.value;
-//         //   let taskDue = taskDateInput.value;
-//         //   let taskImportant = taskImportantInput.checked;
-//         //   let targetProject = e.target.dataset.submitTaskTo;
-
-//         //   currentProjects.forEach(proj => {
-//         //     if (proj.id === targetProject) {
-//         //       addItem(new Task(taskName, taskDetails, taskDue, taskImportant), proj.tasks);
-
-//         //       let itemIdPrefix = `${proj.id}-task-`;
-//         //       setItemId(itemIdPrefix, proj.tasks);
-//         //       populateLocalStorage(currentProjects);
-
-//         //       display(proj.tasks, false);
-//         //       hideForm(taskForm, addTaskButton);
-//         //     }
-//         //   })
-//         // }        
-//       }
-//     })
-//   })
-// }
