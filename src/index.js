@@ -270,8 +270,8 @@ const display = (list, isProject = true) => {
 }
 
 // Add listeners to Add, Submit, Cancel Project/Task buttons
-const addFormButtonListeners = (element = document) => {
-  const formBtns = element.querySelectorAll('button');
+const addFormButtonListeners = () => {
+  const formBtns = document.querySelectorAll('button');
 
   formBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -284,6 +284,21 @@ const addFormButtonListeners = (element = document) => {
         addButton = document.querySelector("#add-project");
 
         if (e.currentTarget.id === 'add-project') {
+
+          if (!taskForm.classList.contains('hidden')) {
+            taskForm.classList.toggle('hidden');
+            addTaskButton.classList.toggle('hidden');
+          }
+
+          if (tasksListContainer.querySelector('form')) {
+
+            let editForm = tasksListContainer.querySelector('form');
+
+            editForm.previousElementSibling.classList.toggle('hidden');
+            editForm.remove();
+          }
+
+
           form.classList.remove('hidden');
           projectNameInput.focus();
           addButton.classList.add('hidden');
@@ -311,16 +326,25 @@ const addFormButtonListeners = (element = document) => {
 
       // Add, Submit, Cancel Task buttons
       if (e.currentTarget.classList.contains('task-button')) {
-
-        if (element === document) {
-          form = document.querySelector('main > form'); 
-          addButton = document.querySelector('main > button');
-        } else {
-          form = e.target.closest('form');
-        }
-
+        form = document.querySelector('main > form'); 
+        addButton = document.querySelector('main > button');
 
         if (e.currentTarget.id === 'add-task') {
+
+
+          if (!projectForm.classList.contains('hidden')) {
+            projectForm.classList.toggle('hidden');
+            addProjectButton.classList.toggle('hidden');
+          }
+
+          if (tasksListContainer.querySelector('form')) {
+
+            let editForm = tasksListContainer.querySelector('form');
+
+            editForm.previousElementSibling.classList.toggle('hidden');
+            editForm.remove();
+          }
+
           form.classList.remove('hidden');
           taskNameInput.focus();
           addButton.classList.add('hidden');
@@ -358,163 +382,12 @@ const addFormButtonListeners = (element = document) => {
               addButton.classList.remove('hidden');
             }
           })
-        }
-        
-        // if (e.target.id === 'cancel-edit') {
-        //   console.log(form);
-        //   form.remove();
-
-        // }
-
-        // if (e.target.id === 'cancel-task') {
-        //   // task.classList.toggle('hidden');
-        //   // taskForm.remove();
-
-        //   let editTask = e.target.closest('li');
-        //   const taskForm = document.querySelector('main form');
-
-
-        //   taskForm.remove();
-        // }
-
-
-        // if (e.target.id === 'submit-task') {
-        //   let taskName = taskNameInput.value;
-        //   let taskDetails = taskDetailsInput.value;
-        //   let taskDue = taskDateInput.value;
-        //   let taskImportant = taskImportantInput.checked;
-        //   let targetProject = e.target.dataset.submitTaskTo;
-
-        //   currentProjects.forEach(proj => {
-        //     if (proj.id === targetProject) {
-        //       addItem(new Task(taskName, taskDetails, taskDue, taskImportant), proj.tasks);
-
-        //       let itemIdPrefix = `${proj.id}-task-`;
-        //       setItemId(itemIdPrefix, proj.tasks);
-        //       populateLocalStorage(currentProjects);
-
-        //       display(proj.tasks, false);
-        //       hideForm(taskForm, addTaskButton);
-        //     }
-        //   })
-        // }        
+        }    
       }
     })
   })
 }
 
-// const addFormButtonListeners = (e) => {
-//   const formBtns = document.querySelectorAll('button');
-
-
-
-//   formBtns.forEach(btn => {
-//     btn.addEventListener('click', (e) => {
-//       // Add, Submit, Cancel Project buttons
-//       if (e.currentTarget.classList.contains('project-button')) {
-//         if (e.currentTarget.id === 'add-project') {
-//           projectForm.classList.remove('hidden');
-//           projectNameInput.focus();
-//           addProjectButton.classList.add('hidden');
-//         }
-
-//         if (e.target.id === 'cancel-project') {
-//           projectForm.reset();
-//           projectForm.classList.add('hidden');
-//           addProjectButton.classList.remove('hidden');
-//         }
-
-//         if (e.target.id === 'submit-project') {
-//           updateCurrentProjects(e);
-//           setItemId('project-', currentProjects);
-//           populateLocalStorage(currentProjects);
-
-//           display(currentProjects);
-//           addProjectsListListener();
-
-//           projectForm.reset();
-//           projectForm.classList.add('hidden');
-//           addProjectButton.classList.remove('hidden');
-//         }
-//       }
-
-//       // Add, Submit, Cancel Task buttons
-//       if (e.currentTarget.classList.contains('task-button')) {
-
-//         if (e.currentTarget.id === 'add-task') {
-//           taskForm.classList.remove('hidden');
-//           taskNameInput.focus();
-//           addTaskButton.classList.add('hidden');
-//         }
-
-//         if (e.target.id === 'cancel-task') {
-//           taskForm.reset();
-//           taskForm.classList.add('hidden');
-//           addTaskButton.classList.remove('hidden');
-//         }
-
-//         if (e.target.id === 'submit-task') {
-//           let taskName = taskNameInput.value;
-//           let taskDetails = taskDetailsInput.value;
-//           let taskDue = taskDateInput.value;
-//           let taskImportant = taskImportantInput.checked;
-//           let selectedProject = mainPanel.dataset.selected;
-          
-//           currentProjects.forEach(proj => {
-//             if (proj.id === selectedProject) {
-//               let itemIdPrefix = `${proj.id}-task-`;
-              
-//               addItem(new Task(taskName, taskDetails, taskDue, taskImportant), proj.tasks);
-//               setItemId(itemIdPrefix, proj.tasks);
-//               populateLocalStorage(currentProjects);
-
-//               display(proj.tasks, false);
-//               // Add task listeners here
-//               addTasksListListener();
-
-//               taskForm.reset();
-//               taskForm.classList.add('hidden');
-//               addTaskButton.classList.remove('hidden');
-//             }
-//           })
-//         }    
-
-//         // if (e.target.id === 'cancel-task') {
-//         //   // task.classList.toggle('hidden');
-//         //   // taskForm.remove();
-
-//         //   let editTask = e.target.closest('li');
-//         //   const taskForm = document.querySelector('main form');
-
-
-//         //   taskForm.remove();
-//         // }
-
-
-//         // if (e.target.id === 'submit-task') {
-//         //   let taskName = taskNameInput.value;
-//         //   let taskDetails = taskDetailsInput.value;
-//         //   let taskDue = taskDateInput.value;
-//         //   let taskImportant = taskImportantInput.checked;
-//         //   let targetProject = e.target.dataset.submitTaskTo;
-
-//         //   currentProjects.forEach(proj => {
-//         //     if (proj.id === targetProject) {
-//         //       addItem(new Task(taskName, taskDetails, taskDue, taskImportant), proj.tasks);
-
-//         //       let itemIdPrefix = `${proj.id}-task-`;
-//         //       setItemId(itemIdPrefix, proj.tasks);
-//         //       populateLocalStorage(currentProjects);
-
-//         //       display(proj.tasks, false);
-//         //       hideForm(taskForm, addTaskButton);
-//         //     }
-//         //   })
-//         // }        
-//       }
-//     })
-//   })
-// }
 
 const addTasksListListener = () => {
   const tasksList = document.querySelector('#project-tasks-list');
@@ -536,14 +409,11 @@ const addTasksListListener = () => {
         checkbox = listItem.querySelector('.checkbox');
       }
 
-
-
       for (let i = 0; i < currentProjects.length; i++) {
         for (let j = 0; j < currentProjects[i].tasks.length; j++) {
 
           if (currentProjects[i].tasks[j].id === selection) {
             let task = currentProjects[i].tasks[j];
-
 
             if (e.target.classList.contains('checkbox') || e.target.classList.contains('checked')) {
 
@@ -646,7 +516,6 @@ const addTasksListListener = () => {
               addTasksListListener();
             }
 
-
             if (e.target.id === 'cancel-edit') {
               editForm.previousElementSibling.classList.toggle('hidden');
               editForm.remove();
@@ -723,15 +592,10 @@ const addTasksListListener = () => {
             }
 
           }
-
-
-
         }
       }
-
     })
   }
-
 }
 
 const addViewOptionsListListener = () => {
