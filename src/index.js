@@ -240,7 +240,6 @@ const createEditTaskForm = (task) => {
   return form;
 };
 
-
 const display = (list, isProject = true) => {
   let oldList, listId, container;
 
@@ -270,7 +269,6 @@ const display = (list, isProject = true) => {
 }
 
 let selectedLi;
-
 const highlight = (li) => {
 
   if (selectedLi) {
@@ -314,7 +312,6 @@ const addFormButtonListeners = () => {
             editForm.previousElementSibling.classList.toggle('hidden');
             editForm.remove();
           }
-
 
           form.classList.remove('hidden');
           projectNameInput.focus();
@@ -728,6 +725,31 @@ const addProjectsListListener = () => {
 
 
 }
+
+
+const addMenuToggleListener = () => {
+  const navPanel = document.querySelector('nav'); 
+  const menuIcon = document.querySelector('.menu-icon');
+  const menuToggleTooltip = document.querySelector('#menu-icon-wrapper > .tooltip-text');
+
+
+  const menuToggle = document.querySelector('.menu-icon');
+  menuToggle.addEventListener('click', () => {
+
+    navPanel.classList.toggle('hidden');
+
+    if (navPanel.classList.contains('hidden')) {
+      menuToggleTooltip.textContent = 'Expand menu';
+      menuIcon.textContent = 'menu'
+    } else {
+      menuToggleTooltip.textContent = 'Collapse menu';
+      menuIcon.textContent = 'menu_open'
+    }
+  })
+}
+addMenuToggleListener();
+
+
 
 // Display projects in projects panel
 display(currentProjects);
