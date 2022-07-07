@@ -242,8 +242,9 @@ textarea {
   font-size: 1.7rem;
   border-radius: 5px;
 }
-/* Important container */
-label[for = task-important-input] {
+/* Important label */
+label[for = task-important-input],
+label[for = edit-important-input] {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -294,7 +295,7 @@ main li > div {
 /* Wrapper for task name, details */
 .task-descr-wrapper {
   width: 100%;
-  word-break: break-all;
+  word-break: break-word;
 }
 /* Wrapper for task due date, flag, edit icons */
 .task-edit-wrapper {
@@ -373,11 +374,45 @@ main > button > span {
 
 footer {
   display: flex;
-  border: 3px solid black;
-  padding: 30px;
+  justify-content: flex-end;
+  align-items: center;
+  border-top: solid 3px rgb(30 36 99);
+  padding: 1.5rem 3rem;
+  height: 10%;
 }
+/* Github link */
+footer a {
+  text-decoration: none;
+  color: rgb(30 36 99);
+  font-size: 2rem;
 
+  position: relative;
+}
+/* Github img */
+/* Use class selector, easier to change on github link hover */
+.github {
+  height: 2.7rem;
+  position: relative;
+  top: 4px;
+  right: 3px;
 
+  /* Change color of image to dark blue (text color) */
+  filter: invert(13%) sepia(17%) saturate(7499%) hue-rotate(222deg) brightness(94%) contrast(99%);
+}
+/* Change github link + image color on hover */
+footer a:hover {
+  color: rgb(133 184 250);
+}
+footer a:hover .github {
+  filter: invert(72%) sepia(5%) saturate(5184%) hue-rotate(184deg) brightness(99%) contrast(98%);
+}
+/* Change github link + image color on click */
+footer a:active {
+  color: rgb(103 166 248);
+}
+footer a:active .github {
+  filter: invert(71%) sepia(28%) saturate(5239%) hue-rotate(188deg) brightness(97%) contrast(101%);
+}
 
 
 /* Task completed checkbox */
@@ -420,5 +455,7 @@ footer {
   text-decoration: line-through;
 }
 
-
 /* One nuance with absolute positioning is that it will be locked relative to its closest positioned ancestor. If you forget to add a position rule to the parent item, (this is typically done using position: relative;), the browser will keep looking up the chain and ultimately default to the body tag. */
+
+
+
