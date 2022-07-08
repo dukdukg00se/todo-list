@@ -249,8 +249,8 @@ const display = (list, isProject = true) => {
     listId = 'projects-list';
   } else {
     container = tasksListContainer;
-    oldList = document.querySelector('#project-tasks-list');
-    listId = 'project-tasks-list';
+    oldList = document.querySelector('#tasks-list');
+    listId = 'tasks-list';
   }
 
   if (container.contains(oldList)) {
@@ -403,7 +403,7 @@ const addFormButtonListeners = () => {
 }
 
 const addTasksListListener = () => {
-  const tasksList = document.querySelector('#project-tasks-list');
+  const tasksList = document.querySelector('#tasks-list');
 
   if (tasksList) {
     tasksList.addEventListener('click', (e) => {
@@ -620,7 +620,7 @@ const addViewOptionsListListener = () => {
 
     if (selection.id === 'all') {
       mainHeader.textContent = 'All Tasks';
-      mainPanel.dataset.selected = selection;
+      mainPanel.dataset.selected = selection.id;
 
       let allTasks = [];
       currentProjects.forEach(proj => {
@@ -634,7 +634,7 @@ const addViewOptionsListListener = () => {
 
     if (selection.id === 'today') {
       mainHeader.textContent = 'Today';
-      mainPanel.dataset.selected = selection;
+      mainPanel.dataset.selected = selection.id;
 
       let todayTasks = [];
       currentProjects.forEach(proj => {
@@ -650,7 +650,7 @@ const addViewOptionsListListener = () => {
 
     if (selection.id === 'week') {
       mainHeader.textContent = 'Next 7 Days';
-      mainPanel.dataset.selected = selection;
+      mainPanel.dataset.selected = selection.id;
 
       let weekTasks = [];
       currentProjects.forEach(proj => {
@@ -668,7 +668,7 @@ const addViewOptionsListListener = () => {
 
     if (selection.id === 'important') {
       mainHeader.textContent = 'Important';
-      mainPanel.dataset.selected = selection;
+      mainPanel.dataset.selected = selection.id;
 
       let importantTasks = [];
       currentProjects.forEach(proj => {
@@ -749,6 +749,28 @@ const addMenuToggleListener = () => {
 }
 addMenuToggleListener();
 
+
+
+const addThemeToggleListener = () => {
+  const themeToggle = document.querySelector('.theme-icon');
+  const themeIcon = document.querySelector('.theme-icon');
+  const themeToggleTooltip = document.querySelector('#theme-icon-wrapper > .tooltip-text');
+
+  themeToggle.addEventListener('click', () => {
+
+    document.body.classList.toggle('dark');
+    
+    if (document.body.classList.contains('dark')) {
+      themeToggleTooltip.textContent = 'Light theme'; 
+      themeIcon.textContent = 'brightness_high';
+    } else {
+      themeToggleTooltip.textContent = 'Dark theme'; 
+      themeIcon.textContent = 'brightness_4';
+    }
+  })
+
+}
+addThemeToggleListener();
 
 
 // Display projects in projects panel
