@@ -5,18 +5,46 @@
 html, body {
   height: 100%;
 }
+
 html {
   /* Set base font size equivalent to 10px for easy rem calculations */
   /* Use percentages for accessibility */
   font-size: 62.5%;
+
+  --bg-color: rgb(243 243 243);
+  --text-color: rgb(30 36 99); 
+  --nav-bg-color: white;
+  --highlight-color: rgb(194 219 251);
+  --hover-color: rgba(194 219 251 / 0.5);
+  --active-color: rgb(194 219 251);
+  --completed-text-color: rgb(30 36 99 / 0.4);
+  --delete-icon-bg-color: white;
+  --icon-hover-color: rgb(230 230 230);
+  --icon-active-color: rgb(220 220 220);
 }
+
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 1.7rem;
-  color: rgb(30 36 99);
+  color: var(--text-color);
   display: flex;
   flex-direction: column;
-  background-color: rgb(243 243 243);
+  background-color: var(--bg-color);
+}
+
+/* Styles for dark theme */
+/* Add class to body */
+.dark {
+  --bg-color: rgb(85 85 85);
+  --text-color: white; 
+  --nav-bg-color: rgb(59 59 59);
+  --highlight-color: rgb(30 36 99);
+  --hover-color: rgb(75 86 169);
+  --active-color: rgb(46 55 151);
+  --completed-text-color: rgb(255 255 255 / 0.3);
+  --delete-icon-bg-color: rgb(59 59 59);
+  --icon-hover-color: rgb(44 44 44);
+  --icon-active-color: black;
 }
 
 /* For google icons */
@@ -53,7 +81,7 @@ button .decor-icon {
   font-size: 2.5rem;
 }
 
-/* Task-view, projects, tasks lists */
+/* Task view, projects, task list */
 ul {
   display: flex;
   flex-direction: column;
@@ -66,11 +94,10 @@ li:hover {
   cursor: pointer;
 }
 
-/* Used to hide target element */
+/* Class to hide target element */
 .hidden {
   display: none !important;
 }
-
 
 header {
   display: flex;
@@ -79,13 +106,15 @@ header {
   border-bottom: solid 3px rgb(30 36 99);
   padding: 1.5rem 3rem;
 }
-/* Page logo */
+
+/* Logo (icon + text) */
 header h2 {
   font-size: 6rem;
   font-weight: 700;
   letter-spacing: 2px;
 }
-/* Add task logo icon */
+
+/* Add_task logo icon */
 /* .decor-icon overrides .material-symbols-rounded  */
 header .decor-icon {
   vertical-align: bottom;
@@ -94,6 +123,7 @@ header .decor-icon {
   font-size: 6rem;
   color: rgb(133 184 250);
 }
+
 /* header action icons */
 .menu-icon, 
 .theme-icon {
@@ -104,12 +134,13 @@ header .decor-icon {
 .menu-icon:hover, 
 .theme-icon:hover {
   cursor: pointer;
-  background-color: rgb(230 230 230);
+  background-color: var(--hover-color);
 }
 .menu-icon:active, 
 .theme-icon:active {
-  background-color: rgb(220 220 220);
+  background-color: var(--active-color);
 }
+
 /* Icon tooltip text */
 .tooltip-text {
   position: absolute;
@@ -126,26 +157,31 @@ header .decor-icon {
 .theme-icon:hover + .tooltip-text {
   opacity: 1;
 }
+
+/* Tooltip for menu toggle */
 #menu-icon-wrapper .tooltip-text {
   left: 1rem;
 }
+
+/* Tooltip for theme toggle */
 #theme-icon-wrapper .tooltip-text {
   right: 1rem;
 }
 
-
-/* Container holding nav and main panel */
+/* Container holding nav, main panel */
 #content-container {
   display: flex;
-  flex: 1;
+  /* Fill space, fixes footer to bottom */
+  flex: 1; 
 }
 
 nav {
   border-right: solid 1px rgb(30 36 99);
-  background-color: white;
+  background-color: var(--nav-bg-color);
   flex: 1;
   min-width: 21rem;
 }
+
 /* Nav sub-containers, main */
 main,
 nav section {
@@ -154,30 +190,34 @@ nav section {
   gap: 1.5rem;
   padding: 2rem;
 }
+
 /* Nav sub-container headers */
 nav section h2 {
   font-size: 2.2rem;
   font-weight: 700;
 }
-/* tasks-panel */
+
+/* task view panel */
 nav section:first-child {
   border-bottom: solid 1px rgb(30 36 99);
 }
-/* View, project items */
+
+/* task view, project items */
 nav li:hover {
-  background-color: rgba(194 219 251 / 0.5);
+  background-color: var(--hover-color);
 }
 nav li:active {
-  background-color: rgb(194 219 251);
+  background-color: var(--active-color);
 }
-/* Item content */
-/* View options, projects content*/
+
+/* task view, project items content */
 nav li > div {
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 0.4rem 0.7rem;
 }
+
 /* Project titles */
 h3 {
   width: 100%;
@@ -185,11 +225,11 @@ h3 {
 
 /* Use to show selected option in nav */
 .highlight {
-  background-color: rgb(194 219 251);
+  background-color: var(--highlight-color);
   border: solid 2px;
 }
 
-/* Add proj, add task button */
+/* Add proj, add task buttons */
 nav section > button,
 main > button {
   align-self: center;
@@ -200,7 +240,6 @@ main > button {
   width: 16rem;
 }
 
-/* Add project, task forms */
 form {
   color: white;
   display: flex;
@@ -211,21 +250,26 @@ form {
   border-radius: 5px;
   padding: 1.2rem;
 }
-/* Form button container (Submit, Cancel) */
+
+/* Form subcontainers */
 form div {
   display: flex;
   gap: 1rem;
 }
+
+/* Submit, cancel button */
 form button {
   width: 30%;
   min-width: 7rem;
 }
+
 /* Add project form */
 nav form {
   align-self: center;
   align-items: center;
 }
-/* Input boxes */
+
+/* Form input boxes */
 input {
   border: none;
   padding: 1px 4px;
@@ -234,7 +278,8 @@ input {
   font-size: 1.7rem;
   border-radius: 5px;
 }
-/* Details input box */
+
+/* Task form details input box */
 textarea {
   font-family: 'Roboto', sans-serif;
   border: none;
@@ -242,6 +287,7 @@ textarea {
   font-size: 1.7rem;
   border-radius: 5px;
 }
+
 /* Important label */
 label[for = task-important-input],
 label[for = edit-important-input] {
@@ -260,12 +306,14 @@ main {
   flex: 3;
   align-items: center;
 }
+
 /* Main header */
 h1 {
   font-size: 5rem;
   font-weight: 700;
 }
-/* Task list container */
+
+/* Tasks list container */
 main > h1 + div {
   width: 70%;
 }
@@ -276,13 +324,15 @@ main li {
   padding: 1rem;
 }
 main li:hover {
-background-color: white;
+background-color: var(--hover-color);
 }
-/* Task header */
+
+/* Task name */
 main li h3 {
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
+
 /* Task item content (.task-wrapper) */
 main li > div {
   display: flex;
@@ -297,6 +347,7 @@ main li > div {
   width: 100%;
   word-break: break-word;
 }
+
 /* Wrapper for task due date, flag, edit icons */
 .task-edit-wrapper {
   display: flex;
@@ -304,6 +355,7 @@ main li > div {
   /* gap: 0.2rem; */
   min-width: fit-content;
 }
+
 .task-due-date {
   border: solid 1px;
   border-radius: 5px;
@@ -313,7 +365,7 @@ main li > div {
   line-height: 2rem;
 }
 
-/* Page actionable icons */
+/* Task item action icons */
 .delete-icon,
 .important-icon, 
 .edit-icon {
@@ -323,35 +375,37 @@ main li > div {
 .delete-icon:hover,
 .important-icon:hover,
 .edit-icon:hover {
-  background-color: rgb(230 230 230);
+  background-color: var(--icon-hover-color);
 }
 .delete-icon:active,
 .important-icon:active,
 .edit-icon:active {
-  background-color: rgb(220 220 220);
+  background-color: var(--icon-active-color);
 } 
 .important-icon, 
 .edit-icon {
   padding: 0.1rem;
 }
 .delete-icon {
-  background-color: white;
+  background-color: var(--delete-icon-bg-color);
   padding: 0.4rem;
 }
 .important-icon {
   font-variation-settings:
   'FILL' 0;
 }
-/* Fill to indicate important task*/
+
+/* Fill to indicate important task */
 .important {
   font-variation-settings:
   'FILL' 1;
 }
 
-/* Task form sub-container, buttons container */
+/* Task form sub-containers */
 main form > div {
   justify-content: center;
 }
+
 /* Wrapper holding delete text and icon */
 .delete-wrapper {
   display: flex;
@@ -360,17 +414,18 @@ main form > div {
   margin-top: 1rem;
   width: 50%;
 }
+
 /* Edit task form delete icon */
 .delete-wrapper .delete-icon {
-  color: rgb(30 36 99);
+  color: var(--text-color);
   font-size: 2.7rem;
 
 }
-/* Add task icon for Add Task button */
+
+/* Add_task icon for Add Task button */
 main > button > span {
   color: rgb(133 184 250);
 }
-
 
 footer {
   display: flex;
@@ -380,25 +435,33 @@ footer {
   padding: 1.5rem 3rem;
   height: 10%;
 }
+
 /* Github link */
 footer a {
   text-decoration: none;
-  color: rgb(30 36 99);
+  color: var(--text-color);
   font-size: 2rem;
-
+  /* Set position to place github img */
   position: relative;
 }
+
 /* Github img */
-/* Use class selector, easier to change on github link hover */
+/* Used class selector, easier to change on github link hover */
 .github {
   height: 2.7rem;
   position: relative;
   top: 4px;
   right: 3px;
 
-  /* Change color of image to dark blue (text color) */
+  /* Github icon to dark blue (text color) */
   filter: invert(13%) sepia(17%) saturate(7499%) hue-rotate(222deg) brightness(94%) contrast(99%);
 }
+
+/* Icon to white in dark mode */
+.dark .github {
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(32deg) brightness(102%) contrast(104%);
+}
+
 /* Change github link + image color on hover */
 footer a:hover {
   color: rgb(133 184 250);
@@ -414,7 +477,6 @@ footer a:active .github {
   filter: invert(71%) sepia(28%) saturate(5239%) hue-rotate(188deg) brightness(97%) contrast(101%);
 }
 
-
 /* Task completed checkbox */
 .checkbox {
   align-self: flex-start;
@@ -425,11 +487,12 @@ footer a:active .github {
   margin-left: 5px;
 }
 .checkbox:hover {
-  background-color: rgb(230 230 230);
+  background-color: var(--icon-hover-color);
 }
 .checkbox:active {
-  background-color: rgb(220 220 220);
+  background-color: var(--icon-active-color);
 }
+
 /* Adds check mark to checkbox */
 .checked::before {
   content: '';
@@ -443,19 +506,22 @@ footer a:active .github {
   height: 12px;
   width: 5px;
 }
+
 /* Shade completed task items */
 .completed {
   background-color: rgb(145 145 145);
+  color: var(--completed-text-color);
 }
 .completed:hover {
   background-color: rgb(145 145 145);
 }
+
 /* Cross out task header and details */
 .crossed {
   text-decoration: line-through;
+
 }
 
-/* One nuance with absolute positioning is that it will be locked relative to its closest positioned ancestor. If you forget to add a position rule to the parent item, (this is typically done using position: relative;), the browser will keep looking up the chain and ultimately default to the body tag. */
 
 
 
