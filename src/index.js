@@ -99,6 +99,9 @@ const createProjectContent = (projObj) => {
 const createTaskContent = (taskObj) => {
   const taskListItem = document.createElement('li');
   const taskWrapper = document.createElement('div');
+
+  const taskSubWrapper = document.createElement('div');
+
   const checkbox = document.createElement('div');
   const taskDescrWrapper = document.createElement('div');
   const taskName = document.createElement('h3');
@@ -111,6 +114,9 @@ const createTaskContent = (taskObj) => {
   taskListItem.classList.add('task-item');
   taskListItem.id = taskObj.id;
   taskWrapper.classList.add('task-wrapper');
+
+  taskSubWrapper.classList.add('task-sub-wrapper');
+
   checkbox.classList.add('checkbox');
   taskDescrWrapper.classList.add('task-descr-wrapper');
   taskName.textContent = taskObj.name;
@@ -160,7 +166,12 @@ const createTaskContent = (taskObj) => {
 
   taskEditWrapper.append(taskDueDate, taskImportantIcon, editIcon);
   taskDescrWrapper.append(taskName, taskDetails);
-  taskWrapper.append(checkbox,  taskDescrWrapper, taskEditWrapper);
+
+  taskSubWrapper.append(checkbox, taskDescrWrapper);
+
+  // taskWrapper.append(checkbox,  taskDescrWrapper, taskEditWrapper);
+
+  taskWrapper.append(taskSubWrapper, taskEditWrapper);
   taskListItem.append(taskWrapper);
   
   return taskListItem;
