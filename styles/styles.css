@@ -30,6 +30,7 @@ body {
   display: flex;
   flex-direction: column;
   background-color: var(--bg-color);
+  min-width: 340px;
 }
 
 /* Styles for dark theme */
@@ -218,9 +219,10 @@ nav li > div {
   padding: 0.4rem 0.7rem;
 }
 
-/* Project titles */
+/* Project/task titles */
 h3 {
   width: 100%;
+  word-break: break-word;
 }
 
 /* Use to show selected option in nav */
@@ -339,7 +341,13 @@ main li > div {
   align-items: flex-start;
   gap: 1rem;
   position: relative;
-  /* padding: 0.4rem 0.7rem; */
+  justify-content: space-between;
+}
+
+
+.task-sub-wrapper {
+  display: flex;
+  gap: 1rem;
 }
 
 /* Wrapper for task name, details */
@@ -432,8 +440,7 @@ footer {
   justify-content: flex-end;
   align-items: center;
   border-top: solid 3px rgb(30 36 99);
-  padding: 1.5rem 3rem;
-  height: 10%;
+  padding: 2rem 3rem;
 }
 
 /* Github link */
@@ -519,9 +526,36 @@ footer a:active .github {
 /* Cross out task header and details */
 .crossed {
   text-decoration: line-through;
-
 }
 
 
+@media (max-width: 390px) {
+  header .decor-icon,
+  header h2 {
+    font-size: 4rem;
+  }
+} 
 
+@media (max-width: 600px) {
+  main li > div {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .task-edit-wrapper {
+    align-self: center;
+  }
+}
+
+
+@media (max-width: 815px) {
+  nav {
+    border-right: none;
+    border-bottom: solid 1px;
+  }
+
+  #content-container {
+    flex-direction: column;
+  }
+}
 
