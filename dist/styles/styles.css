@@ -30,7 +30,7 @@ body {
   display: flex;
   flex-direction: column;
   background-color: var(--bg-color);
-  min-width: 340px;
+  min-width: 350px;
 }
 
 /* Styles for dark theme */
@@ -529,21 +529,30 @@ footer a:active .github {
 }
 
 
-@media (max-width: 390px) {
-  header .decor-icon,
-  header h2 {
-    font-size: 4rem;
-  }
-} 
-
-@media (max-width: 600px) {
+@media (max-width: 450px) {
   main li > div {
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
   }
 
   .task-edit-wrapper {
     align-self: center;
+  }
+
+  header .decor-icon,
+  header h2 {
+    font-size: 5rem;
+  }
+
+  .delete-wrapper .delete-icon {
+    font-size: 2rem;
+  }
+} 
+
+
+@media (max-width: 600px) {
+  main > h1 + div {
+    width: 90%;
   }
 }
 
