@@ -15,11 +15,9 @@ const taskNameInput = document.querySelector('#task-name-input');
 const taskDetailsInput = document.querySelector('#task-details-input');
 const taskDateInput = document.querySelector('#task-date-input');
 const taskImportantInput = document.querySelector('#task-important-input');
-
 const projectForm = document.querySelector("#projects-panel form");
 const addProjectButton = document.querySelector("#add-project");
 const taskForm = document.querySelector('main > form');
-
 const addTaskButton = document.querySelector('main > button');
 
 
@@ -35,13 +33,13 @@ function Task(name, details, due, important) {
   this.details = details;
   this.due = due;
   this.important = important;
-
   this.completed = false;
 }
 
 const addItem = (item, container) => {
   container.push(item);
 }
+
 const removeItem = (itemId, container) => {
   for (let i = 0; i < container.length; i++) {
     if (container[i].id === itemId) {
@@ -49,11 +47,13 @@ const removeItem = (itemId, container) => {
     }
   }
 }
+
 const setItemId = (prefix, container) => {
   for (let i = 0; i < container.length; i++) {
     container[i].id = prefix + i;
   }
 }
+
 const updateCurrentProjects = (e) => {
   if (e.target.classList.contains('delete')) {
     let projectToDelete = e.target.parentElement.id;
@@ -63,6 +63,7 @@ const updateCurrentProjects = (e) => {
     addItem(new Project(projectName), currentProjects);
   }
 }
+ 
 const populateLocalStorage = (projects) => {
   localStorage.setItem('projects', JSON.stringify(projects));
 };
@@ -99,9 +100,7 @@ const createProjectContent = (projObj) => {
 const createTaskContent = (taskObj) => {
   const taskListItem = document.createElement('li');
   const taskWrapper = document.createElement('div');
-
   const taskSubWrapper = document.createElement('div');
-
   const checkbox = document.createElement('div');
   const taskDescrWrapper = document.createElement('div');
   const taskName = document.createElement('h3');
@@ -114,9 +113,7 @@ const createTaskContent = (taskObj) => {
   taskListItem.classList.add('task-item');
   taskListItem.id = taskObj.id;
   taskWrapper.classList.add('task-wrapper');
-
   taskSubWrapper.classList.add('task-sub-wrapper');
-
   checkbox.classList.add('checkbox');
   taskDescrWrapper.classList.add('task-descr-wrapper');
   taskName.textContent = taskObj.name;
@@ -143,7 +140,6 @@ const createTaskContent = (taskObj) => {
     taskImportantIcon.classList.add('important');
   }
 
-
   // taskImportantIcon.addEventListener('click', () => {
   //   if (taskObj.important) {
   //     taskObj.important = false;
@@ -163,14 +159,9 @@ const createTaskContent = (taskObj) => {
   //   selectedTaskWrapper.classList.add('hidden');
   // })
 
-
   taskEditWrapper.append(taskDueDate, taskImportantIcon, editIcon);
   taskDescrWrapper.append(taskName, taskDetails);
-
   taskSubWrapper.append(checkbox, taskDescrWrapper);
-
-  // taskWrapper.append(checkbox,  taskDescrWrapper, taskEditWrapper);
-
   taskWrapper.append(taskSubWrapper, taskEditWrapper);
   taskListItem.append(taskWrapper);
   
