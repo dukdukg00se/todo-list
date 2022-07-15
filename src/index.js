@@ -19,6 +19,9 @@ const addTaskButton = document.querySelector('main > button');
 const dataController = (() => {
   let currentProjects = !localStorage.length ? [] : JSON.parse(localStorage.getItem("projects"));
 
+  // Maybe move this to displayController for default startup
+  let highlightedNavItem;
+
   function Project(name) {
     this.name = name;
     this.tasks = [];
@@ -47,44 +50,104 @@ const dataController = (() => {
       arr[i].id = prefix + i;
     }
   }
-  const populateLocalStorage = (projects) => {
-    localStorage.setItem('projects', JSON.stringify(projects));
+  const populateLocalStorage = (arr) => {
+    localStorage.setItem('projects', JSON.stringify(arr));
   };
 
+  const updateData = (input) => {
 
-  const updateProjectsInfo = (action) => {
-    let item, container, idPrefix;
+    if (input === 'submit-project' || input === 'submit-task') {
+      let item, container, idPrefix;
+
+      if (input === 'submit-project') {
+        const projName = document.querySelector("#project-name-input").value;
+        item = new Project(projName);
+        container = dataController.currentProjects;
+        idPrefix = 'project-'
+      } else if (input === 'submit-task') {
+        const taskName = document.querySelector('#task-name-input').value;
+        const taskDetails = document.querySelector('#task-details-input').value;
+        const taskDue = document.querySelector('#task-date-input').value;
+        const taskImportant = document.querySelector('#task-important-input').checked;
+        let selectedProject = mainPanel.dataset.selected;
+    
+        item = new Task(taskName, taskDetails, taskDue, taskImportant)
+    
+        dataController.currentProjects.forEach(proj => {
+          if (proj.id === selectedProject) {
+            container = proj.tasks;
+            idPrefix = `${proj.id}-task-`;
+          }
+        })
+      }
+
+      addItem(item, container);
+      setItemId(idPrefix, container);
+
+    } else { // Delete action
+      removeItem(input, dataController.currentProjects);
+    }
+
+    populateLocalStorage(currentProjects);
+  }
+
+
+  const filterTasks = (filter) => {
+    let filteredTasks = [];
   
-    if (action === 'submit-project') {
-      const projName = document.querySelector("#project-name-input").value;
-      item = new Project(projName);
-      container = dataController.currentProjects;
-      idPrefix = 'project-'
-    } else if (action === 'submit-task') {
-      const taskName = document.querySelector('#task-name-input').value;
-      const taskDetails = document.querySelector('#task-details-input').value;
-      const taskDue = document.querySelector('#task-date-input').value;
-      const taskImportant = document.querySelector('#task-important-input').checked;
-      let selectedProject = mainPanel.dataset.selected;
-  
-      item = new Task(taskName, taskDetails, taskDue, taskImportant)
-  
-      dataController.currentProjects.forEach(proj => {
-        if (proj.id === selectedProject) {
-          container = proj.tasks;
-          idPrefix = `${proj.id}-task-`;
-        }
-      })
+    switch (filter) {
+      case 'all':
+        dataController.currentProjects.forEach(proj => {
+          proj.tasks.forEach(task => {
+            filteredTasks.push(task);
+          });
+        });
+        break;
+      case 'today':
+        dataController.currentProjects.forEach(proj => {
+          proj.tasks.forEach(task => {
+            if (isToday(parseISO(task.due))) {
+              filteredTasks.push(task);
+            }
+          });
+        });
+        break;
+      case 'week':
+        dataController.currentProjects.forEach(proj => {
+          proj.tasks.forEach(task => {
+            if (task.due) {
+              if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
+                filteredTasks.push(task);
+              }
+            }
+          });
+        });
+        break;
+      case 'important':
+        dataController.currentProjects.forEach(proj => {
+          proj.tasks.forEach(task => {
+            if (task.important) {
+              filteredTasks.push(task);
+            }
+          });
+        });
+        break;
+      default:
+        dataController.currentProjects.forEach(proj => {
+          if (proj.id === filter) {
+            filteredTasks = proj.tasks;
+          }
+        })
     }
   
-    addItem(item, container);
-    setItemId(idPrefix, container);
-    populateLocalStorage(currentProjects);
+    return filteredTasks;
   }
 
   return {
     currentProjects,
-    updateProjectsInfo
+    highlightedNavItem,
+    updateData,
+    filterTasks
   }
 })();
 
@@ -242,7 +305,66 @@ const contentCreator = (() => {
   }
 })();
 
-const displayController = (() => {
+const displayController = ((e) => {
+
+
+
+  // Helper function: create item and add to appropriate list
+  const display = (list, isProject = true) => {
+    let oldList, listId, container;
+  
+    if (isProject) {
+      container = projectsListContainer;
+      oldList = document.querySelector('#projects-list');
+      listId = 'projects-list';
+    } else {
+      container = tasksListContainer;
+      oldList = document.querySelector('#tasks-list');
+      listId = 'tasks-list';
+    }
+  
+    if (container.contains(oldList)) {
+      oldList.remove();
+    }
+  
+    const currentList = document.createElement('ul');
+    currentList.id = listId;
+    list.forEach(item => { 
+      currentList.append(
+        isProject ? contentCreator.createProject(item) : contentCreator.createTask(item)
+      );
+    })
+  
+    container.append(currentList);
+  }
+
+
+
+
+  const setMainHeader = (input) => {
+    const mainHeader = document.querySelector('h1');
+
+    switch (input) {
+    case 'all':
+      mainHeader.textContent = 'All Tasks';
+      break;
+    case 'today':
+      mainHeader.textContent = 'Today';
+      break;
+    case 'week':
+      mainHeader.textContent = 'Next 7 Days';
+      break;
+    case 'important':
+      mainHeader.textContent = 'Important';
+      break;
+    default:
+      dataController.currentProjects.forEach(proj => {
+        if (proj.id === input) {
+          mainHeader.textContent = proj.name;
+        }
+      })
+  }
+  }
 
   const controlForm = (e) => {
     let isProjBtn = e.currentTarget.classList.contains('project-button');
@@ -311,12 +433,12 @@ const displayController = (() => {
     }
   
     if (action === 'submit-project' || action === 'submit-task') {
-      dataController.updateProjectsInfo(action);
+      dataController.updateData(action);
   
 
       // Move DOM stuff below 
       display(dataController.currentProjects);
-      addProjectsListListener();
+      listenersController.addNavListener();
       hideTargetForm(form);
     }
   }
@@ -352,95 +474,126 @@ const displayController = (() => {
     }
   }
 
-  const displaySelection = (e) => {
+  const controlNavAction = (e) => {
     const mainPanel = document.querySelector('main');
-    const mainHeader = document.querySelector('h1');
     const selection = e.target.closest('li');
     const addTaskBtn = document.querySelector('main > button');
-    let tasksToDisplay = [];
+
+    // Function highlights nav selection
+    const highlight = (item) => {
+      if (dataController.highlightedNavItem) {
+        dataController.highlightedNavItem.classList.remove('highlight');
+      }
+    
+      dataController.highlightedNavItem = item;
+      dataController.highlightedNavItem.classList.add('highlight');
+    }
 
 
-    if (selection) {
-      if (e.target.closest('ul').id === 'view-options-list') {
+    // If view option/proj is clicked
+    if (selection) { 
+      // If click is on a delete icon
+      if (e.target.classList.contains('delete-icon')) {
+        dataController.updateData(selection.id);
+        display(dataController.currentProjects);
+        listenersController.addNavListener();
+      } else {
         mainPanel.dataset.selected = selection.id;
-    
-        switch (selection.id) {
-          case 'all':
-            mainHeader.textContent = 'All Tasks';
-            dataController.currentProjects.forEach(proj => {
-              proj.tasks.forEach(task => {
-                tasksToDisplay.push(task);
-              });
-            });
-            break;
-          case 'today':
-            mainHeader.textContent = 'Today';
-            dataController.currentProjects.forEach(proj => {
-              proj.tasks.forEach(task => {
-                if (isToday(parseISO(task.due))) {
-                  tasksToDisplay.push(task);
-                }
-              });
-            });
-            break;
-          case 'week':
-            mainHeader.textContent = 'Next 7 Days';
-            dataController.currentProjects.forEach(proj => {
-              proj.tasks.forEach(task => {
-                if (task.due) {
-                  if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
-                    tasksToDisplay.push(task);
-                  }
-                }
-              });
-            });
-            break;
-          case 'important':
-            mainHeader.textContent = 'Important';
-            dataController.currentProjects.forEach(proj => {
-              proj.tasks.forEach(task => {
-                if (task.important) {
-                  tasksToDisplay.push(task);
-                }
-              });
-            });
-        }
-    
-        display(tasksToDisplay, false);
-        addTaskBtn.classList.add('hidden');
+        
+        (e.target.closest('ul').id === 'view-options-list') ? addTaskBtn.classList.add('hidden') : addTaskBtn.classList.remove('hidden');
+
+
+        setMainHeader(selection.id);
+        display(dataController.filterTasks(selection.id), false);
+        listenersController.addTaskListener();  
+        highlight(selection);
+        
       }
+
+      // if (e.target.closest('ul').id === 'view-options-list') {
+      //   mainPanel.dataset.selected = selection.id;
   
-      if (e.target.closest('ul').id === 'projects-list') {
-        if (e.target.classList.contains('delete-icon')) {
-          removeItem(selection.id, dataController.dataController.currentProjects);
-          populateLocalStorage(dataController.currentProjects);
-          display(dataController.currentProjects);
-          addProjectsListListener();
+
+      //   display(dataController.filterTasks(selection.id), false);
+
+
+      //   // switch (selection.id) {
+      //   //   case 'all':
+      //   //     mainHeader.textContent = 'All Tasks';
+      //   //     dataController.currentProjects.forEach(proj => {
+      //   //       proj.tasks.forEach(task => {
+      //   //         tasksToDisplay.push(task);
+      //   //       });
+      //   //     });
+      //   //     break;
+      //   //   case 'today':
+      //   //     mainHeader.textContent = 'Today';
+      //   //     dataController.currentProjects.forEach(proj => {
+      //   //       proj.tasks.forEach(task => {
+      //   //         if (isToday(parseISO(task.due))) {
+      //   //           tasksToDisplay.push(task);
+      //   //         }
+      //   //       });
+      //   //     });
+      //   //     break;
+      //   //   case 'week':
+      //   //     mainHeader.textContent = 'Next 7 Days';
+      //   //     dataController.currentProjects.forEach(proj => {
+      //   //       proj.tasks.forEach(task => {
+      //   //         if (task.due) {
+      //   //           if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
+      //   //             tasksToDisplay.push(task);
+      //   //           }
+      //   //         }
+      //   //       });
+      //   //     });
+      //   //     break;
+      //   //   case 'important':
+      //   //     mainHeader.textContent = 'Important';
+      //   //     dataController.currentProjects.forEach(proj => {
+      //   //       proj.tasks.forEach(task => {
+      //   //         if (task.important) {
+      //   //           tasksToDisplay.push(task);
+      //   //         }
+      //   //       });
+      //   //     });
+      //   // }
     
-          // Main display All Tasks after deleting proj
-          mainHeader.textContent = 'All Tasks';
-          dataController.currentProjects.forEach(proj => {
-            proj.tasks.forEach(task => {
-              tasksToDisplay.push(task);
-            });
-          });
-          display(tasksToDisplay, false);
+      //   // display(tasksToDisplay, false);
+      //   addTaskBtn.classList.add('hidden');
+      // }
+  
+      // if (e.target.closest('ul').id === 'projects-list') {
+      //   if (e.target.classList.contains('delete-icon')) {
+      //     // dataController.removeItem(selection.id, dataController.currentProjects);
+      //     // populateLocalStorage(dataController.currentProjects);
+
+
+      //     /** */
+      //     dataController.updateData(selection.id);
+      //     display(dataController.currentProjects);
+      //     // addProjectsListListener();
     
-        } else {
-          dataController.currentProjects.forEach(proj => {
-            if (proj.id === selection.id) {
-              mainPanel.dataset.selected = selection.id;
-              mainHeader.textContent = proj.name;
+      //     // Main display All Tasks after deleting proj
+      //     display(dataController.filterTasks('all'), false);
+    
+      //   } else {
+      //     // dataController.currentProjects.forEach(proj => {
+      //     //   if (proj.id === selection.id) {
+      //     //     mainPanel.dataset.selected = selection.id;
+      //     //     mainHeader.textContent = proj.name;
       
-              display(proj.tasks, false);
-              addTaskBtn.classList.remove('hidden');
-            }
-          })
-        }
-      }
-  
-      listenersController.addTaskListener();  
-      highlight(selection);
+      //     //     display(proj.tasks, false);
+      //     //     addTaskBtn.classList.remove('hidden');
+      //     //   }
+      //     // })
+
+      //     display(dataController.filterTasks(selection.id), false);
+
+      //     addTaskBtn.classList.remove('hidden');
+      //   }
+      // }
+
     }
   }
 
@@ -448,9 +601,10 @@ const displayController = (() => {
     controlForm,
     toggleMenu, 
     toggleTheme,
-    displaySelection
+    controlNavAction
   }
 })();
+
 
 const listenersController = (() => {
 
@@ -469,10 +623,10 @@ const listenersController = (() => {
   const addNavListener = () => {
     // In lieu of adding listener to list items, add to lists
     // May be more efficient?
-    let viewOptions = document.querySelectorAll('nav ul');
+    let navLists = document.querySelectorAll('nav ul');
 
-    viewOptions.forEach(option => {
-      option.addEventListener('click', displayController.displaySelection)
+    navLists.forEach(list => {
+      list.addEventListener('click', displayController.controlNavAction)
     })
   }
 
@@ -742,17 +896,6 @@ const display = (list, isProject = true) => {
   container.append(currentList);
 }
 
-let selectedLi;
-const highlight = (li) => {
-
-  if (selectedLi) {
-    selectedLi.classList.remove('highlight');
-  }
-
-  selectedLi = li;
-  selectedLi.classList.add('highlight');
-
-}
 
 display(dataController.currentProjects);
 
@@ -1055,7 +1198,331 @@ listenersController.addNavListener();
 //   let viewOptions = document.querySelectorAll('nav ul');
 
 //   viewOptions.forEach(option => {
-//     option.addEventListener('click', displayController.displaySelection)
+//     option.addEventListener('click', displayController.controlNavAction)
+//   })
+// }
+
+// addMenuToggListener();
+// addThemeToggListener();
+// addFormButtonListeners();
+// addTaskListener();
+// addNavListeners();
+
+
+// Display projects in projects panel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Add listeners to Add, Submit, Cancel Project/Task buttons
+// const addFormButtonListeners = () => {
+//   const formBtns = document.querySelectorAll('button');
+
+//   formBtns.forEach(btn => {
+//     btn.addEventListener('click', displayController.controlForm);
+//   })
+// }
+// const addTaskListener = () => {
+//   const tasksList = document.querySelector('#tasks-list');
+
+//   if (tasksList) {
+//     tasksList.addEventListener('click', (e) => {
+
+//       let editForm = tasksList.querySelector('#edit-task-form');
+//       let listItem = e.target.closest('li');
+//       let selection;
+//       let wrapper;
+//       let description;
+//       let checkbox;
+
+//       if (listItem) {
+//         selection = listItem.id;
+//         wrapper = listItem.querySelector('.task-wrapper');
+//         description = listItem.querySelector('.task-descr-wrapper');
+//         checkbox = listItem.querySelector('.checkbox');
+//       }
+
+//       for (let i = 0; i < dataController.currentProjects.length; i++) {
+//         for (let j = 0; j < dataController.currentProjects[i].tasks.length; j++) {
+
+//           if (dataController.currentProjects[i].tasks[j].id === selection) {
+//             let task = dataController.currentProjects[i].tasks[j];
+
+//             if (e.target.classList.contains('checkbox') || e.target.classList.contains('checked')) {
+
+//               (task.completed) ? task.completed = false : task.completed = true;
+//               populateLocalStorage(dataController.currentProjects);
+
+//               checkbox.classList.toggle('checked');
+//               listItem.classList.toggle('completed');
+//               description.classList.toggle('crossed');
+
+//             } else if (e.target.classList.contains('important-icon')) {
+
+//               (task.important) ? task.important = false : task.important = true; 
+//               populateLocalStorage(dataController.currentProjects);
+
+//               // console.log(e.target.classList.contains('important'));
+
+//               e.target.classList.toggle('important');
+
+//             } else if (e.target.classList.contains('edit-icon')) {
+
+//               if (editForm) {
+//                 editForm.previousElementSibling.classList.toggle('hidden');
+//                 editForm.remove();
+//               }
+
+//               if (!projectForm.classList.contains('hidden')) {
+//                 projectForm.classList.toggle('hidden');
+//                 addProjectButton.classList.toggle('hidden');
+//               }
+
+//               if (!taskForm.classList.contains('hidden')) {
+//                 taskForm.classList.toggle('hidden');
+//                 addTaskButton.classList.toggle('hidden');
+//               }
+
+//               listItem.append(createEditForm(task));
+//               wrapper.classList.toggle('hidden');
+
+//             } else if (e.target.classList.contains('delete-icon')) {
+//               dataController.currentProjects[i].tasks.splice(j, 1);
+//               populateLocalStorage(dataController.currentProjects);
+
+//               let selectedTasks = [];
+
+//               if (mainPanel.dataset.selected === 'all') {
+
+//                 dataController.currentProjects.forEach(proj => {
+//                   proj.tasks.forEach(task => {
+//                     selectedTasks.push(task)
+
+//                   })
+//                 })
+
+//               } else if (mainPanel.dataset.selected === 'today') {
+      
+//                 dataController.currentProjects.forEach(proj => {
+//                   proj.tasks.forEach(task => {
+      
+//                     if (isToday(parseISO(task.due))) {
+//                       selectedTasks.push(task);
+//                     }
+      
+//                   })
+//                 })
+      
+//               } else if (mainPanel.dataset.selected === 'week') {
+
+//                 dataController.currentProjects.forEach(proj => {
+//                   proj.tasks.forEach(task => {
+      
+//                     if (task.due) {
+//                       if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
+//                         selectedTasks.push(task)
+//                       }
+//                     }
+      
+//                   })
+//                 })
+      
+
+//               } else if (mainPanel.dataset.selected === 'important') {
+
+//                 dataController.currentProjects.forEach(proj => {
+//                   proj.tasks.forEach(task => {
+//                     if (task.important) {
+//                       selectedTasks.push(task);
+//                     }
+//                   })
+//                 })
+                
+//               } else {
+
+//                 dataController.currentProjects[i].tasks.forEach(task => {
+//                   selectedTasks.push(task);
+//                 })
+//               }
+
+//               display(selectedTasks, false);
+//               addTaskListener();
+//             }
+
+//             if (e.target.id === 'cancel-edit') {
+//               editForm.previousElementSibling.classList.toggle('hidden');
+//               editForm.remove();
+  
+//               // console.log(editForm.previousElementSibling);
+  
+  
+//             } else if (e.target.id === 'submit-edit') {
+      
+//               task.name = tasksList.querySelector('#edit-name-input').value;
+//               task.details = tasksList.querySelector('#edit-details-input').value;
+//               task.due = tasksList.querySelector('#edit-date-input').value;
+//               task.important = tasksList.querySelector('#edit-important-input').checked;
+      
+//               populateLocalStorage(dataController.currentProjects);
+      
+//               let selectedTasks = [];
+      
+//               if (mainPanel.dataset.selected === 'all') {
+      
+//                 dataController.currentProjects.forEach(proj => {
+//                   proj.tasks.forEach(task => {
+//                     selectedTasks.push(task)
+      
+//                   })
+//                 })
+      
+//               } else if (mainPanel.dataset.selected === 'today') {
+      
+//                 dataController.currentProjects.forEach(proj => {
+//                   proj.tasks.forEach(task => {
+      
+//                     if (isToday(parseISO(task.due))) {
+//                       selectedTasks.push(task);
+//                     }
+      
+//                   })
+//                 })
+      
+//               } else if (mainPanel.dataset.selected === 'week') {
+      
+//                 dataController.currentProjects.forEach(proj => {
+//                   proj.tasks.forEach(task => {
+      
+//                     if (task.due) {
+//                       if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
+//                         selectedTasks.push(task)
+//                       }
+//                     }
+      
+//                   })
+//                 })
+      
+      
+//               } else if (mainPanel.dataset.selected === 'important') {
+      
+//                 dataController.currentProjects.forEach(proj => {
+//                   proj.tasks.forEach(task => {
+//                     if (task.important) {
+//                       selectedTasks.push(task);
+//                     }
+//                   })
+//                 })
+                
+//               } else {
+      
+//                 dataController.currentProjects[i].tasks.forEach(task => {
+//                   selectedTasks.push(task);
+//                 })
+//               }
+      
+//               display(selectedTasks, false);
+//               addTaskListener();
+//             }
+
+//           }
+//         }
+//       }
+//     })
+//   }
+// }
+// const addProjectsListListener = () => {
+//   const projectsPanelList = document.querySelector('#projects-list');
+
+//   projectsPanelList.addEventListener('click', (e) => {
+//     let selection = e.target.closest('li');
+//     let addButton = document.querySelector('main > button');
+
+//     if (e.target.classList.contains('delete-icon')) {
+//       removeItem(selection.id, dataController.currentProjects);
+//       populateLocalStorage(dataController.currentProjects);
+//       display(dataController.currentProjects);
+//       addProjectsListListener();
+
+//       // Add code to revert main panel display to All Tasks after deleting proj
+
+//     } else {
+//       dataController.currentProjects.forEach(proj => {
+//         if (proj.id === selection.id) {
+//           mainPanel.dataset.selected = proj.id;
+//           mainHeader.textContent = proj.name;
+  
+//           display(proj.tasks, false);
+//           // Add task listeners
+//           addTaskListener();
+//           addButton.classList.remove('hidden');
+//         }
+//       })
+//     }
+
+//     highlight(selection);
+
+//   })
+
+
+// }
+// const addMenuToggListener = () => {
+//   const navPanel = document.querySelector('nav'); 
+//   const menuIcon = document.querySelector('.menu-icon');
+//   const menuToggleTooltip = document.querySelector('#menu-icon-wrapper > .tooltip-text');
+
+
+//   const menuToggle = document.querySelector('.menu-icon');
+//   menuToggle.addEventListener('click', () => {
+
+//     navPanel.classList.toggle('hidden');
+
+//     if (navPanel.classList.contains('hidden')) {
+//       menuToggleTooltip.textContent = 'Expand menu';
+//       menuIcon.textContent = 'menu'
+//     } else {
+//       menuToggleTooltip.textContent = 'Collapse menu';
+//       menuIcon.textContent = 'menu_open'
+//     }
+//   })
+// }
+// const addThemeToggListener = () => {
+//   const themeToggle = document.querySelector('.theme-icon');
+//   const themeIcon = document.querySelector('.theme-icon');
+//   const themeToggleTooltip = document.querySelector('#theme-icon-wrapper > .tooltip-text');
+
+//   themeToggle.addEventListener('click', () => {
+
+//     document.body.classList.toggle('dark');
+    
+//     if (document.body.classList.contains('dark')) {
+//       themeToggleTooltip.textContent = 'Light theme'; 
+//       themeIcon.textContent = 'brightness_high';
+//     } else {
+//       themeToggleTooltip.textContent = 'Dark theme'; 
+//       themeIcon.textContent = 'brightness_4';
+//     }
+//   })
+
+// }
+// const addNavListeners = () => {
+//   // In lieu of adding listener to list items, add to lists
+//   // May be more efficient?
+//   let viewOptions = document.querySelectorAll('nav ul');
+
+//   viewOptions.forEach(option => {
+//     option.addEventListener('click', displayController.controlNavAction)
 //   })
 // }
 
