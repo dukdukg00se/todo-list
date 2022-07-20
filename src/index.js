@@ -4,7 +4,7 @@ import {
   isToday,
   parseISO
 } from "date-fns";
-import contentCreator from './modules/content.js';
+import content from './modules/content.js';
 
 // Varaiables. Move later
 const projectsListContainer = document.querySelector('#projects-list-container');
@@ -185,7 +185,6 @@ const displayController = (() => {
   display(dataController.currentProjects);
 
 
-
   const toggleMenu = () => {
     const navPanel = document.querySelector('nav'); 
     const menuIcon = document.querySelector('.menu-icon');
@@ -217,8 +216,9 @@ const displayController = (() => {
     }
   }
 
-  
-  const controlSubFormEvents = (e) => {
+
+  // Excludes task edit form btns
+  const managePageBtns = (e) => {
     let isProjBtn = e.currentTarget.classList.contains('project-button');
     let action = e.currentTarget.id;
     let form;
@@ -246,248 +246,18 @@ const displayController = (() => {
       if (action === 'submit-project') {
         // display(dataController.currentProjects);
         display(dataController.updateData(action));
-        listenersController.addNavListener();
+        listenersController.addNavListsListeners();
       } else if (action === 'submit-task') {
         display(dataController.updateData(action), false);
-        listenersController.addTaskListener();
+        listenersController.addTasksListListener();
       }
 
-      
       hideTargetForm(form);
     }
 
-    /* Helper functions */
-    // Show correct input form
-    // function displayTargetForm(form) {
-    //   // Show selected form
-    //   form.classList.remove('hidden');
-    //   // Focus on first input box
-    //   form.querySelector('input').focus();
-    //   // Hide add button
-    //   form.nextElementSibling.classList.add('hidden');
-    // }
-
-    // Hide input form
-    // function hideTargetForm(form) {
-    //   // Reset form
-    //   form.reset();
-    //   // Hide selected form
-    //   form.classList.add('hidden');
-    //   // SHow add button
-    //   form.nextElementSibling.classList.remove('hidden');
-    // }
-
-    // Hide/remove irrelevant forms 
-    // function hideExtraneousForms(action) {
-    //   const tasksListContainer = document.querySelector('#tasks-list-container');
-    //   let editFormDisplayed = !!tasksListContainer.querySelector('form')
-    //   let irrelForm;
-    
-    //   if (action === 'add-project') {
-    //     // Task submission form
-    //     irrelForm = document.querySelector('main > form');
-    //   } else if (action === 'add-task') {
-    //     // Proj submission form
-    //     irrelForm = document.querySelector("#projects-panel form");
-    //   } else {
-    //     let pageForms = document.querySelectorAll('#projects-panel > form, main > form');
-
-    //     console.log(pageForms);
-
-    //   }
-    
-    //   // If task/proj submission form displayed, hide
-    //   if (!irrelForm.classList.contains('hidden')) {
-    //     irrelForm.classList.toggle('hidden');
-    //     irrelForm.nextElementSibling.classList.toggle('hidden');
-    //   }
-    
-    //   // If task edit form displayed, hide
-    //   if (editFormDisplayed) {
-    //     let editForm = tasksListContainer.querySelector('form');
-    
-    //     editForm.previousElementSibling.classList.toggle('hidden');
-    //     editForm.remove();
-    //   }
-    // }
-    // function hideExtraneousForms(action) {
-    //   const tasksListContainer = document.querySelector('#tasks-list-container');
-    //   let editFormDisplayed = !!tasksListContainer.querySelector('form')
-    //   let irrelForm;
-    
-    
-    //   if (action === 'add-project') {
-    //     // Task submission form
-    //     irrelForm = document.querySelector('main > form');
-    //   } else if (action === 'add-task') {
-    //     // Proj submission form
-    //     irrelForm = document.querySelector("#projects-panel form");
-    //   }
-    
-    //   // If task/proj submission form displayed, hide
-    //   if (!irrelForm.classList.contains('hidden')) {
-    //     irrelForm.classList.toggle('hidden');
-    //     irrelForm.nextElementSibling.classList.toggle('hidden');
-    //   }
-    
-    //   // If task edit form displayed, hide
-    //   if (editFormDisplayed) {
-    //     let editForm = tasksListContainer.querySelector('form');
-    
-    //     editForm.previousElementSibling.classList.toggle('hidden');
-    //     editForm.remove();
-    //   }
-    // }
-
   }
-  // const controlSubFormEvents = (e) => {
 
-  //   let btn = e.currentTarget;
-
-  //   // let isProjBtn = e.currentTarget.classList.contains('project-button');
-  //   let action = e.currentTarget.id;
-  //   let form;
-
-  //   // isProjBtn
-  //   // ? (form = document.querySelector("#projects-panel form"))
-  //   // : (form = document.querySelector("main > form"));  
-
-  //   if (btn.classList.contains('project-button')) {
-  //     form = document.querySelector("#projects-panel form");
-  //   } else if (btn.classList.contains('task-button')) {
-  //     form = document.querySelector("main > form");
-  //   } else {
-  //     form = document.querySelector('#edit-task-form');
-  //   }
-
-
-  
-  //   if (action === 'add-project' || action === 'add-task') {
-  //     hideExtraneousForms(action);
-  //     displayTargetForm(form);
-  //   }
-  
-  //   if (action === 'cancel-project' || action === 'cancel-task') {
-  //     hideTargetForm(form);
-  //   }
-  
-  //   if (action === 'submit-project' || action === 'submit-task') {
-  //     // dataController.updateData(action);
-
-  //     // display(dataController.updateData(action));
-  
-
-  //     // Move DOM stuff below 
-  //     if (action === 'submit-project') {
-  //       // display(dataController.currentProjects);
-  //       display(dataController.updateData(action));
-  //       listenersController.addNavListener();
-  //     } else if (action === 'submit-task') {
-  //       display(dataController.updateData(action), false);
-  //       listenersController.addTaskListener();
-  //     }
-
-      
-  //     hideTargetForm(form);
-  //   }
-
-
-  //   if (action === 'cancel-edit') {
-  //     form.previousElementSibling.classList.toggle('hidden');
-  //     form.remove();
-  //   }
-
-  //   // if (action === 'submit-edit') {
-
-  //   // }
-
-  //   /* Helper functions */
-  //   // Show correct input form
-  //   function displayTargetForm(form) {
-  //     // Show selected form
-  //     form.classList.remove('hidden');
-  //     // Focus on first input box
-  //     form.querySelector('input').focus();
-  //     // Hide add button
-  //     form.nextElementSibling.classList.add('hidden');
-  //   }
-
-  //   // Hide input form
-  //   function hideTargetForm(form) {
-  //     // Reset form
-  //     form.reset();
-  //     // Hide selected form
-  //     form.classList.add('hidden');
-  //     // SHow add button
-  //     form.nextElementSibling.classList.remove('hidden');
-  //   }
-
-  //   // Hide/remove irrelevant forms 
-  //   function hideExtraneousForms(action) {
-  //     const tasksListContainer = document.querySelector('#tasks-list-container');
-  //     let editFormDisplayed = !!tasksListContainer.querySelector('form')
-  //     let irrelForm;
-    
-  //     if (action === 'add-project') {
-  //       // Task submission form
-  //       irrelForm = document.querySelector('main > form');
-  //     } else if (action === 'add-task') {
-  //       // Proj submission form
-  //       irrelForm = document.querySelector("#projects-panel form");
-  //     } else {
-  //       let pageForms = document.querySelectorAll('#projects-panel > form, main > form');
-
-  //       console.log(pageForms);
-
-  //     }
-    
-  //     // If task/proj submission form displayed, hide
-  //     if (!irrelForm.classList.contains('hidden')) {
-  //       irrelForm.classList.toggle('hidden');
-  //       irrelForm.nextElementSibling.classList.toggle('hidden');
-  //     }
-    
-  //     // If task edit form displayed, hide
-  //     if (editFormDisplayed) {
-  //       let editForm = tasksListContainer.querySelector('form');
-    
-  //       editForm.previousElementSibling.classList.toggle('hidden');
-  //       editForm.remove();
-  //     }
-  //   }
-  //   // function hideExtraneousForms(action) {
-  //   //   const tasksListContainer = document.querySelector('#tasks-list-container');
-  //   //   let editFormDisplayed = !!tasksListContainer.querySelector('form')
-  //   //   let irrelForm;
-    
-    
-  //   //   if (action === 'add-project') {
-  //   //     // Task submission form
-  //   //     irrelForm = document.querySelector('main > form');
-  //   //   } else if (action === 'add-task') {
-  //   //     // Proj submission form
-  //   //     irrelForm = document.querySelector("#projects-panel form");
-  //   //   }
-    
-  //   //   // If task/proj submission form displayed, hide
-  //   //   if (!irrelForm.classList.contains('hidden')) {
-  //   //     irrelForm.classList.toggle('hidden');
-  //   //     irrelForm.nextElementSibling.classList.toggle('hidden');
-  //   //   }
-    
-  //   //   // If task edit form displayed, hide
-  //   //   if (editFormDisplayed) {
-  //   //     let editForm = tasksListContainer.querySelector('form');
-    
-  //   //     editForm.previousElementSibling.classList.toggle('hidden');
-  //   //     editForm.remove();
-  //   //   }
-  //   // }
-
-  // }
-
-
-  const manageNavEvents = (e) => {
+  const manageNavResponse = (e) => {
     const selection = e.target.closest('li');
     const addTaskBtn = document.querySelector('main > button');
     const mainPanel = document.querySelector('main');
@@ -499,7 +269,7 @@ const displayController = (() => {
         
         // Remove item, redisplay + add listener to container list
         display(dataController.updateData(selection.id))
-        listenersController.addNavListener();
+        listenersController.addNavListsListeners();
 
         // If deleted item was displayed in main, display 'All' tasks
         if (selection.id === mainPanel.dataset.selected) {
@@ -510,7 +280,7 @@ const displayController = (() => {
           setMainHeader('all');
           highlight(document.querySelector('#all'));
           display(dataController.filterTasks('all'), false);
-          listenersController.addTaskListener();  
+          listenersController.addTasksListListener();  
         } 
       } else {
 
@@ -520,12 +290,12 @@ const displayController = (() => {
         setMainHeader(selection.id);
         highlight(selection);
         display(dataController.filterTasks(selection.id), false);
-        listenersController.addTaskListener();  
+        listenersController.addTasksListListener();  
       }
     }
   }
 
-  const manageTaskEvents = (e) => {
+  const manageTaskResponse = (e) => {
     let editForm = document.querySelector('#edit-task-form');
     let listItem = e.target.closest('li');
     let currentProjs = dataController.currentProjects;
@@ -589,7 +359,7 @@ const displayController = (() => {
             hideExtraneousForms();
 
   
-            listItem.append(contentCreator.createEditForm(task));
+            listItem.append(content.createEditForm(task));
             wrapper.classList.toggle('hidden');
   
           } 
@@ -654,7 +424,7 @@ const displayController = (() => {
             }
   
             display(selectedTasks, false);
-            addTaskListener();
+            addTasksListListener();
           }
   
 
@@ -733,219 +503,17 @@ const displayController = (() => {
             }
     
             display(selectedTasks, false);
-            addTaskListener();
+            addTasksListListener();
           }
   
         }
       }
     }
   }
-  // const manageTaskEvents = (e) => {
-  //   let editForm = document.querySelector('#edit-task-form');
-  //   let listItem = e.target.closest('li');
-  //   let currentProjs = dataController.currentProjects;
-  //   let selection;
-  //   let wrapper;
-  //   let description;
-  //   let checkbox;
-  
-  //   if (listItem) {
-  //     selection = listItem.id;
-  //     wrapper = listItem.querySelector('.task-wrapper');
-  //     description = listItem.querySelector('.task-descr-wrapper');
-  //     checkbox = listItem.querySelector('.checkbox');
-  //   }
-  
-  //   for (let i = 0; i < currentProjs.length; i++) {
-  //     for (let j = 0; j < currentProjs[i].tasks.length; j++) {
-
-  //       if (currentProjs[i].tasks[j].id === selection) {
-  //         let task = currentProjs[i].tasks[j];
-  
-  //         if (e.target.classList.contains('checkbox') || e.target.classList.contains('checked')) {
-  
-  //           (task.completed) ? task.completed = false : task.completed = true;
-  //           populateLocalStorage(currentProjects);
-  
-  //           checkbox.classList.toggle('checked');
-  //           listItem.classList.toggle('completed');
-  //           description.classList.toggle('crossed');
-  
-  //         } else if (e.target.classList.contains('important-icon')) {
-  
-  //           (task.important) ? task.important = false : task.important = true; 
-  //           populateLocalStorage(currentProjects);
-  
-
-  
-  //           e.target.classList.toggle('important');
-  
-  //         } else if (e.target.classList.contains('edit-icon')) {
-  
-  //           if (editForm) {
-  //             editForm.previousElementSibling.classList.toggle('hidden');
-  //             editForm.remove();
-  //           }
-  
-  //           if (!projectForm.classList.contains('hidden')) {
-  //             projectForm.classList.toggle('hidden');
-  //             addProjectButton.classList.toggle('hidden');
-  //           }
-  
-  //           if (!taskForm.classList.contains('hidden')) {
-  //             taskForm.classList.toggle('hidden');
-  //             addTaskButton.classList.toggle('hidden');
-  //           }
-  
-  //           listItem.append(contentCreator.createEditForm(task));
-  //           wrapper.classList.toggle('hidden');
-  
-  //         } else if (e.target.classList.contains('delete-icon')) {
-  //           currentProjects[i].tasks.splice(j, 1);
-  //           populateLocalStorage(currentProjects);
-  
-  //           let selectedTasks = [];
-  
-  //           if (mainPanel.dataset.selected === 'all') {
-  
-  //             currentProjects.forEach(proj => {
-  //               proj.tasks.forEach(task => {
-  //                 selectedTasks.push(task)
-  
-  //               })
-  //             })
-  
-  //           } else if (mainPanel.dataset.selected === 'today') {
-    
-  //             currentProjects.forEach(proj => {
-  //               proj.tasks.forEach(task => {
-    
-  //                 if (isToday(parseISO(task.due))) {
-  //                   selectedTasks.push(task);
-  //                 }
-    
-  //               })
-  //             })
-    
-  //           } else if (mainPanel.dataset.selected === 'week') {
-  
-  //             currentProjects.forEach(proj => {
-  //               proj.tasks.forEach(task => {
-    
-  //                 if (task.due) {
-  //                   if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
-  //                     selectedTasks.push(task)
-  //                   }
-  //                 }
-    
-  //               })
-  //             })
-    
-  
-  //           } else if (mainPanel.dataset.selected === 'important') {
-  
-  //             currentProjects.forEach(proj => {
-  //               proj.tasks.forEach(task => {
-  //                 if (task.important) {
-  //                   selectedTasks.push(task);
-  //                 }
-  //               })
-  //             })
-              
-  //           } else {
-  
-  //             currentProjects[i].tasks.forEach(task => {
-  //               selectedTasks.push(task);
-  //             })
-  //           }
-  
-  //           display(selectedTasks, false);
-  //           addTaskListener();
-  //         }
-  
-  //         if (e.target.id === 'cancel-edit') {
-  //           editForm.previousElementSibling.classList.toggle('hidden');
-  //           editForm.remove();
-  
-  //           // console.log(editForm.previousElementSibling);
-  
-  
-  //         } else if (e.target.id === 'submit-edit') {
-    
-  //           task.name = tasksList.querySelector('#edit-name-input').value;
-  //           task.details = tasksList.querySelector('#edit-details-input').value;
-  //           task.due = tasksList.querySelector('#edit-date-input').value;
-  //           task.important = tasksList.querySelector('#edit-important-input').checked;
-    
-  //           populateLocalStorage(currentProjects);
-    
-  //           let selectedTasks = [];
-    
-  //           if (mainPanel.dataset.selected === 'all') {
-    
-  //             currentProjects.forEach(proj => {
-  //               proj.tasks.forEach(task => {
-  //                 selectedTasks.push(task)
-    
-  //               })
-  //             })
-    
-  //           } else if (mainPanel.dataset.selected === 'today') {
-    
-  //             currentProjects.forEach(proj => {
-  //               proj.tasks.forEach(task => {
-    
-  //                 if (isToday(parseISO(task.due))) {
-  //                   selectedTasks.push(task);
-  //                 }
-    
-  //               })
-  //             })
-    
-  //           } else if (mainPanel.dataset.selected === 'week') {
-    
-  //             currentProjects.forEach(proj => {
-  //               proj.tasks.forEach(task => {
-    
-  //                 if (task.due) {
-  //                   if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
-  //                     selectedTasks.push(task)
-  //                   }
-  //                 }
-    
-  //               })
-  //             })
-    
-    
-  //           } else if (mainPanel.dataset.selected === 'important') {
-    
-  //             currentProjects.forEach(proj => {
-  //               proj.tasks.forEach(task => {
-  //                 if (task.important) {
-  //                   selectedTasks.push(task);
-  //                 }
-  //               })
-  //             })
-              
-  //           } else {
-    
-  //             currentProjects[i].tasks.forEach(task => {
-  //               selectedTasks.push(task);
-  //             })
-  //           }
-    
-  //           display(selectedTasks, false);
-  //           addTaskListener();
-  //         }
-  
-  //       }
-  //     }
-  //   }
-  // }
 
 
   /* Helper functions: */
-  // Highlight nav selection
+  // Highlight displayed nav selection 
   function highlight(item) {
     if (highlighted) {
       highlighted.classList.remove('highlight');
@@ -977,14 +545,14 @@ const displayController = (() => {
     currentList.id = listId;
     list.forEach(item => { 
       currentList.append(
-        isProject ? contentCreator.createProject(item) : contentCreator.createTask(item)
+        isProject ? content.createProject(item) : content.createTask(item)
       );
     })
   
     container.append(currentList);
   }
 
-  // Set main h1 text content
+  // Set main h1 text 
   const setMainHeader = (input) => {
     const mainHeader = document.querySelector('h1');
 
@@ -1010,9 +578,7 @@ const displayController = (() => {
   }
   }
 
-
-
-  // Show correct input form
+  // Show correct form (either proj or task)
   function displayTargetForm(form) {
     // Show selected form
     form.classList.remove('hidden');
@@ -1075,13 +641,12 @@ const displayController = (() => {
   }
 
 
-
   return {
     toggleMenu, 
     toggleTheme,
-    controlSubFormEvents,
-    manageNavEvents,
-    manageTaskEvents
+    managePageBtns,
+    manageNavResponse,
+    manageTaskResponse
   }
 })();
 
@@ -1101,252 +666,45 @@ const listenersController = (() => {
     themeToggle.addEventListener('click', displayController.toggleTheme);
   }
 
-  const addNavListener = () => {
+  const addNavListsListeners = () => {
     // In lieu of adding listener to list items, add to lists
     // May be more efficient?
     let navLists = document.querySelectorAll('nav ul');
 
     navLists.forEach(list => {
-      list.addEventListener('click', displayController.manageNavEvents)
+      list.addEventListener('click', displayController.manageNavResponse)
     })
   }
 
-  const addTaskListener = () => {
+  const addTasksListListener = () => {
   const tasksList = document.querySelector('#tasks-list');
 
     if (tasksList) {
-      tasksList.addEventListener('click', displayController.manageTaskEvents)
+      tasksList.addEventListener('click', displayController.manageTaskResponse)
     }
   }
-  // const addTaskListener = () => {
-  // const tasksList = document.querySelector('#tasks-list');
 
-  // if (tasksList) {
-  //   tasksList.addEventListener('click', (e) => {
-
-  //     let editForm = tasksList.querySelector('#edit-task-form');
-  //     let listItem = e.target.closest('li');
-  //     let selection;
-  //     let wrapper;
-  //     let description;
-  //     let checkbox;
-
-  //     if (listItem) {
-  //       selection = listItem.id;
-  //       wrapper = listItem.querySelector('.task-wrapper');
-  //       description = listItem.querySelector('.task-descr-wrapper');
-  //       checkbox = listItem.querySelector('.checkbox');
-  //     }
-
-  //     for (let i = 0; i < dataController.currentProjects.length; i++) {
-  //       for (let j = 0; j < dataController.currentProjects[i].tasks.length; j++) {
-
-  //         if (dataController.currentProjects[i].tasks[j].id === selection) {
-  //           let task = dataController.currentProjects[i].tasks[j];
-
-  //           if (e.target.classList.contains('checkbox') || e.target.classList.contains('checked')) {
-
-  //             (task.completed) ? task.completed = false : task.completed = true;
-  //             populateLocalStorage(currentProjects);
-
-  //             checkbox.classList.toggle('checked');
-  //             listItem.classList.toggle('completed');
-  //             description.classList.toggle('crossed');
-
-  //           } else if (e.target.classList.contains('important-icon')) {
-
-  //             (task.important) ? task.important = false : task.important = true; 
-  //             populateLocalStorage(currentProjects);
-
-  //             // console.log(e.target.classList.contains('important'));
-
-  //             e.target.classList.toggle('important');
-
-  //           } else if (e.target.classList.contains('edit-icon')) {
-
-  //             if (editForm) {
-  //               editForm.previousElementSibling.classList.toggle('hidden');
-  //               editForm.remove();
-  //             }
-
-  //             if (!projectForm.classList.contains('hidden')) {
-  //               projectForm.classList.toggle('hidden');
-  //               addProjectButton.classList.toggle('hidden');
-  //             }
-
-  //             if (!taskForm.classList.contains('hidden')) {
-  //               taskForm.classList.toggle('hidden');
-  //               addTaskButton.classList.toggle('hidden');
-  //             }
-
-  //             listItem.append(createEditForm(task));
-  //             wrapper.classList.toggle('hidden');
-
-  //           } else if (e.target.classList.contains('delete-icon')) {
-  //             currentProjects[i].tasks.splice(j, 1);
-  //             populateLocalStorage(currentProjects);
-
-  //             let selectedTasks = [];
-
-  //             if (mainPanel.dataset.selected === 'all') {
-
-  //               currentProjects.forEach(proj => {
-  //                 proj.tasks.forEach(task => {
-  //                   selectedTasks.push(task)
-
-  //                 })
-  //               })
-
-  //             } else if (mainPanel.dataset.selected === 'today') {
-      
-  //               currentProjects.forEach(proj => {
-  //                 proj.tasks.forEach(task => {
-      
-  //                   if (isToday(parseISO(task.due))) {
-  //                     selectedTasks.push(task);
-  //                   }
-      
-  //                 })
-  //               })
-      
-  //             } else if (mainPanel.dataset.selected === 'week') {
-
-  //               currentProjects.forEach(proj => {
-  //                 proj.tasks.forEach(task => {
-      
-  //                   if (task.due) {
-  //                     if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
-  //                       selectedTasks.push(task)
-  //                     }
-  //                   }
-      
-  //                 })
-  //               })
-      
-
-  //             } else if (mainPanel.dataset.selected === 'important') {
-
-  //               currentProjects.forEach(proj => {
-  //                 proj.tasks.forEach(task => {
-  //                   if (task.important) {
-  //                     selectedTasks.push(task);
-  //                   }
-  //                 })
-  //               })
-                
-  //             } else {
-
-  //               currentProjects[i].tasks.forEach(task => {
-  //                 selectedTasks.push(task);
-  //               })
-  //             }
-
-  //             display(selectedTasks, false);
-  //             addTaskListener();
-  //           }
-
-  //           if (e.target.id === 'cancel-edit') {
-  //             editForm.previousElementSibling.classList.toggle('hidden');
-  //             editForm.remove();
-
-  //             // console.log(editForm.previousElementSibling);
-
-
-  //           } else if (e.target.id === 'submit-edit') {
-      
-  //             task.name = tasksList.querySelector('#edit-name-input').value;
-  //             task.details = tasksList.querySelector('#edit-details-input').value;
-  //             task.due = tasksList.querySelector('#edit-date-input').value;
-  //             task.important = tasksList.querySelector('#edit-important-input').checked;
-      
-  //             populateLocalStorage(currentProjects);
-      
-  //             let selectedTasks = [];
-      
-  //             if (mainPanel.dataset.selected === 'all') {
-      
-  //               currentProjects.forEach(proj => {
-  //                 proj.tasks.forEach(task => {
-  //                   selectedTasks.push(task)
-      
-  //                 })
-  //               })
-      
-  //             } else if (mainPanel.dataset.selected === 'today') {
-      
-  //               currentProjects.forEach(proj => {
-  //                 proj.tasks.forEach(task => {
-      
-  //                   if (isToday(parseISO(task.due))) {
-  //                     selectedTasks.push(task);
-  //                   }
-      
-  //                 })
-  //               })
-      
-  //             } else if (mainPanel.dataset.selected === 'week') {
-      
-  //               currentProjects.forEach(proj => {
-  //                 proj.tasks.forEach(task => {
-      
-  //                   if (task.due) {
-  //                     if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
-  //                       selectedTasks.push(task)
-  //                     }
-  //                   }
-      
-  //                 })
-  //               })
-      
-      
-  //             } else if (mainPanel.dataset.selected === 'important') {
-      
-  //               currentProjects.forEach(proj => {
-  //                 proj.tasks.forEach(task => {
-  //                   if (task.important) {
-  //                     selectedTasks.push(task);
-  //                   }
-  //                 })
-  //               })
-                
-  //             } else {
-      
-  //               currentProjects[i].tasks.forEach(task => {
-  //                 selectedTasks.push(task);
-  //               })
-  //             }
-      
-  //             display(selectedTasks, false);
-  //             addTaskListener();
-  //           }
-
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
-  // }
-
-  const addFormButtonListeners = () => {
+  const addPageBtnListeners = () => {
     const formBtns = document.querySelectorAll('button');
   
     formBtns.forEach(btn => {
-      btn.addEventListener('click', displayController.controlSubFormEvents);
+      btn.addEventListener('click', displayController.managePageBtns);
     })
   }
 
   addMenuToggListener();
   addThemeToggListener();
-  addNavListener(); // Only on task views on start
-  addTaskListener();
-  addFormButtonListeners();
+  // Only on task views on start
+  addNavListsListeners(); 
+  addTasksListListener();
+  addPageBtnListeners();
 
   return {
     addMenuToggListener,
     addThemeToggListener,
-    addNavListener,
-    addTaskListener,
-    addFormButtonListeners
+    addNavListsListeners,
+    addTasksListListener,
+    addPageBtnListeners
   }
 })();
 

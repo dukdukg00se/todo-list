@@ -1,4 +1,4 @@
-const contentCreator = (() => {
+const content = (() => {
 
   const createProject = (projObj) => {
     const projectListItem = document.createElement('li');
@@ -152,4 +152,4 @@ const contentCreator = (() => {
   }
 })();
 
-export default contentCreator;
+export default content;
