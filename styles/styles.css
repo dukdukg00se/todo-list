@@ -373,7 +373,6 @@ main li > div {
   line-height: 2rem;
 }
 
-/* Task item action icons */
 .delete-icon,
 .important-icon, 
 .edit-icon {
@@ -395,7 +394,6 @@ main li > div {
   padding: 0.1rem;
 }
 .delete-icon {
-  background-color: var(--delete-icon-bg-color);
   padding: 0.4rem;
 }
 .important-icon {
@@ -424,10 +422,10 @@ main form > div {
 }
 
 /* Edit task form delete icon */
-.delete-wrapper .delete-icon {
+form > div span {
+  background-color: var(--delete-icon-bg-color);
   color: var(--text-color);
   font-size: 2.7rem;
-
 }
 
 /* Add_task icon for Add Task button */
