@@ -7,65 +7,98 @@ import {
 import content from './modules/content.js';
 
 // Varaiables. Move later
-const projectsListContainer = document.querySelector('#projects-list-container');
-const mainPanel = document.querySelector('main');
-const tasksListContainer = document.querySelector('#tasks-list-container');
-
+// const mainPanel = document.querySelector('main');
 
 
 const dataController = (() => {
-
   let currentProjects = !JSON.parse(localStorage.getItem('projects')) 
     ? [] 
     : JSON.parse(localStorage.getItem('projects'));
 
-  let currentDisplay = !localStorage.getItem('display') 
+  let currentNavSelection = !localStorage.getItem('display')
     ? 'all' 
     : localStorage.getItem('display'); 
 
 
-  const updateData = (input) => {
-    let container;
+  // const updateData = (input) => {
+  //   let container;
 
-    if (input === 'submit-project' || input === 'submit-task') {
-      let item, idPrefix;
+  //   if (input === 'submit-project' || input === 'submit-task') {
+  //     let item, idPrefix;
 
-      if (input === 'submit-project') {
-        const projName = document.querySelector("#project-name-input").value;
-        item = new Project(projName);
-        container = dataController.currentProjects;
-        idPrefix = 'project-'
-      } else if (input === 'submit-task') {
-        const taskName = document.querySelector('#task-name-input').value;
-        const taskDetails = document.querySelector('#task-details-input').value;
-        const taskDue = document.querySelector('#task-date-input').value;
-        const taskImportant = document.querySelector('#task-important-input').checked;
-        let selectedProject = mainPanel.dataset.selected;
+  //     if (input === 'submit-project') {
+  //       const projName = document.querySelector("#project-name-input").value;
+  //       item = new Project(projName);
+  //       container = dataController.currentProjects;
+  //       idPrefix = 'project-'
+  //     } else if (input === 'submit-task') {
+  //       const taskName = document.querySelector('#task-name-input').value;
+  //       const taskDetails = document.querySelector('#task-details-input').value;
+  //       const taskDue = document.querySelector('#task-date-input').value;
+  //       const taskImportant = document.querySelector('#task-important-input').checked;
+  //       let selectedProject = mainPanel.dataset.selected;
     
-        item = new Task(taskName, taskDetails, taskDue, taskImportant)
+  //       item = new Task(taskName, taskDetails, taskDue, taskImportant)
     
-        dataController.currentProjects.forEach(proj => {
-          if (proj.id === selectedProject) {
-            container = proj.tasks;
-            idPrefix = `${proj.id}-task-`;
-          }
-        })
-      }
+  //       dataController.currentProjects.forEach(proj => {
+  //         if (proj.id === selectedProject) {
+  //           container = proj.tasks;
+  //           idPrefix = `${proj.id}-task-`;
+  //         }
+  //       })
+  //     }
 
-      addItem(item, container);
-      setItemId(idPrefix, container);
+  //     add(item, container);
+  //     setId(idPrefix, container);
 
-    } else { // Delete action
+  //   } else { // Delete action
 
+  //     container = dataController.currentProjects;
+  //     remove(input, container);
+
+  //   }
+
+  //   populateLocalStorage(currentProjects);
+
+  //   return container;
+  // }
+  const initNewItem = (input) => {
+    let item, container, idPrefix;
+  
+    if (input === 'submit-project') {
+      const projName = document.querySelector("#project-name-input").value;
+      item = new Project(projName);
       container = dataController.currentProjects;
-      removeItem(input, container);
-
+      idPrefix = 'project-'
+    } else if (input === 'submit-task') {
+      const taskName = document.querySelector('#task-name-input').value;
+      const taskDetails = document.querySelector('#task-details-input').value;
+      const taskDue = document.querySelector('#task-date-input').value;
+      const taskImportant = document.querySelector('#task-important-input').checked;
+      let selectedProject = document.querySelector('main').dataset.selected;
+      item = new Task(taskName, taskDetails, taskDue, taskImportant)
+  
+      dataController.currentProjects.forEach(proj => {
+        if (proj.id === selectedProject) {
+          container = proj.tasks;
+          idPrefix = `${proj.id}-task-`;
+        }
+      })
     }
-
+  
+    add(item, container);
+    setId(idPrefix, container);
     populateLocalStorage(currentProjects);
-
+  
     return container;
   }
+  const deleteItem = (item, container) => {
+    remove(item, container);
+    populateLocalStorage(currentProjects);
+  
+    return container;
+  }
+
 
   const filterTasks = (filter) => {
     let filteredTasks = [];
@@ -128,6 +161,12 @@ const dataController = (() => {
     
   };
 
+  const setNavSelection = (input) => {
+    currentNavSelection = input;
+    populateLocalStorage(input);
+    console.log(currentNavSelection);
+  }
+
 
   /* Object constructors */
   function Project(name) {
@@ -145,12 +184,12 @@ const dataController = (() => {
 
   /* Helper functions */
   // Add task/proj items
-  const addItem = (obj, arr) => {
+  const add = (obj, arr) => {
     arr.push(obj);
   }
 
   // Delete task/proj items
-  const removeItem = (objId, arr) => {
+  const remove = (objId, arr) => {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i].id === objId) {
         arr.splice(i, 1);
@@ -159,7 +198,7 @@ const dataController = (() => {
   }
 
   // Set task/proj id's after adding to list
-  const setItemId = (prefix, arr) => {
+  const setId = (prefix, arr) => {
     for (let i = 0; i < arr.length; i++) {
       arr[i].id = prefix + i;
     }
@@ -167,10 +206,13 @@ const dataController = (() => {
 
   return {
     currentProjects,
-    currentDisplay,
-    updateData,
+    currentNavSelection,
+    // updateData,
+    initNewItem,
+    deleteItem,
     filterTasks,
-    populateLocalStorage
+    populateLocalStorage,
+    setNavSelection
   }
 })();
 
@@ -179,10 +221,30 @@ const dataController = (() => {
 const displayController = (() => {
   // Set initial display to "All"
   let highlighted;
-  let elemId = dataController.currentDisplay;
-  highlight(document.getElementById(elemId)); 
-  display(dataController.filterTasks('all'), false);
+  let selection = dataController.currentNavSelection;
+
+
+  setMainHeader(selection);
+  document.querySelector('main').dataset.selected = selection;
+  display(dataController.filterTasks(selection));
   display(dataController.currentProjects);
+  highlight(document.getElementById(selection)); 
+  ctrlAddTaskBtn(selection);
+
+  function ctrlAddTaskBtn(input) {
+    const addTaskBtn = document.querySelector('main > button');
+
+    switch (input) {
+    case 'all':
+    case 'today':
+    case 'week':
+    case 'important':
+      addTaskBtn.classList.add('hidden');
+      break;
+    default:
+      addTaskBtn.classList.remove('hidden');
+    }
+  }
 
 
   const toggleMenu = () => {
@@ -219,13 +281,13 @@ const displayController = (() => {
 
   // Excludes task edit form btns
   const managePageBtns = (e) => {
+    // console.log(e.currentTarget.id)
+
     let isProjBtn = e.currentTarget.classList.contains('project-button');
     let action = e.currentTarget.id;
-    let form;
-
-    isProjBtn
-    ? (form = document.querySelector("#projects-panel form"))
-    : (form = document.querySelector("main > form"));  
+    let form = isProjBtn 
+      ? document.querySelector('#projects-panel form')
+      : document.querySelector('main > form');
   
     if (action === 'add-project' || action === 'add-task') {
       hideExtraneousForms(action);
@@ -234,27 +296,23 @@ const displayController = (() => {
   
     if (action === 'cancel-project' || action === 'cancel-task') {
       hideTargetForm(form);
+
     }
   
     if (action === 'submit-project' || action === 'submit-task') {
-      // dataController.updateData(action);
+      display(dataController.initNewItem(action));
+      hideTargetForm(form);
 
-      // display(dataController.updateData(action));
-  
 
-      // Move DOM stuff below 
       if (action === 'submit-project') {
-        // display(dataController.currentProjects);
-        display(dataController.updateData(action));
+        let elem = document.getElementById(dataController.currentNavSelection);
+        highlight(elem);
         listenersController.addNavListsListeners();
-      } else if (action === 'submit-task') {
-        display(dataController.updateData(action), false);
+      } else {
         listenersController.addTasksListListener();
       }
 
-      hideTargetForm(form);
     }
-
   }
 
   const manageNavResponse = (e) => {
@@ -262,35 +320,41 @@ const displayController = (() => {
     const addTaskBtn = document.querySelector('main > button');
     const mainPanel = document.querySelector('main');
 
-    // If a view option/proj is clicked
+    // If a home option/proj clicked
     if (selection) { 
       // If click is on a delete icon
-      if (e.target.classList.contains('delete-icon')) {
-        
+      if (e.target.classList.contains('delete-icon')) {        
         // Remove item, redisplay + add listener to container list
-        display(dataController.updateData(selection.id))
+        display(dataController.deleteItem(selection.id, dataController.currentProjects))
         listenersController.addNavListsListeners();
 
         // If deleted item was displayed in main, display 'All' tasks
         if (selection.id === mainPanel.dataset.selected) {
 
-          mainPanel.dataset.selected = 'all';
-          addTaskBtn.classList.add('hidden');
+          dataController.currentNavSelection = 'all';
+          dataController.populateLocalStorage(dataController.currentNavSelection);
 
-          setMainHeader('all');
-          highlight(document.querySelector('#all'));
-          display(dataController.filterTasks('all'), false);
-          listenersController.addTasksListListener();  
+          let selection = dataController.currentNavSelection;
+          setMainHeader(selection);
+          display(dataController.filterTasks(selection));
+          addTaskBtn.classList.add('hidden');
+          // Add task listener here
         } 
+
+        highlight(document.getElementById(dataController.currentNavSelection)); 
+
       } else {
 
-        mainPanel.dataset.selected = selection.id;
-        (e.target.closest('ul').id === 'view-options-list') ? addTaskBtn.classList.add('hidden') : addTaskBtn.classList.remove('hidden');
+        dataController.currentNavSelection = selection.id;
+        dataController.populateLocalStorage(selection.id);
 
+        mainPanel.dataset.selected = selection.id;
+        (e.target.closest('ul').id === 'home-list') ? addTaskBtn.classList.add('hidden') : addTaskBtn.classList.remove('hidden');
         setMainHeader(selection.id);
         highlight(selection);
-        display(dataController.filterTasks(selection.id), false);
+        display(dataController.filterTasks(selection.id));
         listenersController.addTasksListListener();  
+
       }
     }
   }
@@ -423,7 +487,7 @@ const displayController = (() => {
               })
             }
   
-            display(selectedTasks, false);
+            display(selectedTasks);
             addTasksListListener();
           }
   
@@ -502,7 +566,7 @@ const displayController = (() => {
               })
             }
     
-            display(selectedTasks, false);
+            display(selectedTasks);
             addTasksListListener();
           }
   
@@ -518,21 +582,22 @@ const displayController = (() => {
     if (highlighted) {
       highlighted.classList.remove('highlight');
     }
-  
+
     highlighted = item;
     highlighted.classList.add('highlight');
   }
 
   // Create item and add to appropriate list
-  function display (list, isProject = true) {
+  function display (data) {
     let oldList, listId, container;
+    let isProj = (data === dataController.currentProjects);
   
-    if (isProject) {
-      container = projectsListContainer;
+    if (isProj) {
+      container = document.querySelector('#projects-list-container');
       oldList = document.querySelector('#projects-list');
       listId = 'projects-list';
     } else {
-      container = tasksListContainer;
+      container = document.querySelector('#tasks-list-container');
       oldList = document.querySelector('#tasks-list');
       listId = 'tasks-list';
     }
@@ -541,19 +606,19 @@ const displayController = (() => {
       oldList.remove();
     }
   
-    const currentList = document.createElement('ul');
-    currentList.id = listId;
-    list.forEach(item => { 
-      currentList.append(
-        isProject ? content.createProject(item) : content.createTask(item)
+    const newList = document.createElement('ul');
+    newList.id = listId;
+    data.forEach(item => { 
+      newList.append(
+        isProj ? content.createProject(item) : content.createTask(item)
       );
     })
   
-    container.append(currentList);
+    container.append(newList);
   }
-
+  
   // Set main h1 text 
-  const setMainHeader = (input) => {
+  function setMainHeader(input) {
     const mainHeader = document.querySelector('h1');
 
     switch (input) {
@@ -575,7 +640,7 @@ const displayController = (() => {
           mainHeader.textContent = proj.name;
         }
       })
-  }
+    }
   }
 
   // Show correct form (either proj or task)
@@ -586,7 +651,36 @@ const displayController = (() => {
     form.querySelector('input').focus();
     // Hide add button
     form.nextElementSibling.classList.add('hidden');
+
+    window.addEventListener('click', hideFormOnClick);
+
   }
+
+  function hideFormOnClick(e) {
+
+    let isTaskBtn = 
+      e.target.classList.contains('task-button') || 
+      e.target.parentElement.classList.contains('task-button');
+    let isProjBtn = 
+      e.target.classList.contains('project-button') || 
+      e.target.parentElement.classList.contains('project-button');
+    let isForm = !!e.target.closest('form');
+    let displayed;
+
+    let pgForms = document.querySelectorAll('form');
+    pgForms.forEach(form => {
+      if (!form.classList.contains('hidden')) {
+        displayed = form;
+      }
+    })
+
+    if (!isTaskBtn && !isProjBtn && !isForm) {
+      hideTargetForm(displayed);
+    }
+  }
+
+
+
 
   // Hide input form
   function hideTargetForm(form) {
@@ -594,8 +688,11 @@ const displayController = (() => {
     form.reset();
     // Hide selected form
     form.classList.add('hidden');
-    // SHow add button
+    // Show add button
     form.nextElementSibling.classList.remove('hidden');
+
+
+    window.removeEventListener('click', hideFormOnClick);
   }
 
   // Hide/remove irrelevant forms 
@@ -692,6 +789,9 @@ const listenersController = (() => {
     })
   }
 
+
+
+
   addMenuToggListener();
   addThemeToggListener();
   // Only on task views on start
@@ -707,11 +807,6 @@ const listenersController = (() => {
     addPageBtnListeners
   }
 })();
-
-
-
-
-
 
 
 
