@@ -6,9 +6,6 @@ import {
 } from "date-fns";
 import content from './modules/content.js';
 
-// Varaiables. Move later
-// const mainPanel = document.querySelector('main');
-
 
 const dataController = (() => {
   let currentProjects = !JSON.parse(localStorage.getItem('projects')) 
@@ -161,6 +158,8 @@ const dataController = (() => {
     
   };
 
+
+  // Delete???
   const setNavSelection = (input) => {
     currentNavSelection = input;
     populateLocalStorage(input);
@@ -212,7 +211,7 @@ const dataController = (() => {
     deleteItem,
     filterTasks,
     populateLocalStorage,
-    setNavSelection
+    // setNavSelection
   }
 })();
 
@@ -234,7 +233,6 @@ const displayController = (() => {
       addTaskBtn.classList.remove('hidden');
     }
   }
-
   // Highlight displayed nav selection 
   let highlighted;
   function highlight(item) {
@@ -250,9 +248,15 @@ const displayController = (() => {
   setMainHeader(selection);
   document.querySelector('main').dataset.selected = selection;
   display(dataController.filterTasks(selection));
+  ctrlAddTaskBtn(selection);
+  // After moving listenerController below
+  // Need to add task list listener
+
   display(dataController.currentProjects);
   highlight(document.getElementById(selection)); 
-  ctrlAddTaskBtn(selection);
+  // Need to add proj list listener
+
+  // Need to add rest of page listeners
 
 
 
@@ -292,8 +296,6 @@ const displayController = (() => {
 
   // Excludes task edit form btns
   const managePageBtns = (e) => {
-    // console.log(e.currentTarget.id)
-
     let isProjBtn = e.currentTarget.classList.contains('project-button');
     let action = e.currentTarget.id;
     let form = isProjBtn 
@@ -373,6 +375,7 @@ const displayController = (() => {
   const manageTaskResponse = (e) => {
     let editForm = document.querySelector('#edit-task-form');
     let listItem = e.target.closest('li');
+    let mainPanel = document.querySelector('main');
     let currentProjs = dataController.currentProjects;
     let selection;
     let wrapper;
@@ -393,10 +396,14 @@ const displayController = (() => {
           let task = currentProjs[i].tasks[j];
   
           if (e.target.classList.contains('checkbox') || e.target.classList.contains('checked')) {
+
+            console.log(dataController.currentProjects);
   
             (task.completed) ? task.completed = false : task.completed = true;
-            populateLocalStorage(currentProjects);
+            dataController.populateLocalStorage(dataController.currentProjects);
   
+            console.log(dataController.currentProjects);
+
             checkbox.classList.toggle('checked');
             listItem.classList.toggle('completed');
             description.classList.toggle('crossed');
@@ -406,7 +413,7 @@ const displayController = (() => {
           if (e.target.classList.contains('important-icon')) {
   
             (task.important) ? task.important = false : task.important = true; 
-            populateLocalStorage(currentProjects);
+            dataController.populateLocalStorage(dataController.currentProjects);
   
 
   
@@ -415,91 +422,19 @@ const displayController = (() => {
           } 
           
           if (e.target.classList.contains('edit-icon')) {
-  
-            // if (editForm) {
-            //   editForm.previousElementSibling.classList.toggle('hidden');
-            //   editForm.remove();
-            // }
-  
-            // if (!projectForm.classList.contains('hidden')) {
-            //   projectForm.classList.toggle('hidden');
-            //   addProjectButton.classList.toggle('hidden');
-            // }
-  
-            // if (!taskForm.classList.contains('hidden')) {
-            //   taskForm.classList.toggle('hidden');
-            //   addTaskButton.classList.toggle('hidden');
-            // }
-
             hideExtraneousForms();
 
-  
             listItem.append(content.createEditForm(task));
             wrapper.classList.toggle('hidden');
   
           } 
           
           if (e.target.classList.contains('delete-icon')) {
-            currentProjects[i].tasks.splice(j, 1);
-            populateLocalStorage(currentProjects);
-  
-            let selectedTasks = [];
-  
-            if (mainPanel.dataset.selected === 'all') {
-  
-              currentProjects.forEach(proj => {
-                proj.tasks.forEach(task => {
-                  selectedTasks.push(task)
-  
-                })
-              })
-  
-            } else if (mainPanel.dataset.selected === 'today') {
-    
-              currentProjects.forEach(proj => {
-                proj.tasks.forEach(task => {
-    
-                  if (isToday(parseISO(task.due))) {
-                    selectedTasks.push(task);
-                  }
-    
-                })
-              })
-    
-            } else if (mainPanel.dataset.selected === 'week') {
-  
-              currentProjects.forEach(proj => {
-                proj.tasks.forEach(task => {
-    
-                  if (task.due) {
-                    if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
-                      selectedTasks.push(task)
-                    }
-                  }
-    
-                })
-              })
-    
-  
-            } else if (mainPanel.dataset.selected === 'important') {
-  
-              currentProjects.forEach(proj => {
-                proj.tasks.forEach(task => {
-                  if (task.important) {
-                    selectedTasks.push(task);
-                  }
-                })
-              })
-              
-            } else {
-  
-              currentProjects[i].tasks.forEach(task => {
-                selectedTasks.push(task);
-              })
-            }
-  
-            display(selectedTasks);
-            addTasksListListener();
+            dataController.currentProjects[i].tasks.splice(j, 1);
+            dataController.populateLocalStorage(dataController.currentProjects);
+
+            display(dataController.filterTasks(mainPanel.dataset.selected))
+            listenersController.addTasksListListener();
           }
   
 
@@ -510,75 +445,15 @@ const displayController = (() => {
             editForm.previousElementSibling.classList.toggle('hidden');
             editForm.remove();
   
-            // console.log(editForm.previousElementSibling);
-  
-  
           } else if (e.target.id === 'submit-edit') {
+            task.name = document.querySelector('#edit-name-input').value;
+            task.details = document.querySelector('#edit-details-input').value;
+            task.due = document.querySelector('#edit-date-input').value;
+            task.important = document.querySelector('#edit-important-input').checked;
     
-            task.name = tasksList.querySelector('#edit-name-input').value;
-            task.details = tasksList.querySelector('#edit-details-input').value;
-            task.due = tasksList.querySelector('#edit-date-input').value;
-            task.important = tasksList.querySelector('#edit-important-input').checked;
-    
-            populateLocalStorage(currentProjects);
-    
-            let selectedTasks = [];
-    
-            if (mainPanel.dataset.selected === 'all') {
-    
-              currentProjects.forEach(proj => {
-                proj.tasks.forEach(task => {
-                  selectedTasks.push(task)
-    
-                })
-              })
-    
-            } else if (mainPanel.dataset.selected === 'today') {
-    
-              currentProjects.forEach(proj => {
-                proj.tasks.forEach(task => {
-    
-                  if (isToday(parseISO(task.due))) {
-                    selectedTasks.push(task);
-                  }
-    
-                })
-              })
-    
-            } else if (mainPanel.dataset.selected === 'week') {
-    
-              currentProjects.forEach(proj => {
-                proj.tasks.forEach(task => {
-    
-                  if (task.due) {
-                    if (isThisWeek(parseISO(task.due), {weekStartsOn: getDay(new Date())})) {
-                      selectedTasks.push(task)
-                    }
-                  }
-    
-                })
-              })
-    
-    
-            } else if (mainPanel.dataset.selected === 'important') {
-    
-              currentProjects.forEach(proj => {
-                proj.tasks.forEach(task => {
-                  if (task.important) {
-                    selectedTasks.push(task);
-                  }
-                })
-              })
-              
-            } else {
-    
-              currentProjects[i].tasks.forEach(task => {
-                selectedTasks.push(task);
-              })
-            }
-    
-            display(selectedTasks);
-            addTasksListListener();
+            dataController.populateLocalStorage(dataController.currentProjects);
+            display(dataController.filterTasks(mainPanel.dataset.selected))
+            listenersController.addTasksListListener();
           }
   
         }
@@ -811,7 +686,4 @@ const listenersController = (() => {
     addPageBtnListeners
   }
 })();
-
-
-
 
