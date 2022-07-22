@@ -220,17 +220,6 @@ const dataController = (() => {
 
 const displayController = (() => {
   // Set initial display to "All"
-  let highlighted;
-  let selection = dataController.currentNavSelection;
-
-
-  setMainHeader(selection);
-  document.querySelector('main').dataset.selected = selection;
-  display(dataController.filterTasks(selection));
-  display(dataController.currentProjects);
-  highlight(document.getElementById(selection)); 
-  ctrlAddTaskBtn(selection);
-
   function ctrlAddTaskBtn(input) {
     const addTaskBtn = document.querySelector('main > button');
 
@@ -245,6 +234,28 @@ const displayController = (() => {
       addTaskBtn.classList.remove('hidden');
     }
   }
+
+  // Highlight displayed nav selection 
+  let highlighted;
+  function highlight(item) {
+    if (highlighted) {
+      highlighted.classList.remove('highlight');
+    }
+
+    highlighted = item;
+    highlighted.classList.add('highlight');
+  }
+
+  let selection = dataController.currentNavSelection;
+  setMainHeader(selection);
+  document.querySelector('main').dataset.selected = selection;
+  display(dataController.filterTasks(selection));
+  display(dataController.currentProjects);
+  highlight(document.getElementById(selection)); 
+  ctrlAddTaskBtn(selection);
+
+
+
 
 
   const toggleMenu = () => {
@@ -577,15 +588,7 @@ const displayController = (() => {
 
 
   /* Helper functions: */
-  // Highlight displayed nav selection 
-  function highlight(item) {
-    if (highlighted) {
-      highlighted.classList.remove('highlight');
-    }
 
-    highlighted = item;
-    highlighted.classList.add('highlight');
-  }
 
   // Create item and add to appropriate list
   function display (data) {
@@ -700,7 +703,7 @@ const displayController = (() => {
     const tasksListContainer = document.querySelector('#tasks-list-container');
     let editFormDisplayed = !!tasksListContainer.querySelector('form')
     let irrelForm;
-  
+
     if (action === 'add-project') {
       // Task submission form
       irrelForm = document.querySelector('main > form');
@@ -714,7 +717,7 @@ const displayController = (() => {
       pageForms.forEach(form => {
         if (!form.classList.contains('hidden')) {
           irrelForm = form;
-          console.log(irrelForm)
+
         }
       })
 
@@ -725,6 +728,7 @@ const displayController = (() => {
       if (!irrelForm.classList.contains('hidden')) {
         irrelForm.classList.toggle('hidden');
         irrelForm.nextElementSibling.classList.toggle('hidden');
+        window.removeEventListener('click', hideFormOnClick);
       }
     }
   
