@@ -12,7 +12,7 @@ const content = (() => {
     projectWrapper.classList.add('project-wrapper');
     projectIcon.classList.add('material-symbols-rounded', 'decor-icon');
     projectIcon.textContent = 'tools_power_drill';
-    projectTitle.textContent = projObj.name
+    projectTitle.textContent = projObj.name ? projObj.name : 'No name entered';
     deleteIcon.classList.add('material-symbols-rounded', 'delete-icon');
     deleteIcon.textContent = 'delete';
   
@@ -40,7 +40,7 @@ const content = (() => {
     taskSubWrapper.classList.add('task-sub-wrapper');
     checkbox.classList.add('checkbox');
     taskDescrWrapper.classList.add('task-descr-wrapper');
-    taskName.textContent = taskObj.name;
+    taskName.textContent = taskObj.name ? taskObj.name : 'No name entered';
     taskDetails.textContent = taskObj.details;
     taskEditWrapper.classList.add('task-edit-wrapper');
     taskDueDate.classList.add('task-due-date');
@@ -93,14 +93,14 @@ const content = (() => {
     nameLabel.textContent = "Task name:";
     nameInput.id = "edit-name-input";
     nameInput.type = "text";
-    nameInput.placeholder = "Get Dinner";
+    nameInput.placeholder = "E.g., Get dinner";
     detailsLabel.htmlFor = "edit-details-input";
     detailsLabel.textContent = "Details:";
     detailsInput.id = "edit-details-input";
     detailsInput.rows = "5";
     detailsInput.cols = "30";
     detailsInput.wrap = "hard";
-    detailsInput.placeholder = "Taco Bell";
+    detailsInput.placeholder = "E.g., Taco Bell";
     dateLabel.htmlFor = "edit-date-input";
     dateLabel.textContent = "Date due:";
     dateInput.id = "edit-date-input";
