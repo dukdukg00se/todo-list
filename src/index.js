@@ -17,48 +17,6 @@ const dataController = (() => {
     : localStorage.getItem('display'); 
 
 
-  // const updateData = (input) => {
-  //   let container;
-
-  //   if (input === 'submit-project' || input === 'submit-task') {
-  //     let item, idPrefix;
-
-  //     if (input === 'submit-project') {
-  //       const projName = document.querySelector("#project-name-input").value;
-  //       item = new Project(projName);
-  //       container = dataController.currentProjects;
-  //       idPrefix = 'project-'
-  //     } else if (input === 'submit-task') {
-  //       const taskName = document.querySelector('#task-name-input').value;
-  //       const taskDetails = document.querySelector('#task-details-input').value;
-  //       const taskDue = document.querySelector('#task-date-input').value;
-  //       const taskImportant = document.querySelector('#task-important-input').checked;
-  //       let selectedProject = mainPanel.dataset.selected;
-    
-  //       item = new Task(taskName, taskDetails, taskDue, taskImportant)
-    
-  //       dataController.currentProjects.forEach(proj => {
-  //         if (proj.id === selectedProject) {
-  //           container = proj.tasks;
-  //           idPrefix = `${proj.id}-task-`;
-  //         }
-  //       })
-  //     }
-
-  //     add(item, container);
-  //     setId(idPrefix, container);
-
-  //   } else { // Delete action
-
-  //     container = dataController.currentProjects;
-  //     remove(input, container);
-
-  //   }
-
-  //   populateLocalStorage(currentProjects);
-
-  //   return container;
-  // }
   const initNewItem = (input) => {
     let item, container, idPrefix;
   
@@ -89,13 +47,13 @@ const dataController = (() => {
   
     return container;
   }
+
   const deleteItem = (item, container) => {
     remove(item, container);
     populateLocalStorage(currentProjects);
   
     return container;
   }
-
 
   const filterTasks = (filter) => {
     let filteredTasks = [];
@@ -160,7 +118,7 @@ const dataController = (() => {
 
 
   // Delete???
-  const setNavSelection = (input) => {
+  const saveNavSelection = (input) => {
     currentNavSelection = input;
     populateLocalStorage(input);
     console.log(currentNavSelection);
@@ -211,13 +169,15 @@ const dataController = (() => {
     deleteItem,
     filterTasks,
     populateLocalStorage,
-    // setNavSelection
+    // saveNavSelection
   }
 })();
 
 
 
 const displayController = (() => {
+
+
   // Set initial display to "All"
   function ctrlAddTaskBtn(input) {
     const addTaskBtn = document.querySelector('main > button');
@@ -251,6 +211,8 @@ const displayController = (() => {
   ctrlAddTaskBtn(selection);
   // After moving listenerController below
   // Need to add task list listener
+
+
 
   display(dataController.currentProjects);
   highlight(document.getElementById(selection)); 
@@ -303,21 +265,20 @@ const displayController = (() => {
       : document.querySelector('main > form');
   
     if (action === 'add-project' || action === 'add-task') {
-      hideExtraneousForms(action);
       displayTargetForm(form);
+      hideExtraneousForms(action);
     }
   
     if (action === 'cancel-project' || action === 'cancel-task') {
       hideTargetForm(form);
-
     }
   
     if (action === 'submit-project' || action === 'submit-task') {
       display(dataController.initNewItem(action));
-      hideTargetForm(form);
 
 
       if (action === 'submit-project') {
+        // Move highlight to own module??
         let elem = document.getElementById(dataController.currentNavSelection);
         highlight(elem);
         listenersController.addNavListsListeners();
@@ -325,6 +286,7 @@ const displayController = (() => {
         listenersController.addTasksListListener();
       }
 
+      hideTargetForm(form);
     }
   }
 
@@ -349,6 +311,7 @@ const displayController = (() => {
 
           let selection = dataController.currentNavSelection;
           setMainHeader(selection);
+          // Set dataset here 
           display(dataController.filterTasks(selection));
           addTaskBtn.classList.add('hidden');
           // Add task listener here
@@ -364,48 +327,44 @@ const displayController = (() => {
         mainPanel.dataset.selected = selection.id;
         (e.target.closest('ul').id === 'home-list') ? addTaskBtn.classList.add('hidden') : addTaskBtn.classList.remove('hidden');
         setMainHeader(selection.id);
-        highlight(selection);
         display(dataController.filterTasks(selection.id));
         listenersController.addTasksListListener();  
 
+        // Move highlight to own module??
+        highlight(selection);
       }
     }
   }
 
   const manageTaskResponse = (e) => {
-    let editForm = document.querySelector('#edit-task-form');
-    let listItem = e.target.closest('li');
+    let selection = e.target.closest('li');
     let mainPanel = document.querySelector('main');
-    let currentProjs = dataController.currentProjects;
-    let selection;
-    let wrapper;
-    let description;
-    let checkbox;
+    // Move to below; cancel/submit edit
+    let editForm = document.querySelector('#edit-task-form');
+    // ^^^^^^^^^
+    let currentProjects = dataController.currentProjects;
+    let wrapper, description, checkbox;
+
   
-    if (listItem) {
-      selection = listItem.id;
-      wrapper = listItem.querySelector('.task-wrapper');
-      description = listItem.querySelector('.task-descr-wrapper');
-      checkbox = listItem.querySelector('.checkbox');
+    if (selection) {
+      wrapper = selection.querySelector('.task-wrapper');
+      description = selection.querySelector('.task-descr-wrapper');
+      checkbox = selection.querySelector('.checkbox');
     }
   
-    for (let i = 0; i < currentProjs.length; i++) {
-      for (let j = 0; j < currentProjs[i].tasks.length; j++) {
+    for (let i = 0; i < currentProjects.length; i++) {
+      for (let j = 0; j < currentProjects[i].tasks.length; j++) {
 
-        if (currentProjs[i].tasks[j].id === selection) {
-          let task = currentProjs[i].tasks[j];
+        if (currentProjects[i].tasks[j].id === selection.id) {
+          let task = currentProjects[i].tasks[j];
   
           if (e.target.classList.contains('checkbox') || e.target.classList.contains('checked')) {
-
-            console.log(dataController.currentProjects);
   
             (task.completed) ? task.completed = false : task.completed = true;
-            dataController.populateLocalStorage(dataController.currentProjects);
-  
-            console.log(dataController.currentProjects);
+            dataController.populateLocalStorage(currentProjects);
 
             checkbox.classList.toggle('checked');
-            listItem.classList.toggle('completed');
+            selection.classList.toggle('completed');
             description.classList.toggle('crossed');
   
           }  
@@ -413,9 +372,7 @@ const displayController = (() => {
           if (e.target.classList.contains('important-icon')) {
   
             (task.important) ? task.important = false : task.important = true; 
-            dataController.populateLocalStorage(dataController.currentProjects);
-  
-
+            dataController.populateLocalStorage(currentProjects);
   
             e.target.classList.toggle('important');
   
@@ -424,7 +381,7 @@ const displayController = (() => {
           if (e.target.classList.contains('edit-icon')) {
             hideExtraneousForms();
 
-            listItem.append(content.createEditForm(task));
+            selection.append(content.createEditForm(task));
             wrapper.classList.toggle('hidden');
   
           } 
@@ -432,6 +389,14 @@ const displayController = (() => {
           if (e.target.classList.contains('delete-icon')) {
             dataController.currentProjects[i].tasks.splice(j, 1);
             dataController.populateLocalStorage(dataController.currentProjects);
+
+            // let container = dataController.currentProjects[i].tasks
+            // let itemToDelete = task.id
+            // deleteItem(itemToDelete, container) unnecessary?????
+            // display(deleteItem(itemToDelete, container)) works?????
+            // AddListener
+            // or just...
+            // setTasksList()
 
             display(dataController.filterTasks(mainPanel.dataset.selected))
             listenersController.addTasksListListener();
@@ -463,8 +428,6 @@ const displayController = (() => {
 
 
   /* Helper functions: */
-
-
   // Create item and add to appropriate list
   function display (data) {
     let oldList, listId, container;
@@ -515,7 +478,7 @@ const displayController = (() => {
     default:
       dataController.currentProjects.forEach(proj => {
         if (proj.id === input) {
-          mainHeader.textContent = proj.name;
+          mainHeader.textContent = proj.name ? proj.name : 'No name entered';
         }
       })
     }
@@ -543,22 +506,19 @@ const displayController = (() => {
       e.target.classList.contains('project-button') || 
       e.target.parentElement.classList.contains('project-button');
     let isForm = !!e.target.closest('form');
-    let displayed;
+    let displayedForm;
 
     let pgForms = document.querySelectorAll('form');
     pgForms.forEach(form => {
       if (!form.classList.contains('hidden')) {
-        displayed = form;
+        displayedForm = form;
       }
     })
 
     if (!isTaskBtn && !isProjBtn && !isForm) {
-      hideTargetForm(displayed);
+      hideTargetForm(displayedForm);
     }
   }
-
-
-
 
   // Hide input form
   function hideTargetForm(form) {
@@ -587,9 +547,8 @@ const displayController = (() => {
       irrelForm = document.querySelector("#projects-panel form");
     } else { // action === 'show edit form'
       // If create task/proj form not hidden, set = irrelForm
-      let pageForms = document.querySelectorAll('#projects-panel > form, main > form');
-
-      pageForms.forEach(form => {
+      let pgForms = document.querySelectorAll('#projects-panel > form, main > form');
+      pgForms.forEach(form => {
         if (!form.classList.contains('hidden')) {
           irrelForm = form;
 
