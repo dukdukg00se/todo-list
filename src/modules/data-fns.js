@@ -22,10 +22,38 @@ const setId = (prefix, arr) => {
   }
 }
 
+
+const returnProj = (projId) => {
+  let targetProj;
+
+  data.projects.forEach(proj => {
+    if (proj.id === projId) {
+      targetProj = proj;
+    }
+  });
+
+  return targetProj;
+}
+
+const returnProjTasks = (taskId) => {
+  let targetProjTasks;
+
+  data.projects.forEach(proj => {
+    proj.tasks.forEach(task => {
+      if (task.id === taskId) {
+        targetProjTasks =  proj.tasks;
+      }
+    })
+  })
+
+  return targetProjTasks;
+}
+
 /* Constructors to create new projects/tasks */
 function Project(name) {
   this.name = name;
   this.tasks = [];
+  // Proj id will be set later
 }
 
 function Task(name, details, due, important) {
@@ -34,15 +62,18 @@ function Task(name, details, due, important) {
   this.due = due;
   this.important = important;
   this.completed = false;
+  // Task id will be set later
 }
 
 
 /* Exported fns */
+// Returns a new project object
 const createProj = () => {
   const projName = document.querySelector("#project-name-input").value;
   return new Project(projName);
 }
 
+// Returns a new task object
 const createTask = () => {
   const taskName = document.querySelector('#task-name-input').value;
   const taskDetails = document.querySelector('#task-details-input').value;
@@ -56,91 +87,42 @@ const createTask = () => {
 // set id of items in array, 
 // save projects array to local storage, 
 // return container for display
-const initItem = (item) => {
-  let container, idPrefix;
+const initItem = (itm) => {
+  let itmContainer, idPrefix;
 
-  if (item instanceof Project) {
-    container = data.projects;
+  if (itm instanceof Project) {
+    itmContainer = data.projects;
     idPrefix = 'project-'
   } else {
     let targetProj = document.querySelector('main').dataset.selected;
-    data.projects.forEach(proj => {
-      if (proj.id === targetProj) {
-        container = proj.tasks;
-        idPrefix = `${proj.id}-task-`;
-      }
-    })
+    let proj = returnProj(targetProj);
+    itmContainer = proj.tasks;
+    idPrefix = `${proj.id}-task-`;
   }
 
-  add(item, container);
-  setId(idPrefix, container);
+  add(itm, itmContainer);
+  setId(idPrefix, itmContainer);
   popLocalStorage(data.projects);
-  return container;
+  return itmContainer;
 }
-
-// const initNewItem = (input) => {
-//   let item, container, idPrefix;
-
-//   if (input === 'submit-project') {
-//     const projName = document.querySelector("#project-name-input").value;
-//     item = new Project(projName);
-
-//     container = data.projects;
-//     idPrefix = 'project-'
-//   } else if (input === 'submit-task') {
-//     const taskName = document.querySelector('#task-name-input').value;
-//     const taskDetails = document.querySelector('#task-details-input').value;
-//     const taskDue = document.querySelector('#task-date-input').value;
-//     const taskImportant = document.querySelector('#task-important-input').checked;
-//     item = new Task(taskName, taskDetails, taskDue, taskImportant);
-
-//     let selectedProject = document.querySelector('main').dataset.selected;
-//     data.projects.forEach(proj => {
-//       if (proj.id === selectedProject) {
-//         container = proj.tasks;
-//         idPrefix = `${proj.id}-task-`;
-//       }
-//     })
-//   }
-
-//   add(item, container);
-//   setId(idPrefix, container);
-//   popLocalStorage(data.projects);
-//   return container;
-// }
 
 // Delete proj/task - 
 // Remove item from container array,
 // Save projects array to local storage
 // return container for display
-const deleteItem = (objId) => {
-  let isTask = /task/.test(objId);
-  let container;
+const deleteItem = (itmId) => {
+  let isTask = /task/.test(itmId);
+  let itmContainer;
 
   if (isTask) {
-    // for (let i = 0; i < projects.length; i++) {
-    //   for (let j = 0; j < projects[i].tasks.length; j++) {
-    //     if (projects[i].tasks[j].id === objId) {
-    //       container = projects[i].tasks;
-    //     }
-    //   }
-    // }
-
-    data.projects.forEach(proj => {
-      proj.tasks.forEach(task => {
-        if (task.id === objId) {
-          container = proj.tasks;
-        }
-      })
-    })
-
+    itmContainer = returnProjTasks(itmId);
   } else {
-    container = data.projects;
+    itmContainer = data.projects;
   }
 
-  remove(objId, container);
+  remove(itmId, itmContainer);
   popLocalStorage(data.projects);
-  return container;
+  return itmContainer;
 }
 
 // Returns selected tasks based on criteria
@@ -185,11 +167,8 @@ const filterTasks = (filter) => {
       });
       break;
     default:
-      data.projects.forEach(proj => {
-        if (proj.id === filter) {
-          filteredTasks = proj.tasks;
-        }
-      })
+      let proj = returnProj(filter);
+      filteredTasks = proj.tasks;
   }
 
   return filteredTasks;
@@ -213,8 +192,11 @@ const saveNavSelection = (input) => {
 }
 
 
+
+
 export {
   // initNewItem,
+  returnProj,
   createProj,
   createTask,
   initItem,
