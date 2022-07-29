@@ -35,18 +35,32 @@ const returnProj = (projId) => {
   return targetProj;
 }
 
-const returnProjTasks = (taskId) => {
-  let targetProjTasks;
+const returnTaskContainer = (taskId) => {
+  let taskContainer;
 
   data.projects.forEach(proj => {
     proj.tasks.forEach(task => {
       if (task.id === taskId) {
-        targetProjTasks =  proj.tasks;
+        taskContainer =  proj.tasks;
       }
     })
   })
 
-  return targetProjTasks;
+  return taskContainer;
+}
+
+const returnTask = (taskId) => {
+  let targetTask;
+
+  data.projects.forEach(proj => {
+    proj.tasks.forEach(task => {
+      if (task.id === taskId) {
+        targetTask =  task;
+      }
+    })
+  })
+
+  return targetTask;
 }
 
 /* Constructors to create new projects/tasks */
@@ -115,7 +129,7 @@ const deleteItem = (itmId) => {
   let itmContainer;
 
   if (isTask) {
-    itmContainer = returnProjTasks(itmId);
+    itmContainer = returnTaskContainer(itmId);
   } else {
     itmContainer = data.projects;
   }
@@ -191,14 +205,42 @@ const saveNavSelection = (input) => {
   popLocalStorage(data.navSelection);
 }
 
+const editTaskProp = (tskId, prop) => {
+  let projects = data.projects;
 
+  projects.forEach(proj => {
+    proj.tasks.forEach(task => {
+      if (task.id === tskId) {
+
+        switch (prop) {
+          case 'completed':
+            task.completed ? (task.completed = false) : (task.completed = true);
+            break;
+          case 'important':
+            task.important ? (task.important = false) : (task.important = true);
+            break;
+          case 'all':
+            task.name = document.querySelector('#edit-name-input').value;
+            task.details = document.querySelector('#edit-details-input').value;
+            task.due = document.querySelector('#edit-date-input').value;
+            task.important = document.querySelector('#edit-important-input').checked;
+        }
+
+        popLocalStorage(projects);
+      }
+    });
+  });
+}
 
 
 export {
   // initNewItem,
   returnProj,
+  returnTaskContainer,
+  returnTask,
   createProj,
   createTask,
+  editTaskProp,
   initItem,
   deleteItem,
   filterTasks,
