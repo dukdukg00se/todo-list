@@ -4,7 +4,7 @@ import * as listenerFns from './modules/listener-fns';
 import * as dataFns from './modules/data-fns';
 import data from './modules/data.js';
 
-
+// console.log(data.projects[0]);
 
 const displayCtrlr = (() => {
 

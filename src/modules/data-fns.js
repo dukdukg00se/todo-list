@@ -38,30 +38,34 @@ function Task(name, details, due, important) {
 
 
 /* Exported fns */
+const createProj = () => {
+  const projName = document.querySelector("#project-name-input").value;
+  return new Project(projName);
+}
+
+const createTask = () => {
+  const taskName = document.querySelector('#task-name-input').value;
+  const taskDetails = document.querySelector('#task-details-input').value;
+  const taskDue = document.querySelector('#task-date-input').value;
+  const taskImportant = document.querySelector('#task-important-input').checked;
+  return new Task(taskName, taskDetails, taskDue, taskImportant);
+}
+
 // Set up a new item -
 // Add item to container array, 
 // set id of items in array, 
 // save projects array to local storage, 
 // return container for display
-const initNewItem = (input) => {
-  let item, container, idPrefix;
+const initItem = (item) => {
+  let container, idPrefix;
 
-  if (input === 'submit-project') {
-    const projName = document.querySelector("#project-name-input").value;
-
-    item = new Project(projName);
+  if (item instanceof Project) {
     container = data.projects;
     idPrefix = 'project-'
-  } else if (input === 'submit-task') {
-    const taskName = document.querySelector('#task-name-input').value;
-    const taskDetails = document.querySelector('#task-details-input').value;
-    const taskDue = document.querySelector('#task-date-input').value;
-    const taskImportant = document.querySelector('#task-important-input').checked;
-    let selectedProject = document.querySelector('main').dataset.selected;
-
-    item = new Task(taskName, taskDetails, taskDue, taskImportant)
+  } else {
+    let targetProj = document.querySelector('main').dataset.selected;
     data.projects.forEach(proj => {
-      if (proj.id === selectedProject) {
+      if (proj.id === targetProj) {
         container = proj.tasks;
         idPrefix = `${proj.id}-task-`;
       }
@@ -74,12 +78,67 @@ const initNewItem = (input) => {
   return container;
 }
 
+// const initNewItem = (input) => {
+//   let item, container, idPrefix;
+
+//   if (input === 'submit-project') {
+//     const projName = document.querySelector("#project-name-input").value;
+//     item = new Project(projName);
+
+//     container = data.projects;
+//     idPrefix = 'project-'
+//   } else if (input === 'submit-task') {
+//     const taskName = document.querySelector('#task-name-input').value;
+//     const taskDetails = document.querySelector('#task-details-input').value;
+//     const taskDue = document.querySelector('#task-date-input').value;
+//     const taskImportant = document.querySelector('#task-important-input').checked;
+//     item = new Task(taskName, taskDetails, taskDue, taskImportant);
+
+//     let selectedProject = document.querySelector('main').dataset.selected;
+//     data.projects.forEach(proj => {
+//       if (proj.id === selectedProject) {
+//         container = proj.tasks;
+//         idPrefix = `${proj.id}-task-`;
+//       }
+//     })
+//   }
+
+//   add(item, container);
+//   setId(idPrefix, container);
+//   popLocalStorage(data.projects);
+//   return container;
+// }
+
 // Delete proj/task - 
 // Remove item from container array,
 // Save projects array to local storage
 // return container for display
-const deleteItem = (item, container) => {
-  remove(item, container);
+const deleteItem = (objId) => {
+  let isTask = /task/.test(objId);
+  let container;
+
+  if (isTask) {
+    // for (let i = 0; i < projects.length; i++) {
+    //   for (let j = 0; j < projects[i].tasks.length; j++) {
+    //     if (projects[i].tasks[j].id === objId) {
+    //       container = projects[i].tasks;
+    //     }
+    //   }
+    // }
+
+    data.projects.forEach(proj => {
+      proj.tasks.forEach(task => {
+        if (task.id === objId) {
+          container = proj.tasks;
+        }
+      })
+    })
+
+  } else {
+    container = data.projects;
+  }
+
+  remove(objId, container);
   popLocalStorage(data.projects);
   return container;
 }
@@ -148,18 +207,20 @@ const popLocalStorage = (input) => {
 };
 
 // Save user nav panel selection
-const setNavSelection = (input) => {
+const saveNavSelection = (input) => {
   data.navSelection = input;
   popLocalStorage(data.navSelection);
 }
 
 
 export {
-  initNewItem,
+  // initNewItem,
+  createProj,
+  createTask,
+  initItem,
   deleteItem,
   filterTasks,
   popLocalStorage,
-  toggleProp,
-  setNavSelection
+  saveNavSelection
 }
 

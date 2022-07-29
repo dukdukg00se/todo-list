@@ -169,11 +169,6 @@ const setMainPanel = () => {
   }
 
   setTasksList(dataFns.filterTasks(input));
-
-  // Filter tasks by input, display, add tasks listener
-  // setTasksList(dataFns.filterTasks(input));
-  // display(dataFns.filterTasks(input));
-  // listenerFns.addTasksListListener('click', manageTaskResponse);
 }
 
 const setProjPanel = (arr) => {
@@ -236,15 +231,39 @@ const managePageBtns = (e) => {
   } else {
 
     if (action === 'submit-project') {
-      setProjPanel(dataFns.initNewItem(action));
+      let newProj = dataFns.createProj();
+      setProjPanel(dataFns.initItem(newProj));
       hlNavSelection();
     } else if (action === 'submit-task') {
-      setTasksList(dataFns.initNewItem(action));
+      let newTask = dataFns.createTask();
+      setTasksList(dataFns.initItem(newTask));
     }
 
     hideTargetForm(form);
   }
 }
+// const managePageBtns = (e) => {
+//   let isProjBtn = e.currentTarget.classList.contains('project-button');
+//   let action = e.currentTarget.id;
+//   let form = isProjBtn
+//     ? document.querySelector('#projects-panel form')
+//     : document.querySelector('main > form');
+
+//   if (action === 'add-project' || action === 'add-task') {
+//     displayTargetForm(form);
+//     hideExtraneousForms(action);
+//   } else {
+
+//     if (action === 'submit-project') {
+//       setProjPanel(dataFns.initNewItem(action));
+//       hlNavSelection();
+//     } else if (action === 'submit-task') {
+//       setTasksList(dataFns.initNewItem(action));
+//     }
+
+//     hideTargetForm(form);
+//   }
+// }
 
 const manageNavResponse = (e) => {
   const selection = e.target.closest('li');
@@ -255,13 +274,13 @@ const manageNavResponse = (e) => {
       setProjPanel(dataFns.deleteItem(selection.id, data.projects));
 
       if (selection.id === mainPanel.dataset.selected) {
-        dataFns.setNavSelection('all');
+        dataFns.saveNavSelection('all');
         setMainPanel();
       }
 
       hlNavSelection();
     } else {
-      dataFns.setNavSelection(selection.id);
+      dataFns.saveNavSelection(selection.id);
       setMainPanel();
       hlNavSelection();
     }
@@ -275,11 +294,17 @@ const manageTaskResponse = (e) => {
   let projects = data.projects;
   let wrapper, description, checkbox;
 
+
+
   if (selection) {
     wrapper = selection.querySelector('.task-wrapper');
     description = selection.querySelector('.task-descr-wrapper');
     checkbox = selection.querySelector('.checkbox');
   }
+
+  console.log(data.projects);
+  console.log(selection.id)
+
 
   projects.forEach(proj => {
     proj.tasks.forEach(task => {
