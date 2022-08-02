@@ -22,7 +22,7 @@ const setId = (prefix, arr) => {
   }
 }
 
-
+// Search and return specific proj obj by proj id
 const returnProj = (projId) => {
   let targetProj;
 
@@ -35,6 +35,7 @@ const returnProj = (projId) => {
   return targetProj;
 }
 
+// Search and return a specific proj's tasks by task id
 const returnTaskContainer = (taskId) => {
   let taskContainer;
 
@@ -47,20 +48,6 @@ const returnTaskContainer = (taskId) => {
   })
 
   return taskContainer;
-}
-
-const returnTask = (taskId) => {
-  let targetTask;
-
-  data.projects.forEach(proj => {
-    proj.tasks.forEach(task => {
-      if (task.id === taskId) {
-        targetTask =  task;
-      }
-    })
-  })
-
-  return targetTask;
 }
 
 /* Constructors to create new projects/tasks */
@@ -81,6 +68,21 @@ function Task(name, details, due, important) {
 
 
 /* Exported fns */
+// Search and return specific task obj by task id
+const returnTask = (taskId) => {
+  let targetTask;
+
+  data.projects.forEach(proj => {
+    proj.tasks.forEach(task => {
+      if (task.id === taskId) {
+        targetTask =  task;
+      }
+    })
+  })
+
+  return targetTask;
+}
+
 // Returns a new project object
 const createProj = () => {
   const projName = document.querySelector("#project-name-input").value;
@@ -136,7 +138,6 @@ const deleteItem = (itmId) => {
 
   remove(itmId, itmContainer);
   popLocalStorage(data.projects);
-  // return itmContainer;
 }
 
 // Returns selected tasks based on criteria
@@ -205,6 +206,7 @@ const saveNavSelection = (input) => {
   popLocalStorage(data.navSelection);
 }
 
+// Edit task props
 const editTaskProp = (tskId, prop) => {
   let projects = data.projects;
 
@@ -234,9 +236,6 @@ const editTaskProp = (tskId, prop) => {
 
 
 export {
-  // initNewItem,
-  returnProj,
-  returnTaskContainer,
   returnTask,
   createProj,
   createTask,
