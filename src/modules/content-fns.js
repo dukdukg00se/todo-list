@@ -55,7 +55,7 @@ const createTask = (obj) => {
     taskDescrWrapper.classList.add('crossed');
   }
   if (obj.due) {
-    taskDueDate.textContent = taskObj.due;
+    taskDueDate.textContent = obj.due;
   } else {
     taskDueDate.textContent = 'No due date';
   }
@@ -149,3 +149,9 @@ export {
   createTask, 
   createEditForm
 };
+
+
+
+
+
+// Fix addTaskBtn issue
