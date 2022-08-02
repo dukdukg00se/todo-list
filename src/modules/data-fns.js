@@ -1,4 +1,4 @@
-/* This module's functions create/control/manipulate the data, e.g., deleting/adding items from projects array, saving to local storage, etc.. */
+/* This module's functions create/control/manipulate the application data, e.g., deleting/adding items from projects array, saving to local storage, etc.. */
 
 import { getDay, isThisWeek, isToday, parseISO } from 'date-fns';
 import data from './data.js';
@@ -35,6 +35,17 @@ const returnProj = (projId) => {
   return targetProj;
 }
 
+// Save projects or nav selection to local storage
+const popLocalStorage = (input) => {
+
+  if (typeof input === 'object') {
+    localStorage.setItem('projects', JSON.stringify(input));
+  } else {
+    localStorage.setItem('display', input);
+  }
+  
+};
+
 // Search and return a specific proj's tasks by task id
 const returnTaskContainer = (taskId) => {
   let taskContainer;
@@ -50,11 +61,11 @@ const returnTaskContainer = (taskId) => {
   return taskContainer;
 }
 
-/* Constructors to create new projects/tasks */
+/* Constructors */
 function Project(name) {
   this.name = name;
   this.tasks = [];
-  // Proj id will be set later
+  // Proj id set later
 }
 
 function Task(name, details, due, important) {
@@ -63,7 +74,7 @@ function Task(name, details, due, important) {
   this.due = due;
   this.important = important;
   this.completed = false;
-  // Task id will be set later
+  // Task id set later
 }
 
 
@@ -189,24 +200,13 @@ const filterTasks = (filter) => {
   return filteredTasks;
 }
 
-// Save projects or nav selection to local storage
-const popLocalStorage = (input) => {
 
-  if (typeof input === 'object') {
-    localStorage.setItem('projects', JSON.stringify(input));
-  } else {
-    localStorage.setItem('display', input);
-  }
-  
-};
-
-// Save user nav panel selection
 const saveNavSelection = (input) => {
   data.navSelection = input;
   popLocalStorage(data.navSelection);
 }
 
-// Edit task props
+
 const editTaskProp = (tskId, prop) => {
   let projects = data.projects;
 
@@ -243,7 +243,6 @@ export {
   initItem,
   deleteItem,
   filterTasks,
-  popLocalStorage,
   saveNavSelection
 }
 
