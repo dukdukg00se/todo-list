@@ -4,23 +4,36 @@ import * as listenerFns from './listener-fns';
 import * as dataFns from './data-fns';
 
 
-
-
-const setTasksList = (arr) => {
-  display(arr);
-  listenerFns.addTasksListListener('click', manageTaskResponse);
-}
-function displayTargetForm(form) {
-  // Show selected form
+// Show form, focus on first input, add listener to run hideFormOnClick
+// Determine if add proj/task btn displayed
+function displayForm(form) {
   form.classList.remove('hidden');
-  // Focus on first input box
   form.querySelector('input').focus();
-  // Hide add button
+
+  // Hide add proj/task button when displaying form
   form.nextElementSibling.classList.add('hidden');
 
-  // window.addEventListener('click', hideFormOnClick);
   listenerFns.docListener('add', 'click', hideFormOnClick);
 }
+
+// Reset, hide form, remove listener
+// Determine if add proj/task btn displayed
+function hideForm(form) {
+  form.reset();
+  form.classList.add('hidden');
+
+  // Add proj/task btn control
+  // Show add proj btn on proj form hide
+  // Show add task btn on task form hide when a proj is displayed
+  // Otherwise keep add task btn hidden
+  if (form.id === 'project-form' || /project-/.test(data.navSelection)) {
+    form.nextElementSibling.classList.remove('hidden');
+  } 
+
+  listenerFns.docListener('remove', 'click', hideFormOnClick);
+}
+
+// Hide displayed add proj/task form when clicking outside form
 function hideFormOnClick(e) {
   let isTaskBtn =
     e.target.classList.contains('task-button') ||
@@ -38,34 +51,27 @@ function hideFormOnClick(e) {
     }
   })
 
+  // If not a proj/task btn or form evnt, then hide form
   if (!isTaskBtn && !isProjBtn && !isForm) {
-    hideTargetForm(displayedForm);
+    hideForm(displayedForm);
   }
 }
-function hideTargetForm(form) {
-  // Reset form
-  form.reset();
-  // Hide selected form
-  form.classList.add('hidden');
-  // Show add button
-  form.nextElementSibling.classList.remove('hidden');
 
-  // window.removeEventListener('click', hideFormOnClick);
-  listenerFns.docListener('remove', 'click', hideFormOnClick);
-}
-function hideExtraneousForms(action) {
+// Makes sure only one form is displayed
+function hideExtranForms(action) {
   const tasksListContainer = document.querySelector('#tasks-list-container');
   let editFormDisplayed = !!tasksListContainer.querySelector('form')
   let irrelForm;
 
+  // Check if add proj/task submission form displayed
   if (action === 'add-project') {
-    // Task submission form
+    // Irrelevant form = task submission form
     irrelForm = document.querySelector('main > form');
   } else if (action === 'add-task') {
-    // Proj submission form
+    // irrelForm = proj submission form
     irrelForm = document.querySelector("#projects-panel form");
   } else { // action === 'show edit form'
-    // If create task/proj form not hidden, set = irrelForm
+    // If either task/proj form not hidden, set as irrelForm
     let pgForms = document.querySelectorAll('#projects-panel > form, main > form');
     pgForms.forEach(form => {
       if (!form.classList.contains('hidden')) {
@@ -73,21 +79,17 @@ function hideExtraneousForms(action) {
       }
     })
   }
-
   if (irrelForm) {
     // If create task/proj form displayed, hide
     if (!irrelForm.classList.contains('hidden')) {
-      irrelForm.classList.toggle('hidden');
-      irrelForm.nextElementSibling.classList.toggle('hidden');
-      // window.removeEventListener('click', hideFormOnClick);
-      listenerFns.docListener('remove', 'click', hideFormOnClick);
+      hideForm(irrelForm);
     }
   }
 
-  // If edit task form displayed, hide
+
+  // Check if edit task form displayed
   if (editFormDisplayed) {
     let editForm = tasksListContainer.querySelector('form');
-
     editForm.previousElementSibling.classList.toggle('hidden');
     editForm.remove();
   }
@@ -124,18 +126,16 @@ function display(arr) {
 
 
 
-
+// Set main header, dataset, control add task btn, display selected tasks
 const setMainPanel = () => {
   const mainPanel = document.querySelector('main');
   const mainHeader = document.querySelector('h1');
   const addTaskBtn = document.querySelector('main > button');
-  let input = data.navSelection
+  let selection = data.navSelection
 
-  // Set selected data on main
-  mainPanel.dataset.selected = input;
+  mainPanel.dataset.selected = selection;
 
-  // Set header
-  switch (input) {
+  switch (selection) {
     case 'all':
       mainHeader.textContent = 'All Tasks';
       break;
@@ -150,30 +150,32 @@ const setMainPanel = () => {
       break;
     default:
       data.projects.forEach(proj => {
-        if (proj.id === input) {
+        if (proj.id === selection) {
           mainHeader.textContent = proj.name ? proj.name : 'No name entered';
         }
       })
   }
 
-  // Control add task btn
-  switch (input) {
-    case 'all':
-    case 'today':
-    case 'week':
-    case 'important':
-      addTaskBtn.classList.add('hidden');
-      break;
-    default:
-      addTaskBtn.classList.remove('hidden');
-  }
+  // Determine whether add task btn is displayed
+  // If selection is a proj then display add task btn
+  /project-/.test(selection) 
+    ? addTaskBtn.classList.remove('hidden')
+    : addTaskBtn.classList.add('hidden');
 
-  setTasksList(dataFns.filterTasks(input));
+  setTasksList(dataFns.filterTasks(selection));
+
 }
 
-const setProjPanel = (arr) => {
+
+const setProjList = (arr) => {
   display(arr);
   listenerFns.addNavListListeners('click', manageNavResponse);
+}
+
+
+const setTasksList = (arr) => {
+  display(arr);
+  listenerFns.addTasksListListener('click', manageTaskResponse);
 }
 
 const hlNavSelection = () => {
@@ -226,44 +228,24 @@ const managePageBtns = (e) => {
     : document.querySelector('main > form');
 
   if (action === 'add-project' || action === 'add-task') {
-    displayTargetForm(form);
-    hideExtraneousForms(action);
+    hideExtranForms(action);
+    displayForm(form);
+
   } else {
 
     if (action === 'submit-project') {
       let newProj = dataFns.createProj();
-      setProjPanel(dataFns.initItem(newProj));
+      setProjList(dataFns.initItem(newProj));
       hlNavSelection();
     } else if (action === 'submit-task') {
       let newTask = dataFns.createTask();
       setTasksList(dataFns.initItem(newTask));
     }
 
-    hideTargetForm(form);
+    hideForm(form);
   }
 }
-// const managePageBtns = (e) => {
-//   let isProjBtn = e.currentTarget.classList.contains('project-button');
-//   let action = e.currentTarget.id;
-//   let form = isProjBtn
-//     ? document.querySelector('#projects-panel form')
-//     : document.querySelector('main > form');
 
-//   if (action === 'add-project' || action === 'add-task') {
-//     displayTargetForm(form);
-//     hideExtraneousForms(action);
-//   } else {
-
-//     if (action === 'submit-project') {
-//       setProjPanel(dataFns.initNewItem(action));
-//       hlNavSelection();
-//     } else if (action === 'submit-task') {
-//       setTasksList(dataFns.initNewItem(action));
-//     }
-
-//     hideTargetForm(form);
-//   }
-// }
 
 const manageNavResponse = (e) => {
   const selection = e.target.closest('li');
@@ -271,7 +253,9 @@ const manageNavResponse = (e) => {
 
   if (selection) {
     if (e.target.classList.contains('delete-icon')) {
-      setProjPanel(dataFns.deleteItem(selection.id, data.projects));
+      dataFns.deleteItem(selection.id);
+      setProjList(data.projects);
+
 
       if (selection.id === mainPanel.dataset.selected) {
         dataFns.saveNavSelection('all');
@@ -290,76 +274,47 @@ const manageNavResponse = (e) => {
 const manageTaskResponse = (e) => {
   let selection = e.target.closest('li');
   let mainPanel = document.querySelector('main');
-  let editForm = document.querySelector('#edit-task-form');
-  let projects = data.projects;
-  let wrapper, description, checkbox;
 
+  if (
+    e.target.classList.contains('checkbox') || 
+    e.target.classList.contains('checked')
+  ) {
+    dataFns.editTaskProp(selection.id, 'completed');
 
+    let checkbox = selection.querySelector('.checkbox');
+    let description = selection.querySelector('.task-descr-wrapper');
+    checkbox.classList.toggle('checked');
+    description.classList.toggle('crossed');
+    selection.classList.toggle('completed');
+  } else if (e.target.classList.contains('important-icon')) {
+    dataFns.editTaskProp(selection.id, 'important');
 
-  if (selection) {
-    wrapper = selection.querySelector('.task-wrapper');
-    description = selection.querySelector('.task-descr-wrapper');
-    checkbox = selection.querySelector('.checkbox');
+    e.target.classList.toggle('important');
+  } else if (e.target.classList.contains('edit-icon')) {
+    hideExtranForms();
+
+    let wrapper = selection.querySelector('.task-wrapper');
+    let task = dataFns.returnTask(selection.id);
+    wrapper.classList.toggle('hidden');
+    selection.append(contentFns.createEditForm(task));
+  } else if (e.target.classList.contains('delete-icon')) {
+    dataFns.deleteItem(selection.id);
+
+    setTasksList(dataFns.filterTasks(data.navSelection));
+  } else if (e.target.id === 'cancel-edit') {
+    let editForm = document.querySelector('#edit-task-form');
+    editForm.previousElementSibling.classList.toggle('hidden');
+    editForm.remove();
+  } else if (e.target.id === 'submit-edit') {
+    dataFns.editTaskProp(selection.id, 'all');
+    
+    setTasksList(dataFns.filterTasks(mainPanel.dataset.selected));
   }
-
-  console.log(data.projects);
-  console.log(selection.id)
-
-
-  projects.forEach(proj => {
-    proj.tasks.forEach(task => {
-      if (task.id === selection.id) {
-        if (
-          e.target.classList.contains('checkbox') || 
-          e.target.classList.contains('checked')
-        ) {
-          task.completed ? (task.completed = false) : (task.completed = true);
-          dataFns.popLocalStorage(projects);
-
-          checkbox.classList.toggle('checked');
-          selection.classList.toggle('completed');
-          description.classList.toggle('crossed');
-        }
-
-        if (e.target.classList.contains('important-icon')) {
-          task.important ? (task.important = false) : (task.important = true);
-          dataFns.popLocalStorage(projects);
-
-          e.target.classList.toggle('important');
-        }
-
-        if (e.target.classList.contains('edit-icon')) {
-          hideExtraneousForms();
-          selection.append(contentFns.createEditForm(task));
-          wrapper.classList.toggle('hidden');
-        }
-
-        if (e.target.classList.contains('delete-icon')) {
-          setTasksList(dataFns.deleteItem(task.id, proj.tasks))
-        }
-
-
-        if (e.target.id === 'cancel-edit') {
-          editForm.previousElementSibling.classList.toggle('hidden');
-          editForm.remove();
-        } else if (e.target.id === 'submit-edit') {
-          task.name = document.querySelector('#edit-name-input').value;
-          task.details = document.querySelector('#edit-details-input').value;
-          task.due = document.querySelector('#edit-date-input').value;
-          task.important = document.querySelector('#edit-important-input').checked;
-          dataFns.popLocalStorage(projects);
-
-          setTasksList(dataFns.filterTasks(mainPanel.dataset.selected));
-        }
-      }
-    })
-  })
 }
-
 
 export {
   setMainPanel,
-  setProjPanel,
+  setProjList,
   toggleMenu,
   toggleTheme,
   hlNavSelection,
@@ -367,264 +322,3 @@ export {
   manageNavResponse,
   manageTaskResponse
 }
-
-// const managePageBtns = (e) => {
-//   let isProjBtn = e.currentTarget.classList.contains('project-button');
-//   let action = e.currentTarget.id;
-//   let form = isProjBtn
-//     ? document.querySelector('#projects-panel form')
-//     : document.querySelector('main > form');
-
-//   if (action === 'add-project' || action === 'add-task') {
-//     displayTargetForm(form);
-//     hideExtraneousForms(action);
-//   }
-
-//   if (action === 'cancel-project' || action === 'cancel-task') {
-//     hideTargetForm(form);
-//   }
-
-//   if (action === 'submit-project' || action === 'submit-task') {
-//     // setMain or setTasksList?
-
-
-//     display(data.initNewItem(action));
-
-
-//     if (action === 'submit-project') {
-//       highlight(data.navSelection);
-//       listenersController.addNavListsListeners();
-
-//     } else {
-//       listenersController.addTasksListListener();
-//     }
-
-//     hideTargetForm(form);
-//   }
-// }
-
-// const manageNavResponse = (e) => {
-//   const selection = e.target.closest('li');
-//   const mainPanel = document.querySelector('main');
-
-//   // If a home option/proj clicked
-//   if (selection) {
-//     // If click is on a delete icon
-//     if (e.target.classList.contains('delete-icon')) {
-
-//       display(dataFns.deleteItem(selection.id, data.projects))
-//       listenerFns.addNavListListeners('click', manageNavResponse);
-
-//       // If deleted item was displayed in main, display 'All' tasks
-//       if (selection.id === mainPanel.dataset.selected) {
-
-//         data.navSelection = 'all';
-//         dataFns.popLocalStorage(data.navSelection);
-
-//         setMainPanel(data.navSelection);
-
-//         // display(data.filterTasks(selection));
-//         // Add task listener here
-//       }
-
-//       highlight(data.navSelection);
-
-//     } else {
-
-//       data.navSelection = selection.id;
-//       dataFns.popLocalStorage(data.navSelection);
-
-//       setMainPanel(selection.id);
-
-//       // display(dataFns.filterTasks(selection.id));
-//       // listenerFns.addTasksListListener('click', manageTaskResponse);
-
-//       // Move highlight to own module??
-//       highlight(selection.id);
-//     }
-//   }
-// }
-
-// const manageTaskResponse = (e) => {
-//   let selection = e.target.closest('li');
-//   let mainPanel = document.querySelector('main');
-//   let currentProjects = data.projects;
-//   let wrapper, description, checkbox;
-
-//   // Move to below; cancel/submit edit
-//   let editForm = document.querySelector('#edit-task-form');
-
-
-
-//   if (selection) {
-//     wrapper = selection.querySelector('.task-wrapper');
-//     description = selection.querySelector('.task-descr-wrapper');
-//     checkbox = selection.querySelector('.checkbox');
-//   }
-
-//   for (let i = 0; i < currentProjects.length; i++) {
-//     for (let j = 0; j < currentProjects[i].tasks.length; j++) {
-
-//       if (currentProjects[i].tasks[j].id === selection.id) {
-//         let task = currentProjects[i].tasks[j];
-
-//         if (e.target.classList.contains('checkbox') || e.target.classList.contains('checked')) {
-
-//           (task.completed) ? task.completed = false : task.completed = true;
-//           data.popLocalStorage(currentProjects);
-
-//           checkbox.classList.toggle('checked');
-//           selection.classList.toggle('completed');
-//           description.classList.toggle('crossed');
-
-//         }
-
-//         if (e.target.classList.contains('important-icon')) {
-
-//           (task.important) ? task.important = false : task.important = true;
-//           dataController.populateLocalStorage(currentProjects);
-
-//           e.target.classList.toggle('important');
-
-//         }
-
-//         if (e.target.classList.contains('edit-icon')) {
-//           hideExtraneousForms();
-
-//           selection.append(content.createEditForm(task));
-//           wrapper.classList.toggle('hidden');
-
-//         }
-
-//         if (e.target.classList.contains('delete-icon')) {
-//           data.projects[i].tasks.splice(j, 1);
-//           data.popLocalStorage(currentProjects);
-
-
-//           // let container = data.projects[i].tasks
-//           // let itemToDelete = task.id
-//           // deleteItem(itemToDelete, container) unnecessary?????
-//           // display(deleteItem(itemToDelete, container)) works?????
-//           // AddListener
-//           // or just...
-//           // setTasksList()
-
-//           display(dataFns.filterTasks(mainPanel.dataset.selected))
-//           listenerFns.addTasksListListener('click', manageTaskResponse);
-//         }
-
-
-//         if (e.target.id === 'cancel-edit') {
-//           editForm.previousElementSibling.classList.toggle('hidden');
-//           editForm.remove();
-
-//         } else if (e.target.id === 'submit-edit') {
-//           task.name = document.querySelector('#edit-name-input').value;
-//           task.details = document.querySelector('#edit-details-input').value;
-//           task.due = document.querySelector('#edit-date-input').value;
-//           task.important = document.querySelector('#edit-important-input').checked;
-
-//           data.popLocalStorage(currentProjects);
-
-
-
-//           display(data.filterTasks(mainPanel.dataset.selected))
-//           listenerFns.addTasksListListener('click', manageTaskResponse);
-//         }
-
-//       }
-//     }
-//   }
-// }
-
-// const manageTaskResponse = (e) => {
-//   let selection = e.target.closest('li');
-//   let mainPanel = document.querySelector('main');
-//   let currentProjects = data.projects;
-//   let wrapper, description, checkbox;
-
-//   // Move to below; cancel/submit edit
-//   let editForm = document.querySelector('#edit-task-form');
-
-
-
-//   if (selection) {
-//     wrapper = selection.querySelector('.task-wrapper');
-//     description = selection.querySelector('.task-descr-wrapper');
-//     checkbox = selection.querySelector('.checkbox');
-//   }
-
-//   for (let i = 0; i < currentProjects.length; i++) {
-//     for (let j = 0; j < currentProjects[i].tasks.length; j++) {
-
-//       if (currentProjects[i].tasks[j].id === selection.id) {
-//         let task = currentProjects[i].tasks[j];
-
-//         if (e.target.classList.contains('checkbox') || e.target.classList.contains('checked')) {
-
-//           (task.completed) ? task.completed = false : task.completed = true;
-//           dataFns.popLocalStorage(currentProjects);
-
-//           checkbox.classList.toggle('checked');
-//           selection.classList.toggle('completed');
-//           description.classList.toggle('crossed');
-
-//         }
-
-//         if (e.target.classList.contains('important-icon')) {
-
-//           (task.important) ? task.important = false : task.important = true;
-//           dataFns.popLocalStorage(currentProjects);
-
-//           e.target.classList.toggle('important');
-
-//         }
-
-//         if (e.target.classList.contains('edit-icon')) {
-//           hideExtraneousForms();
-
-//           selection.append(content.createEditForm(task));
-//           wrapper.classList.toggle('hidden');
-
-//         }
-
-//         if (e.target.classList.contains('delete-icon')) {
-//           data.projects[i].tasks.splice(j, 1);
-//           dataFns.popLocalStorage(currentProjects);
-
-
-//           // let container = data.projects[i].tasks
-//           // let itemToDelete = task.id
-//           // deleteItem(itemToDelete, container) unnecessary?????
-//           // display(deleteItem(itemToDelete, container)) works?????
-//           // AddListener
-//           // or just...
-//           // setTasksList()
-
-//           display(dataFns.filterTasks(mainPanel.dataset.selected))
-//           listenerFns.addTasksListListener('click', manageTaskResponse);
-//         }
-
-
-//         if (e.target.id === 'cancel-edit') {
-//           editForm.previousElementSibling.classList.toggle('hidden');
-//           editForm.remove();
-
-//         } else if (e.target.id === 'submit-edit') {
-//           task.name = document.querySelector('#edit-name-input').value;
-//           task.details = document.querySelector('#edit-details-input').value;
-//           task.due = document.querySelector('#edit-date-input').value;
-//           task.important = document.querySelector('#edit-important-input').checked;
-
-//           data.popLocalStorage(currentProjects);
-
-
-
-//           display(dataFns.filterTasks(mainPanel.dataset.selected))
-//           listenerFns.addTasksListListener('click', manageTaskResponse);
-//         }
-
-//       }
-//     }
-//   }
-// }

@@ -136,7 +136,7 @@ const deleteItem = (itmId) => {
 
   remove(itmId, itmContainer);
   popLocalStorage(data.projects);
-  return itmContainer;
+  // return itmContainer;
 }
 
 // Returns selected tasks based on criteria
