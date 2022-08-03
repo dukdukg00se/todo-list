@@ -1,99 +1,12 @@
+/* This module's functions control */
+
 import data from './data.js';
 import * as contentFns from './content-fns.js';
 import * as listenerFns from './listener-fns';
 import * as dataFns from './data-fns';
 
 
-// Show form, focus on first input, add listener to run hideFormOnClick
-// Determine if add proj/task btn displayed
-function displayForm(form) {
-  form.classList.remove('hidden');
-  form.querySelector('input').focus();
 
-  // Hide add proj/task button when displaying form
-  form.nextElementSibling.classList.add('hidden');
-
-  listenerFns.docListener('add', 'click', hideFormOnClick);
-}
-
-// Reset, hide form, remove listener
-// Determine if add proj/task btn displayed
-function hideForm(form) {
-  form.reset();
-  form.classList.add('hidden');
-
-  // Add proj/task btn control
-  // Show add proj btn on proj form hide
-  // Show add task btn on task form hide when a proj is displayed
-  // Otherwise keep add task btn hidden
-  if (form.id === 'project-form' || /project-/.test(data.navSelection)) {
-    form.nextElementSibling.classList.remove('hidden');
-  } 
-
-  listenerFns.docListener('remove', 'click', hideFormOnClick);
-}
-
-// Hide displayed add proj/task form when clicking outside form
-function hideFormOnClick(e) {
-  let isTaskBtn =
-    e.target.classList.contains('task-button') ||
-    e.target.parentElement.classList.contains('task-button');
-  let isProjBtn =
-    e.target.classList.contains('project-button') ||
-    e.target.parentElement.classList.contains('project-button');
-  let isForm = !!e.target.closest('form');
-  let displayedForm;
-
-  let pgForms = document.querySelectorAll('form');
-  pgForms.forEach(form => {
-    if (!form.classList.contains('hidden')) {
-      displayedForm = form;
-    }
-  })
-
-  // If not a proj/task btn or form evnt, then hide form
-  if (!isTaskBtn && !isProjBtn && !isForm) {
-    hideForm(displayedForm);
-  }
-}
-
-// Makes sure only one form is displayed
-function hideExtranForms(action) {
-  const tasksListContainer = document.querySelector('#tasks-list-container');
-  let editFormDisplayed = !!tasksListContainer.querySelector('form')
-  let irrelForm;
-
-  // Check if add proj/task submission form displayed
-  if (action === 'add-project') {
-    // Irrelevant form = task submission form
-    irrelForm = document.querySelector('main > form');
-  } else if (action === 'add-task') {
-    // irrelForm = proj submission form
-    irrelForm = document.querySelector("#projects-panel form");
-  } else { // action === 'show edit form'
-    // If either task/proj form not hidden, set as irrelForm
-    let pgForms = document.querySelectorAll('#projects-panel > form, main > form');
-    pgForms.forEach(form => {
-      if (!form.classList.contains('hidden')) {
-        irrelForm = form;
-      }
-    })
-  }
-  if (irrelForm) {
-    // If create task/proj form displayed, hide
-    if (!irrelForm.classList.contains('hidden')) {
-      hideForm(irrelForm);
-    }
-  }
-
-
-  // Check if edit task form displayed
-  if (editFormDisplayed) {
-    let editForm = tasksListContainer.querySelector('form');
-    editForm.previousElementSibling.classList.toggle('hidden');
-    editForm.remove();
-  }
-}
 function display(arr) {
   let oldList, listId, container;
   let isProj = (arr === data.projects);
@@ -123,6 +36,127 @@ function display(arr) {
   
   return isProj;
 }
+
+// Display tasks in main, add listener
+const setTaskList = (arr) => {
+  display(arr);
+  listenerFns.addTasksListListener('click', manageTaskResponse);
+}
+
+
+
+
+// Show input form, focus on first input, add listeners 
+// For new proj/task forms hide add proj/task btn 
+// For edit task form, hide task info
+function displayForm(form, task) {
+  if (form.id === 'edit-task-form') {
+    task.append(form);
+
+    // Hide task info when edit form displayed
+    form.previousElementSibling.classList.toggle('hidden');
+  } else {
+    form.classList.remove('hidden');
+
+    // Hide add proj/task button when displaying form
+    form.nextElementSibling.classList.add('hidden');
+  }
+
+  // Focus on first form input field
+  form.querySelector('input').focus();
+
+  listenerFns.docListener('add', 'click', hideFormOnClick);
+  // listenerFns.docListener('add', 'keydown', keyFormCntrl);
+}
+
+// Reset, hide/remove form, remove listener
+function hideForm(form) {
+  if (form.id === 'edit-task-form') {
+    form.previousElementSibling.classList.toggle('hidden');
+    form.remove();
+  } else {
+    form.reset();
+    form.classList.add('hidden');
+  
+    // Add proj/task btn control
+    // Show add proj btn on proj form hide
+    // Show add task btn on task form hide when a proj is displayed in main
+    // Otherwise keep add task btn hidden
+    if (form.id === 'project-form' || /project-/.test(data.navSelection)) {
+      form.nextElementSibling.classList.remove('hidden');
+    } 
+  }
+
+  listenerFns.docListener('remove', 'click', hideFormOnClick);
+}
+
+// Hide displayed forms when clicking outside form
+function hideFormOnClick(e) {
+  let isTaskBtn =
+    e.target.classList.contains('task-button') ||
+    e.target.parentElement.classList.contains('task-button');
+  let isProjBtn =
+    e.target.classList.contains('project-button') ||
+    e.target.parentElement.classList.contains('project-button');
+  let isEditBtn =
+    e.target.classList.contains('edit-icon') ||
+    e.target.classList.contains('edit-button');
+  let isForm = !!e.target.closest('form');
+  let displayedForm;
+
+  let pgForms = document.querySelectorAll('form');
+  pgForms.forEach(form => {
+    if (!form.classList.contains('hidden')) {
+      displayedForm = form;
+    }
+  })
+
+  // If not a proj/task/edit btn or form evnt, then hide form
+  if (!isTaskBtn && !isProjBtn && !isEditBtn && !isForm) {
+
+    if (displayedForm) {
+      hideForm(displayedForm);
+    }
+    
+  }
+}
+
+// Makes sure only one form is displayed
+function hideExtranForms(action) {
+  const tasksListContainer = document.querySelector('#tasks-list-container');
+  let editFormDisplayed = tasksListContainer.querySelector('form')
+  let irrelForm;
+
+  // Use to check if add proj/task form is displayed
+  if (action === 'add-project') {
+    // Irrelevant form = add new task form
+    irrelForm = document.querySelector('main > form');
+  } else if (action === 'add-task') {
+    // irrelForm = add new proj form
+    irrelForm = document.querySelector("#projects-panel form");
+  } else { // action === 'show edit form'
+    // If either task/proj form not hidden, set as irrelForm
+    let pgForms = document.querySelectorAll('#projects-panel > form, main > form');
+    pgForms.forEach(form => {
+      if (!form.classList.contains('hidden')) {
+        irrelForm = form;
+      }
+    })
+  }
+
+  if (irrelForm) {
+    // If add task/projform displayed, hide
+    if (!irrelForm.classList.contains('hidden')) {
+      hideForm(irrelForm);
+    }
+  }
+
+  // Check if a edit task form is displayed
+  if (editFormDisplayed) {
+    hideForm(editFormDisplayed);
+  }
+}
+
 
 
 
@@ -162,22 +196,17 @@ const setMainPanel = () => {
     ? addTaskBtn.classList.remove('hidden')
     : addTaskBtn.classList.add('hidden');
 
-  setTasksList(dataFns.filterTasks(selection));
+  setTaskList(dataFns.filterTasks(selection));
 
 }
 
-
+// Display user projects in proj panel, add listener
 const setProjList = (arr) => {
   display(arr);
   listenerFns.addNavListListeners('click', manageNavResponse);
 }
 
-
-const setTasksList = (arr) => {
-  display(arr);
-  listenerFns.addTasksListListener('click', manageTaskResponse);
-}
-
+// Highlight current selection displayed in main panel
 const hlNavSelection = () => {
   const navItems = document.querySelectorAll('nav li');
   navItems.forEach(item => {
@@ -189,6 +218,7 @@ const hlNavSelection = () => {
   document.getElementById(data.navSelection).classList.add('highlight');
 }
 
+// Minimize/expand nav panel
 const toggleMenu = () => {
   const navPanel = document.querySelector('nav');
   const menuIcon = document.querySelector('.menu-icon');
@@ -205,6 +235,7 @@ const toggleMenu = () => {
   }
 }
 
+// Toggle between light/dark theme
 const toggleTheme = () => {
   const themeIcon = document.querySelector('.theme-icon');
   const themeToggleTooltip = document.querySelector('#theme-icon-wrapper > .tooltip-text');
@@ -219,6 +250,9 @@ const toggleTheme = () => {
     themeIcon.textContent = 'brightness_4';
   }
 }
+
+
+
 
 const managePageBtns = (e) => {
   let isProjBtn = e.currentTarget.classList.contains('project-button');
@@ -239,7 +273,7 @@ const managePageBtns = (e) => {
       hlNavSelection();
     } else if (action === 'submit-task') {
       let newTask = dataFns.createTask();
-      setTasksList(dataFns.initItem(newTask));
+      setTaskList(dataFns.initItem(newTask));
     }
 
     hideForm(form);
@@ -256,20 +290,19 @@ const manageNavResponse = (e) => {
       dataFns.deleteItem(selection.id);
       setProjList(data.projects);
 
-
       if (selection.id === mainPanel.dataset.selected) {
         dataFns.saveNavSelection('all');
         setMainPanel();
       }
 
-      hlNavSelection();
     } else {
       dataFns.saveNavSelection(selection.id);
       setMainPanel();
-      hlNavSelection();
     }
+    hlNavSelection();
   }
 }
+
 
 const manageTaskResponse = (e) => {
   let selection = e.target.closest('li');
@@ -291,24 +324,20 @@ const manageTaskResponse = (e) => {
 
     e.target.classList.toggle('important');
   } else if (e.target.classList.contains('edit-icon')) {
-    hideExtranForms();
-
-    let wrapper = selection.querySelector('.task-wrapper');
+    hideExtranForms();    
     let task = dataFns.returnTask(selection.id);
-    wrapper.classList.toggle('hidden');
-    selection.append(contentFns.createEditForm(task));
+    displayForm(contentFns.createEditForm(task), selection);
   } else if (e.target.classList.contains('delete-icon')) {
     dataFns.deleteItem(selection.id);
 
-    setTasksList(dataFns.filterTasks(data.navSelection));
+    setTaskList(dataFns.filterTasks(data.navSelection));
   } else if (e.target.id === 'cancel-edit') {
     let editForm = document.querySelector('#edit-task-form');
-    editForm.previousElementSibling.classList.toggle('hidden');
-    editForm.remove();
+    hideForm(editForm);
   } else if (e.target.id === 'submit-edit') {
     dataFns.editTaskProp(selection.id, 'all');
-    
-    setTasksList(dataFns.filterTasks(mainPanel.dataset.selected));
+
+    setTaskList(dataFns.filterTasks(mainPanel.dataset.selected));
   }
 }
 
@@ -322,3 +351,98 @@ export {
   manageNavResponse,
   manageTaskResponse
 }
+
+
+
+// const keyFormCntrl = (e) => {
+//   let form = e.target.closest('form');
+
+//   if (e.key === 'Enter') {
+
+//     if (form.id === 'project-form') {
+//       let newProj = dataFns.createProj();
+//       setProjList(dataFns.initItem(newProj));
+//       hlNavSelection();
+//     } else if (form.id === 'task-form') {
+//       let newTask = dataFns.createTask();
+//       setTaskList(dataFns.initItem(newTask));
+//     } else { // form === edit-task-form
+//       let selection = e.target.closest('li');
+//       let mainPanel = document.querySelector('main');
+
+//       dataFns.editTaskProp(selection.id, 'all');
+//       setTaskList(dataFns.filterTasks(mainPanel.dataset.selected));
+//     }
+
+
+//     e.preventDefault();
+//     hideForm(form);
+
+//   } else if (e.key === 'Escape') {
+
+//     // if (form.id === 'project-form' || form.id === 'task-form') {
+//     //   hideForm(form);
+//     // } else {
+//     //   form.previousElementSibling.classList.toggle('hidden');
+//     //   form.remove();
+//     //   listenerFns.docListener('remove', 'keydown', keyFormCntrl);
+//     // }
+
+//     hideForm(form);
+
+//   }
+
+
+// }
+
+/** Old fns */
+
+// function hideFormOnClick(e) {
+//   let isTaskBtn =
+//     e.target.classList.contains('task-button') ||
+//     e.target.parentElement.classList.contains('task-button');
+//   let isProjBtn =
+//     e.target.classList.contains('project-button') ||
+//     e.target.parentElement.classList.contains('project-button');
+//   let isForm = !!e.target.closest('form');
+//   let displayedForm;
+
+//   let pgForms = document.querySelectorAll('form');
+//   pgForms.forEach(form => {
+//     if (!form.classList.contains('hidden')) {
+//       displayedForm = form;
+//     }
+//   })
+
+//   // If not a proj/task btn or form evnt, then hide form
+//   if (!isTaskBtn && !isProjBtn && !isForm) {
+//     hideForm(displayedForm);
+//   }
+// }
+// function displayForm(form) {
+//   form.classList.remove('hidden');
+//   form.querySelector('input').focus();
+
+//   // Hide add proj/task button when displaying form
+//   form.nextElementSibling.classList.add('hidden');
+
+//   listenerFns.docListener('add', 'click', hideFormOnClick);
+
+//   listenerFns.docListener('add', 'keydown', keyFormCntrl);
+// }
+// function hideForm(form) {
+//   form.reset();
+//   form.classList.add('hidden');
+
+//   // Add proj/task btn control
+//   // Show add proj btn on proj form hide
+//   // Show add task btn on task form hide when a proj is displayed in main
+//   // Otherwise keep add task btn hidden
+//   if (form.id === 'project-form' || /project-/.test(data.navSelection)) {
+//     form.nextElementSibling.classList.remove('hidden');
+//   } 
+
+//   listenerFns.docListener('remove', 'click', hideFormOnClick);
+
+//   listenerFns.docListener('remove', 'keydown', keyFormCntrl);
+// }
