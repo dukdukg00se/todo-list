@@ -264,7 +264,6 @@ const managePageBtns = (e) => {
   if (action === 'add-project' || action === 'add-task') {
     hideExtranForms(action);
     displayForm(form);
-
   } else {
 
     if (action === 'submit-project') {
@@ -322,6 +321,7 @@ const manageTaskResponse = (e) => {
   } else if (e.target.classList.contains('important-icon')) {
     dataFns.editTaskProp(selection.id, 'important');
 
+    setTaskList(dataFns.filterTasks(mainPanel.dataset.selected));
     e.target.classList.toggle('important');
   } else if (e.target.classList.contains('edit-icon')) {
     hideExtranForms();    
