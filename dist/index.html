@@ -83,10 +83,11 @@
         <div id="projects-list-container"></div> 
 
         <form class="hidden" id="project-form">
-          <input id="project-name-input" type="text" placeholder="Project name">
+          <label for="project-name-input">Project name:</label>
+          <input id="project-name-input" type="text" placeholder="E.g., Home">
     
           <div>
-            <button class="project-button" id="submit-project" type="button">Submit</button>
+            <button class="project-button" id="submit-project" type="submit">Submit</button>
             <button class="project-button" id="cancel-project" type="button">Cancel</button>
           </div>
         </form>
@@ -113,7 +114,7 @@
         <label for="task-important-input">Important:<input id="task-important-input" type="checkbox"></label>
         
         <div>
-          <button class="task-button" id="submit-task" type="button">Submit</button>
+          <button class="task-button" id="submit-task" type="submit">Submit</button>
           <button class="task-button" id="cancel-task" type="button">Cancel</button>
         </div>
       </form>

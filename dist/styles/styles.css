@@ -257,6 +257,7 @@ form {
 form div {
   display: flex;
   gap: 1rem;
+  justify-content: center;
 }
 
 /* Submit, cancel button */
@@ -268,7 +269,6 @@ form button {
 /* Add project form */
 nav form {
   align-self: center;
-  align-items: center;
 }
 
 /* Form input boxes */
