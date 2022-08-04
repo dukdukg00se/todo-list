@@ -3,7 +3,7 @@
 // Wrap in IIFE to be able to reassign the variables
 // Without it, get a no setter error 
 const data = (() => {
-  // Defines user current projects
+  // Defines current user projects
   let projects = !JSON.parse(localStorage.getItem('projects')) 
     ? [] 
     : JSON.parse(localStorage.getItem('projects'));

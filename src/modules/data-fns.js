@@ -206,7 +206,7 @@ const saveNavSelection = (input) => {
   popLocalStorage(data.navSelection);
 }
 
-
+// Find specific task by id and edit its input prop
 const editTaskProp = (tskId, prop) => {
   let projects = data.projects;
 
