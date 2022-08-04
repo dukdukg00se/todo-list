@@ -1,15 +1,20 @@
 // This module contains functions that add (or remove) listeners to key page elements
 
-const addMenuToggListener = (evnt, fn) => {
+const addMenuToggListener = (fn, ...evnts) => {
   const menuToggle = document.querySelector('.menu-icon');
 
-  menuToggle.addEventListener(evnt, fn);
+  evnts.forEach(evnt => {
+    menuToggle.addEventListener(evnt, fn);
+  });
 }
 
-const addThemeToggListener = (evnt, fn) => {
+const addThemeToggListener = (fn, ...evnts) => {
   const themeToggle = document.querySelector('.theme-icon');
 
-  themeToggle.addEventListener(evnt, fn);
+  evnts.forEach(evnt => {
+    themeToggle.addEventListener(evnt, fn);
+  });
+
 }
 
 const addNavListListeners = (evnt, fn) => {
