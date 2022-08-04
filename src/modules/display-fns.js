@@ -217,37 +217,42 @@ const hlNavSelection = () => {
 }
 
 // Minimize/expand nav panel
-const toggleMenu = () => {
-  const navPanel = document.querySelector('nav');
-  const menuIcon = document.querySelector('.menu-icon');
-  const menuToggleTooltip = document.querySelector('#menu-icon-wrapper > .tooltip-text');
-
-  navPanel.classList.toggle('hidden');
-
-  if (navPanel.classList.contains('hidden')) {
-    menuToggleTooltip.textContent = 'Expand menu';
-    menuIcon.textContent = 'menu';
-  } else {
-    menuToggleTooltip.textContent = 'Collapse menu';
-    menuIcon.textContent = 'menu_open';
+const toggleMenu = (e) => {
+  if (e.type === 'click' || e.key === 'Enter') {
+    const navPanel = document.querySelector('nav');
+    const menuIcon = document.querySelector('.menu-icon');
+    const menuToggleTooltip = document.querySelector('#menu-icon-wrapper > .tooltip-text');
+  
+    navPanel.classList.toggle('hidden');
+  
+    if (navPanel.classList.contains('hidden')) {
+      menuToggleTooltip.textContent = 'Expand menu';
+      menuIcon.textContent = 'menu';
+    } else {
+      menuToggleTooltip.textContent = 'Collapse menu';
+      menuIcon.textContent = 'menu_open';
+    }
   }
 }
 
 // Toggle between light/dark theme
-const toggleTheme = () => {
-  const themeIcon = document.querySelector('.theme-icon');
-  const themeToggleTooltip = document.querySelector('#theme-icon-wrapper > .tooltip-text');
-
-  document.body.classList.toggle('dark');
-
-  if (document.body.classList.contains('dark')) {
-    themeToggleTooltip.textContent = 'Light theme';
-    themeIcon.textContent = 'brightness_high';
-  } else {
-    themeToggleTooltip.textContent = 'Dark theme';
-    themeIcon.textContent = 'brightness_4';
+const toggleTheme = (e) => {
+  if (e.type === 'click' || e.key === 'Enter') {
+    const themeIcon = document.querySelector('.theme-icon');
+    const themeToggleTooltip = document.querySelector('#theme-icon-wrapper > .tooltip-text');
+  
+    document.body.classList.toggle('dark');
+  
+    if (document.body.classList.contains('dark')) {
+      themeToggleTooltip.textContent = 'Light theme';
+      themeIcon.textContent = 'brightness_high';
+    } else {
+      themeToggleTooltip.textContent = 'Dark theme';
+      themeIcon.textContent = 'brightness_4';
+    }
   }
 }
+
 
 
 const managePageBtns = (e) => {
@@ -270,7 +275,7 @@ const managePageBtns = (e) => {
   } else if (action === 'cancel-edit') {
     let editForm = document.querySelector('#edit-task-form');
     removeForm(editForm);
-  } else { // Either submit proj, submit task, cancel proj, cancel task
+  } else { // Action === submit proj, submit task, cancel proj, or cancel task
 
     if (action === 'submit-project') {
       let newProj = dataFns.createProj();

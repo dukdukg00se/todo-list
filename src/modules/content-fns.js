@@ -71,7 +71,6 @@ const createTask = (obj) => {
   return taskListItem;
 }
 
-// Task edit form
 const createEditForm = (obj) => {
   const form = document.createElement("form");
   const nameLabel = document.createElement("label");

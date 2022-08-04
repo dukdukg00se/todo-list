@@ -22,7 +22,6 @@ const setId = (prefix, arr) => {
   }
 }
 
-// Search and return specific proj obj by proj id
 const returnProj = (projId) => {
   let targetProj;
 
@@ -35,7 +34,6 @@ const returnProj = (projId) => {
   return targetProj;
 }
 
-// Save projects or nav selection to local storage
 const popLocalStorage = (input) => {
 
   if (typeof input === 'object') {
@@ -46,7 +44,6 @@ const popLocalStorage = (input) => {
   
 };
 
-// Search and return a specific proj's tasks by task id
 const returnTaskContainer = (taskId) => {
   let taskContainer;
 
@@ -61,7 +58,6 @@ const returnTaskContainer = (taskId) => {
   return taskContainer;
 }
 
-/* Constructors */
 function Project(name) {
   this.name = name;
   this.tasks = [];
@@ -79,7 +75,6 @@ function Task(name, details, due, important) {
 
 
 /* Exported fns */
-// Search and return specific task obj by task id
 const returnTask = (taskId) => {
   let targetTask;
 
@@ -94,13 +89,11 @@ const returnTask = (taskId) => {
   return targetTask;
 }
 
-// Returns a new project object
 const createProj = () => {
   const projName = document.querySelector("#project-name-input").value;
   return new Project(projName);
 }
 
-// Returns a new task object
 const createTask = () => {
   const taskName = document.querySelector('#task-name-input').value;
   const taskDetails = document.querySelector('#task-details-input').value;

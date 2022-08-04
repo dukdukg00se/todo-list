@@ -82,7 +82,7 @@ button .decor-icon {
   font-size: 2.5rem;
 }
 
-/* Task view, projects, task list */
+/* Task view, proj, task list */
 ul {
   display: flex;
   flex-direction: column;
@@ -155,16 +155,16 @@ header .decor-icon {
   transition: opacity .4s;
 }
 .menu-icon:hover + .tooltip-text,
-.theme-icon:hover + .tooltip-text {
+.theme-icon:hover + .tooltip-text,
+.menu-icon:focus + .tooltip-text, 
+.theme-icon:focus + .tooltip-text {
   opacity: 1;
 }
 
-/* Tooltip for menu toggle */
 #menu-icon-wrapper .tooltip-text {
   left: 1rem;
 }
 
-/* Tooltip for theme toggle */
 #theme-icon-wrapper .tooltip-text {
   right: 1rem;
 }
@@ -183,7 +183,6 @@ nav {
   min-width: 21rem;
 }
 
-/* Nav sub-containers, main */
 main,
 nav section {
   display: flex;
@@ -192,7 +191,6 @@ nav section {
   padding: 2rem;
 }
 
-/* Nav sub-container headers */
 nav section h2 {
   font-size: 2.2rem;
   font-weight: 700;
@@ -203,7 +201,7 @@ nav section:first-child {
   border-bottom: solid 1px rgb(30 36 99);
 }
 
-/* task view, project items */
+/* task view, proj items */
 nav li:hover {
   background-color: var(--hover-color);
 }
@@ -211,7 +209,7 @@ nav li:active {
   background-color: var(--active-color);
 }
 
-/* task view, project items content */
+/* task view, proj items content */
 nav li > div {
   display: flex;
   align-items: center;
@@ -219,7 +217,7 @@ nav li > div {
   padding: 0.4rem 0.7rem;
 }
 
-/* Project/task titles */
+/* Proj/task titles */
 h3 {
   width: 100%;
   word-break: break-word;
@@ -253,7 +251,6 @@ form {
   padding: 1.2rem;
 }
 
-/* Form subcontainers */
 form div {
   display: flex;
   gap: 1rem;
@@ -290,7 +287,6 @@ textarea {
   border-radius: 5px;
 }
 
-/* Important label */
 label[for = task-important-input],
 label[for = edit-important-input] {
   display: flex;
@@ -309,7 +305,6 @@ main {
   align-items: center;
 }
 
-/* Main header */
 h1 {
   font-size: 5rem;
   font-weight: 700;
@@ -407,7 +402,6 @@ main li > div {
   'FILL' 1;
 }
 
-/* Task form sub-containers */
 main form > div {
   justify-content: center;
 }
@@ -421,7 +415,7 @@ main form > div {
   width: 50%;
 }
 
-/* Edit task form delete icon */
+/* Edit task form's delete icon */
 form > div span {
   background-color: var(--delete-icon-bg-color);
   color: var(--text-color);
