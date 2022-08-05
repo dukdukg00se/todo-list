@@ -200,8 +200,8 @@ const setMainPanel = () => {
 
 // Display user projects in proj panel, add listener
 const setProjList = (arr) => {
-  display(arr);
-  listenerFns.addNavListListeners('click', manageNavResponse);
+  display(arr);  
+  listenerFns.addNavListListeners(manageNavResponse, 'click', 'keydown');      
 }
 
 // Highlight current selection displayed in main panel
@@ -233,7 +233,7 @@ const toggleMenu = (e) => {
       menuIcon.textContent = 'menu_open';
     }
   }
-}
+}   
 
 // Toggle between light/dark theme
 const toggleTheme = (e) => {
@@ -292,26 +292,28 @@ const managePageBtns = (e) => {
 
 
 const manageNavResponse = (e) => {
-  const selection = e.target.closest('li');
-  const mainPanel = document.querySelector('main');
-
-  if (selection) {
-    if (e.target.classList.contains('delete-icon')) {
-      dataFns.deleteItem(selection.id);
-      setProjList(data.projects);
-
-      // Instead of using dataset, can compare to data.navSelection
-      // Will need to see if one is more efficient
-      if (selection.id === mainPanel.dataset.selected) {
-        dataFns.saveNavSelection('all');
+  if (e.type === 'click' || e.key === 'Enter') {
+    const selection = e.target.closest('li');
+    const mainPanel = document.querySelector('main');
+  
+    if (selection) {
+      if (e.target.classList.contains('delete-icon')) {
+        dataFns.deleteItem(selection.id);
+        setProjList(data.projects);
+  
+        // Instead of using dataset, can compare to data.navSelection
+        // Will need to see if one is more efficient
+        if (selection.id === mainPanel.dataset.selected) {
+          dataFns.saveNavSelection('all');
+          setMainPanel();
+        }
+  
+      } else {
+        dataFns.saveNavSelection(selection.id);
         setMainPanel();
       }
-
-    } else {
-      dataFns.saveNavSelection(selection.id);
-      setMainPanel();
-    }
-    hlNavSelection();
+      hlNavSelection();
+    } 
   }
 }
 

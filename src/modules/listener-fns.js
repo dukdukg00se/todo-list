@@ -17,14 +17,16 @@ const addThemeToggListener = (fn, ...evnts) => {
 
 }
 
-const addNavListListeners = (evnt, fn) => {
+const addNavListListeners = (fn, ...evnts) => {
   // In lieu of adding listener to list items, add to lists
   // May be more efficient?
   let navLists = document.querySelectorAll('nav ul');
 
-  navLists.forEach((list) => {
-    list.addEventListener(evnt, fn);
-  });
+  for (let i = 0; i < navLists.length; i++) {
+    for (let j = 0; j < evnts.length; j++) {
+      navLists[i].addEventListener(evnts[j], fn);
+    }
+  }
 }
 
 const addTasksListListener = (evnt, fn) => {

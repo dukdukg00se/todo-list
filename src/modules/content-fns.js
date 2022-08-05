@@ -1,5 +1,5 @@
 // This module contains functions that create the dynamic page content 
-
+  
 const createProj = (obj) => {
   const projectListItem = document.createElement('li');
   const projectWrapper = document.createElement('div');
@@ -9,12 +9,14 @@ const createProj = (obj) => {
   
   projectListItem.classList.add('project-item');
   projectListItem.id = obj.id;
+  projectListItem.tabIndex = 0;
   projectWrapper.classList.add('project-wrapper');
   projectIcon.classList.add('material-symbols-rounded', 'decor-icon');
   projectIcon.textContent = 'tools_power_drill';
   projectTitle.textContent = obj.name ? obj.name : 'No name entered';
   deleteIcon.classList.add('material-symbols-rounded', 'delete-icon');
   deleteIcon.textContent = 'delete';
+  deleteIcon.tabIndex = 0;    
 
   projectWrapper.append(projectIcon, projectTitle, deleteIcon);
   projectListItem.append(projectWrapper);
