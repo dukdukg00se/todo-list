@@ -393,7 +393,10 @@ main li > div {
 }
 .delete-icon:hover,
 .important-icon:hover,
-.edit-icon:hover {
+.edit-icon:hover, 
+.delete-icon:focus,
+.important-icon:focus,
+.edit-icon:focus {
   background-color: var(--icon-hover-color);
 }
 .delete-icon:active,
