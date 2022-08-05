@@ -144,10 +144,6 @@ header .decor-icon {
 
 
 
-.menu-icon:focus,
-.theme-icon:focus  {
-  background-color: var(--hover-color);
-}
 
 nav li:focus {
   background-color: var(--hover-color);
@@ -483,12 +479,10 @@ footer a {
 }
 
 /* Change github link + image color on hover */
-footer a:hover,
-footer a:focus {
+footer a:hover {
   color: rgb(133 184 250);
 }
-footer a:hover .github,
-footer a:focus .github {
+footer a:hover .github {
   filter: invert(72%) sepia(5%) saturate(5184%) hue-rotate(184deg) brightness(99%) contrast(98%);
 }
 /* Change github link + image color on click */
