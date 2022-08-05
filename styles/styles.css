@@ -142,6 +142,23 @@ header .decor-icon {
   background-color: var(--active-color);
 }
 
+
+
+.menu-icon:focus,
+.theme-icon:focus  {
+  background-color: var(--hover-color);
+}
+
+nav li:focus {
+  background-color: var(--hover-color);
+}
+
+button:focus {
+  background-color: rgb(230 230 220); 
+}
+
+
+
 /* Icon tooltip text */
 .tooltip-text {
   position: absolute;
@@ -440,6 +457,7 @@ footer a {
   text-decoration: none;
   color: var(--text-color);
   font-size: 2rem;
+  padding: 0.2rem;
   /* Set position to place github img */
   position: relative;
 }
@@ -462,10 +480,12 @@ footer a {
 }
 
 /* Change github link + image color on hover */
-footer a:hover {
+footer a:hover,
+footer a:focus {
   color: rgb(133 184 250);
 }
-footer a:hover .github {
+footer a:hover .github,
+footer a:focus .github {
   filter: invert(72%) sepia(5%) saturate(5184%) hue-rotate(184deg) brightness(99%) contrast(98%);
 }
 /* Change github link + image color on click */
@@ -478,7 +498,7 @@ footer a:active .github {
 
 /* Task completed checkbox */
 .checkbox {
-  align-self: flex-start;
+  align-self: flex-start;             
   height: 2rem;
   min-width: 2rem;
   border: solid 1px rgb(30 36 99);
