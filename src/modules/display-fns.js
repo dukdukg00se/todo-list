@@ -6,8 +6,6 @@ import * as listenerFns from './listener-fns';
 import * as dataFns from './data-fns';
 
 
-let focusedElem;
-
 
 function display(arr) {
   let oldList, listId, container;
@@ -37,20 +35,14 @@ function display(arr) {
   container.append(newList);
 }
 
-// Display tasks in main, add listener
+
 const setTaskList = (arr) => {
   display(arr);
-  // if (focusedElem) {
-  //   focusedElem.focus();
-  //   console.log(focusedElem);
-  // }
-  // listenerFns.addTaskListListener(manageTaskResponse, 'click');
+
+  listenerFns.addTaskListListener(manageTaskResponse, 'click');
   listenerFns.docListener(keyContrlr, 'add', 'keydown');
 }
-// const setTaskList = (arr) => {
-//   display(arr);
-//   listenerFns.addTaskListListener(manageTaskResponse, 'click', 'keydown');
-// }
+
 
 
 /** Form module */
@@ -63,6 +55,9 @@ function displayForm(form, task) {
 
     // Hide task info when edit form displayed
     form.previousElementSibling.classList.toggle('hidden');
+
+    
+    listenerFns.addPageBtnListeners(managePageBtns, 'click');
   } else {
     form.classList.remove('hidden');
 
@@ -76,25 +71,6 @@ function displayForm(form, task) {
   listenerFns.docListener(removeFormOnClick, 'add', 'click');
   listenerFns.docListener(testForm, 'add', 'keydown');
 }
-// function displayForm(form, task) {
-//   if (form.id === 'edit-task-form') {
-//     task.append(form);
-
-//     // Hide task info when edit form displayed
-//     form.previousElementSibling.classList.toggle('hidden');
-//   } else {
-//     form.classList.remove('hidden');
-
-//     // Hide add proj/task button when displaying form
-//     form.nextElementSibling.classList.add('hidden');
-//   }
-
-//   // Focus on first form input field
-//   form.querySelector('input').focus();
-
-//   listenerFns.docListener(removeFormOnClick, 'add', 'click');
-// }
-/** */
 
 // Reset, hide/remove form, remove listener
 function removeForm(form) {
@@ -115,7 +91,6 @@ function removeForm(form) {
   }
 
   listenerFns.docListener(removeFormOnClick, 'remove', 'click');
-
   listenerFns.docListener(testForm, 'remove', 'keydown');
 }
 
@@ -232,22 +207,12 @@ const setMainPanel = () => {
 
 
 
-
-
 // Display user projects in proj panel, add listener
 const setProjList = (arr) => {
   display(arr);  
-  // listenerFns.addNavListListeners(manageNavResponse, 'click', 'keydown');      
+  listenerFns.addNavListListeners(manageNavResponse, 'click');      
   listenerFns.docListener(keyContrlr, 'add', 'keydown');
 }
-// const setProjList = (arr) => {
-//   display(arr);  
-//   listenerFns.addNavListListeners(manageNavResponse, 'click', 'keydown');      
-// }
-
-
-
-/** */
 
 // Highlight current selection displayed in main panel
 const hlNavSelection = () => {
@@ -260,6 +225,8 @@ const hlNavSelection = () => {
 
   document.getElementById(data.navSelection).classList.add('highlight');
 }
+
+
 
 // Minimize/expand nav panel
 const toggleMenu = (e) => {
@@ -303,20 +270,35 @@ const toggleTheme = (e) => {
 }
 
 
+
 const managePageBtns = (e) => {  
-  // let isProjBtn = e.target.classList.contains('project-button') || e.target.id === 'project-name-input';
-  let isProjBtn = e.target.classList.contains('project-button');
 
-  let action = e.target.id;
+  let form, action;
 
-  // let isProjBtn = e.currentTarget.classList.contains('project-button');
-  // let action = e.currentTarget.id;
+  if (e.target.parentElement.id === 'add-project') {
+    action = 'add-project';
+  } else if (e.target.parentElement.id === 'add-task') {
+    action = 'add-task';
+  } else {
+    action = e.target.id;
+  }
 
-  // Set form to new proj form or new task form
-  // Edit form displayed through kebab icon (class = edit-icon) in task list
-  let form = isProjBtn
-    ? document.querySelector('#projects-panel form')
-    : document.querySelector('main > form');
+  if (
+    action === 'add-project' || 
+    action === 'submit-project' || 
+    action === 'cancel-project'
+  ) {
+    form = document.querySelector('#projects-panel form');
+  } else if (
+    action === 'add-task' || 
+    action === 'submit-task' || 
+    action === 'cancel-task'
+  ) {
+    form = document.querySelector('main > form');
+  } else {
+    form = document.querySelector('#edit-task-form');
+  }
+
 
   if (action === 'add-project' || action === 'add-task') {
     removeExtranForms(action);
@@ -331,8 +313,10 @@ const managePageBtns = (e) => {
   
   else if (action === 'cancel-edit') {
 
-    let editForm = document.querySelector('#edit-task-form');
-    removeForm(editForm);
+    // let editForm = document.querySelector('#edit-task-form');
+    // removeForm(editForm);
+
+    removeForm(form);
   } 
   
   else { 
@@ -349,98 +333,9 @@ const managePageBtns = (e) => {
     removeForm(form);
   }
 } 
-// const managePageBtns = (e) => {
-//   if (e.type === 'click' || e.key === 'Enter') {
 
 
-//     let isProjBtn = e.currentTarget.classList.contains('project-button');
-//     let action = e.currentTarget.id;
-  
-//     // Set form to new proj form or new task form
-//     // Edit form displayed through kebab icon (class = edit-icon) in task list
-//     let form = isProjBtn
-//       ? document.querySelector('#projects-panel form')
-//       : document.querySelector('main > form');
-  
-//     if (action === 'add-project' || action === 'add-task') {
-//       removeExtranForms(action);
-//       displayForm(form);
 
-
-//     } else if (action === 'submit-edit') {
-//       let targetTask = e.target.closest('li').id;
-//       dataFns.editTaskProp(targetTask, 'all');
-//       setTaskList(dataFns.filterTasks(data.navSelection));
-
-      
-//       focusedElem = targetTask;
-//       if (e.key) {
-//         document.getElementById(focusedElem).focus();
-//       }
-
-//     } else if (action === 'cancel-edit') {
-//       let editForm = document.querySelector('#edit-task-form');
-//       removeForm(editForm);
-  
-  
-//       if (e.key) {
-//         document.getElementById(focusedElem).focus();
-//       }
-
-  
-//     } else { // Action === submit proj, submit task, cancel proj, or cancel task
-  
-//       if (action === 'submit-project') {
-//         let newProj = dataFns.createProj();
-//         setProjList(dataFns.initItem(newProj));
-//         hlNavSelection();
-//       } else if (action === 'submit-task') {
-//         let newTask = dataFns.createTask();
-//         setTaskList(dataFns.initItem(newTask));
-//       }
-  
-//       removeForm(form);   
-
-//       // tab focus
-//       // if (e.key) {
-//       //   document.getElementById('all').focus(); 
-//       // }
-
-
-//     }
-
-//     e.preventDefault();
-//   } else if (e.key === 'Escape') {
-//     document.activeElement.blur();  
-//   }
-// } 
-
-/** */
-
-// const manageNavResponse = (e) => {
-//   const selection = e.target.closest('li');
-//   const mainPanel = document.querySelector('main');
-
-//   if (selection) {
-//     if (e.target.classList.contains('delete-icon')) {
-//       dataFns.deleteItem(selection.id);
-//       setProjList(data.projects);
-
-//       // Instead of using dataset, can compare to data.navSelection
-//       // Will need to see if one is more efficient
-//       if (selection.id === mainPanel.dataset.selected) {
-//         dataFns.saveNavSelection('all');
-//         setMainPanel();
-//       }
-
-//     } else {
-//       dataFns.saveNavSelection(selection.id);
-//       setMainPanel();
-//     }
-//     hlNavSelection();
-//   } 
-  
-// }
 const manageNavResponse = (e) => {
 
   const selection = e.target.closest('li');
@@ -473,36 +368,7 @@ const manageNavResponse = (e) => {
 
 }
 
-/** */
 
-// const manageTaskResponse = (e) => {
-//   let selection = e.target.closest('li');
-
-//   if (
-//     e.target.classList.contains('checkbox') || 
-//     e.target.classList.contains('checked')
-//   ) {
-//     dataFns.editTaskProp(selection.id, 'completed');
-//     setTaskList(dataFns.filterTasks(data.navSelection));
-
-//   } else if (e.target.classList.contains('important-icon')) {
-//     dataFns.editTaskProp(selection.id, 'important');
-//     setTaskList(dataFns.filterTasks(data.navSelection));
-
-//   } else if (e.target.classList.contains('delete-icon')) {
-//     dataFns.deleteItem(selection.id);
-//     setTaskList(dataFns.filterTasks(data.navSelection));
-
-//   } else if (e.target.classList.contains('edit-icon')) {
-//     removeExtranForms();    
-//     let task = dataFns.returnTask(selection.id);
-//     displayForm(contentFns.createEditForm(task), selection);
-
-//     // listenerFns.addPageBtnListeners(managePageBtns, 'click');
-//     // listenerFns.docListener(keyContrlr, 'add', 'keydown');
-
-//   } 
-// }
 
 
 const manageTaskResponse = (e) => {
@@ -510,8 +376,10 @@ const manageTaskResponse = (e) => {
 
   if (e.target.classList.contains('edit-icon')) {
     removeExtranForms();    
-    let task = dataFns.returnTask(selection.id);
-    displayForm(contentFns.createEditForm(task), selection);
+    let taskInfo = dataFns.returnTask(selection.id);
+    displayForm(contentFns.createEditForm(taskInfo), selection);
+    
+    // listenerFns.addPageBtnListeners(managePageBtns, 'click');
   } else {
 
     if (
@@ -519,47 +387,27 @@ const manageTaskResponse = (e) => {
       e.target.classList.contains('checked')
     ) {
       dataFns.editTaskProp(selection.id, 'completed');
-    } else if (e.target.classList.contains('important-icon')) {
+    } 
+    
+    else if (e.target.classList.contains('important-icon')) {
       dataFns.editTaskProp(selection.id, 'important');
-    } else if (e.target.classList.contains('delete-icon')) {
+    } 
+    
+    else if (e.target.classList.contains('delete-icon')) {
       dataFns.deleteItem(selection.id);
       listenerFns.docListener(testForm, 'remove', 'keydown');
     } 
+
+    else {
+      // E.g., events within the edit form; handled by 
+      return;
+    }
 
     setTaskList(dataFns.filterTasks(data.navSelection));
   }
 }
 
 
-// const manageTaskResponse = (e) => {
-//   let selection = e.target.closest('li');
-
-//   if (
-//     e.target.classList.contains('checkbox') || 
-//     e.target.classList.contains('checked')
-//   ) {
-//     dataFns.editTaskProp(selection.id, 'completed');
-//     let checkbox = selection.querySelector('.checkbox');
-//     let description = selection.querySelector('.task-descr-wrapper');
-//     checkbox.classList.toggle('checked');
-//     description.classList.toggle('crossed');
-//     selection.classList.toggle('completed');
-//   } else if (e.target.classList.contains('important-icon')) {
-//     dataFns.editTaskProp(selection.id, 'important');
-//     setTaskList(dataFns.filterTasks(data.navSelection));
-
-//     // No need to toggle since redisplaying task list
-//     // e.target.classList.toggle('important');
-//   } else if (e.target.classList.contains('delete-icon')) {
-//     dataFns.deleteItem(selection.id);
-//     setTaskList(dataFns.filterTasks(data.navSelection));
-//   } else if (e.target.classList.contains('edit-icon')) {
-//     removeExtranForms();    
-//     let task = dataFns.returnTask(selection.id);
-//     displayForm(contentFns.createEditForm(task), selection);
-//     listenerFns.addPageBtnListeners(managePageBtns, 'click');
-//   } 
-// }
 
 
 // const manageTaskResponse = (e) => {
@@ -621,20 +469,11 @@ const manageTaskResponse = (e) => {
 //   }
 // }
 
-/** */
-// const test = (e) => {
-//   console.log(e);
-// }
 
 
 const keyContrlr = (e) => {
-  // console.log(e.target);
 
-  if (e.key === 'Enter' && e.target !== document.body) {
-
-    // if (e.target.id === 'project-name-input') {
-    //   managePageBtns(e);
-    // }
+  if (e.key === 'Enter') {
 
     if (e.target.classList.contains('menu-icon')) {
       toggleMenu(e);
@@ -648,18 +487,19 @@ const keyContrlr = (e) => {
       manageNavResponse(e);
     }
 
-    else if (e.target.classList.contains('project-button') || e.target.classList.contains('task-button') || e.target.classList.contains('edit-button')) {
-
+    else if (e.target.nodeName === 'BUTTON') {
       managePageBtns(e);
       e.preventDefault();   
     }
 
     else if (e.target.classList.contains('delete-icon')) {
+
       if (e.target.parentElement.classList.contains('project-wrapper')) {
         manageNavResponse(e);
       } else {
         manageTaskResponse(e);
       }
+
     }
 
     else if (e.target.classList.contains('github')) {
@@ -671,69 +511,71 @@ const keyContrlr = (e) => {
       e.preventDefault();
     }
 
-
   } 
 
   else if (e.key === 'Escape') {
     document.activeElement.blur();
   }
 
-
-
 }
 
 
-
+// keybrd cntrl of form
 const testForm = (e) => {
-  if (e.key === 'Enter') {
-    let form, action;
+  let form, action;
 
-    if (e.target.parentElement.id === 'project-form') {
-      form = e.target.parentElement;
-      action = 'submit-project';
-    } else if (
-      e.target.parentElement.id === 'task-form' ||
-      e.target.id === 'task-important-input'
-    ) {
-      form = document.querySelector('main > form');
-      action = 'submit-task';
-    } else {
-      form = document.querySelector('#edit-task-form');
-      action = 'submit-edit';
-    }
+  if (e.target.parentElement.id === 'project-form') {
+    form = e.target.parentElement;
+    action = 'submit-project';
+  } else if (
+    e.target.parentElement.id === 'task-form' ||
+    e.target.id === 'task-important-input'
+  ) {
+    form = document.querySelector('main > form');
+    action = 'submit-task';
+  } else {
+    form = document.querySelector('#edit-task-form');
+    action = 'submit-edit';
+  }
+
+
+  if (e.key === 'Enter') {
 
     if (
       !e.target.classList.contains('project-button') &&
       !e.target.classList.contains('task-button') &&
       !e.target.classList.contains('edit-button')
     ) {
+
       if (action === 'submit-edit') {
         let targetTask = e.target.closest('li').id;
         dataFns.editTaskProp(targetTask, 'all');
         setTaskList(dataFns.filterTasks(data.navSelection));
-      } else if (action === 'submit-project') {
+      } 
+      
+      else if (action === 'submit-project') {
         let newProj = dataFns.createProj();
         setProjList(dataFns.initItem(newProj));
         hlNavSelection();
-      } else if (action === 'submit-task') {
+      } 
+      
+      else if (action === 'submit-task') {
         let newTask = dataFns.createTask();
         setTaskList(dataFns.initItem(newTask));
       }
 
       removeForm(form);
     }
-  }     
+
+  } else if (e.key === 'Escape') {
+    removeForm(form);
+  }  
 }
 
-
-const clickContrlr = (e) => {
-  console.log(e.target);
-}
 
 
 export {
   keyContrlr,
-  clickContrlr,
 
   setMainPanel,
   setProjList,
