@@ -27,25 +27,45 @@ const addNavListListeners = (fn, ...evnts) => {
       navLists[i].addEventListener(evnts[j], fn);
     }
   }
+} 
+
+const addTaskListListener = (fn, ...evnts) => {
+  const taskList = document.querySelector('#tasks-list');
+
+  evnts.forEach(evnt => {
+    taskList.addEventListener(evnt, fn);
+  });
+
+  // if (taskList) {
+  //   taskList.addEventListener(evnt, fn);
+  // }
 }
 
-const addTasksListListener = (evnt, fn) => {
-const tasksList = document.querySelector('#tasks-list');
 
-  if (tasksList) {
-    tasksList.addEventListener(evnt, fn);
-  }
-}
 
-const addPageBtnListeners = (evnt, fn) => {
+
+// const addPageBtnListeners = (fn, evnt) => {
+//   const formBtns = document.querySelectorAll('button');
+
+//   formBtns.forEach(btn => {
+//     btn.addEventListener(evnt, fn);
+//   });
+// }
+const addPageBtnListeners = (fn, ...evnts) => {
   const formBtns = document.querySelectorAll('button');
 
-  formBtns.forEach(btn => {
-    btn.addEventListener(evnt, fn);
-  });
+  for (let i = 0; i < formBtns.length; i++) {
+    for (let j = 0; j < evnts.length; j++) {
+      formBtns[i].addEventListener(evnts[j], fn);
+    }
+  }
+
 }
 
-const docListener = (action, evnt, fn) => {
+
+
+
+const docListener = (fn, action, evnt) => {
   action === 'add' 
     ? document.body.addEventListener(evnt, fn) 
     : document.body.removeEventListener(evnt, fn);
@@ -55,7 +75,7 @@ export {
   addMenuToggListener,
   addThemeToggListener,
   addNavListListeners,
-  addTasksListListener,
+  addTaskListListener,
   addPageBtnListeners,
   docListener
 }
