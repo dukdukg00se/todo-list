@@ -12,14 +12,13 @@ import {
 } from './modules/listener-fns';
 import * as displayFns from './modules/display-fns';
 
+// Display page content and set up listeners
+displayFns.contentCntrlr.setMainPanel();
+displayFns.contentCntrlr.setNavPanel();
 
-(() => {
-  displayFns.contentCntrlr.setMainPanel();
-  displayFns.contentCntrlr.setNavPanel();
+docListener(manageKeyResponse, 'add', 'keydown');
+addMenuToggListener(toggleMenu, 'click');
+addThemeToggListener(toggleTheme, 'click');
+addPageBtnListeners(manageBtnResponse, 'click');
 
-  docListener(manageKeyResponse, 'add', 'keydown');
-  addMenuToggListener(toggleMenu, 'click');
-  addThemeToggListener(toggleTheme, 'click');
-  addPageBtnListeners(manageBtnResponse, 'click');
-})();
 

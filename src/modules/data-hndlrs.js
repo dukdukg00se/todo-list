@@ -1,5 +1,5 @@
 /**
- * This module's functions serve as data handlers 
+ * This module's functions serve as the data handlers 
  * They create/control/manipulate the application data 
  * E.g., deleting/adding items from projects array, saving to local storage, etc..
  */
