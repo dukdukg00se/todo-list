@@ -1,11 +1,24 @@
-/* This module's functions control the display content, e.g., showing the proj/tasks, highlighting current nav selection, etc... */
+/**
+ * This module's functions control the displayed content
+ * E.g., showing proj/tasks, highlighting nav selection, etc...
+ */
 
-import data from './data.js';
-import * as contentFns from './content-fns.js';
-import * as listenerFns from './listener-fns';
-import * as dataFns from './data-fns';
-
-
+import { 
+  rmvFormOnClick,
+  cntrlFormByKey,
+  manageBtnResponse, 
+  manageNavListResponse, 
+  manageTaskListResponse 
+} from './event-fns';
+import {
+  addNavListListeners,
+  addTaskListListener,
+  addPageBtnListeners,
+  docListener
+} from './listener-fns';
+import data from './site-data';
+import * as creatorFns from './creator-fns';
+import * as dataHndlrs from './data-hndlrs';
 
 const formCntrlr = (() => {
   const displayForm = (form, task) => {
@@ -15,7 +28,7 @@ const formCntrlr = (() => {
       // Hide task info when edit form displayed
       form.previousElementSibling.classList.toggle('hidden');
 
-      listenerFns.addPageBtnListeners(manageBtnResponse, 'click');
+      addPageBtnListeners(manageBtnResponse, 'click');
     } else {
       form.classList.remove('hidden');
 
@@ -26,8 +39,8 @@ const formCntrlr = (() => {
     // Focus on first form input field
     form.querySelector('input').focus();
 
-    listenerFns.docListener(rmvFormOnClick, 'add', 'click');
-    listenerFns.docListener(sbmtFormByKey, 'add', 'keydown');
+    docListener(rmvFormOnClick, 'add', 'click');
+    docListener(cntrlFormByKey, 'add', 'keydown');
   }
 
   const removeForm = (form) => {
@@ -49,37 +62,8 @@ const formCntrlr = (() => {
       } 
     }
 
-    listenerFns.docListener(rmvFormOnClick, 'remove', 'click');
-    listenerFns.docListener(sbmtFormByKey, 'remove', 'keydown');
-  }
-
-  // Hide/remove displayed form by clicking outside form
-  const rmvFormOnClick = (e) => {
-    let isTaskBtn =
-      e.target.classList.contains('task-button') ||
-      e.target.parentElement.classList.contains('task-button');
-    let isProjBtn =
-      e.target.classList.contains('project-button') ||
-      e.target.parentElement.classList.contains('project-button');
-    let isEditBtn =
-      e.target.classList.contains('edit-icon') ||
-      e.target.classList.contains('edit-button');
-    let isForm = !!e.target.closest('form');
-    let displayedForm;
-
-    let pgForms = document.querySelectorAll('form');
-    pgForms.forEach(form => {
-      if (!form.classList.contains('hidden')) {
-        displayedForm = form;
-      }
-    })
-
-    // If not a proj/task/edit btn or form evnt, then hide form
-    if (!isTaskBtn && !isProjBtn && !isEditBtn && !isForm) {
-      if (displayedForm) {
-        removeForm(displayedForm);
-      }
-    }
+    docListener(rmvFormOnClick, 'remove', 'click');
+    docListener(cntrlFormByKey, 'remove', 'keydown');
   }
 
   // Make sure only one form is displayed 
@@ -118,86 +102,12 @@ const formCntrlr = (() => {
     }
   }
 
-  // Submit, escape form w/ "Enter", "Escape"
-  const sbmtFormByKey = (e) => {
-    let form = e.target.closest('form');
-
-    if (e.key === 'Enter') {
-      // Make sure not on btn or delete
-      // These events handles by manageBtn, manageTaskList
-      if (
-        !e.target.classList.contains('project-button') &&
-        !e.target.classList.contains('task-button') &&
-        !e.target.classList.contains('edit-button') &&
-        !e.target.classList.contains('delete-icon')
-      ) {
-        if (form.id === 'edit-task-form') {
-          let targetTask = e.target.closest('li').id;
-          dataFns.editTaskProp(targetTask, 'all');
-          contentCntrlr.setTaskList(dataFns.filterTasks(data.navSelection));
-        } else if (form.id === 'project-form') {
-          let newProj = dataFns.createProj();
-          contentCntrlr.setNavPanel(dataFns.initItem(newProj));
-        } else if (form.id === 'task-form') {
-          let newTask = dataFns.createTask();
-          contentCntrlr.setTaskList(dataFns.initItem(newTask));
-        }
-        removeForm(form);
-      }
-    } else if (e.key === 'Escape') {
-      removeForm(form);
-    }  
-  }
-
   return {
     displayForm,
     removeForm, 
     rmvExtranForm,
-    sbmtFormByKey
   }
 })();
-
-
-const settingsCntrlr = (() => {
-  // Minimize/expand nav panel
-  const toggleMenu = () => {
-    const navPanel = document.querySelector('nav');
-    const menuIcon = document.querySelector('.menu-icon');
-    const menuToggleTooltip = document.querySelector('#menu-icon-wrapper > .tooltip-text');
-  
-    navPanel.classList.toggle('hidden');
-  
-    if (navPanel.classList.contains('hidden')) {
-      menuToggleTooltip.textContent = 'Expand menu';
-      menuIcon.textContent = 'menu';
-    } else {
-      menuToggleTooltip.textContent = 'Collapse menu';
-      menuIcon.textContent = 'menu_open';
-    }
-  };  
-
-  // Toggle between light/dark theme
-  const toggleTheme = () => {
-    const themeIcon = document.querySelector('.theme-icon');
-    const themeToggleTooltip = document.querySelector('#theme-icon-wrapper > .tooltip-text');
-  
-    document.body.classList.toggle('dark');
-  
-    if (document.body.classList.contains('dark')) {
-      themeToggleTooltip.textContent = 'Light theme';
-      themeIcon.textContent = 'brightness_high';
-    } else {
-      themeToggleTooltip.textContent = 'Dark theme';
-      themeIcon.textContent = 'brightness_4';
-    }
-  };
-
-  return {
-    toggleMenu,
-    toggleTheme
-  }
-})();
-
 
 const contentCntrlr = (() => {
   const hlNavSelection = () => {
@@ -233,7 +143,7 @@ const contentCntrlr = (() => {
     newList.id = listId;
     arr.forEach(item => {
       newList.append(
-        isProj ? contentFns.createProj(item) : contentFns.createTask(item)
+        isProj ? creatorFns.createProj(item) : creatorFns.createTask(item)
       );
     })
     container.append(newList);
@@ -241,15 +151,12 @@ const contentCntrlr = (() => {
 
   const setProjList = (arr) => {
     display(arr);  
-    listenerFns.addNavListListeners(manageNavListResponse, 'click');      
-    listenerFns.docListener(masterKeyCntrlr, 'add', 'keydown');
+    addNavListListeners(manageNavListResponse, 'click');      
   }
 
   const setTaskList = (arr) => {
     display(arr);
-  
-    listenerFns.addTaskListListener(manageTaskListResponse, 'click');
-    listenerFns.docListener(masterKeyCntrlr, 'add', 'keydown');
+    addTaskListListener(manageTaskListResponse, 'click');
   }
 
   const setNavPanel = (arr) => {
@@ -264,10 +171,12 @@ const contentCntrlr = (() => {
     const mainHeader = document.querySelector('h1');
     const addTaskBtn = document.querySelector('main > button');
     let selection = data.navSelection;
-  
-    // Used in manageNavListResponse()
-    // Setting dataset may be unnecessary, can use data.navSelection
-    // Need to see if one is more preferable
+
+    /**
+     * Used in manageNavListResponse()
+     * Setting dataset unnecessary, can use data.navSelection
+     * One more preferable?
+     */
     mainPanel.dataset.selected = selection;
   
     switch (selection) {
@@ -291,14 +200,13 @@ const contentCntrlr = (() => {
         });
     }
   
-    // Determine whether add task btn is displayed
+    // Determine if add task btn displayed
     // If selection is a proj then display add task btn
     /project-/.test(selection) 
       ? addTaskBtn.classList.remove('hidden')
       : addTaskBtn.classList.add('hidden');
   
-    setTaskList(dataFns.filterTasks(selection));
-  
+    setTaskList(dataHndlrs.filterTasks(selection));
   }
 
   return {
@@ -310,295 +218,7 @@ const contentCntrlr = (() => {
   }
 })();
 
-
-
-
-
-
-
-
-
-const manageBtnResponse = (e) => {  
-  let action = 
-    e.target.parentElement.id === 'add-project' 
-      ? 'add-project' 
-      : e.target.parentElement.id === 'add-task' 
-      ? 'add-task' 
-      : e.target.id;
-
-  let form = 
-    /project/.test(action) 
-      ? document.querySelector('#projects-panel form')
-      : /edit/.test(action)
-      ? document.querySelector('#edit-task-form')
-      : document.querySelector('main > form');
-
-
-  if (action === 'add-project' || action === 'add-task') {
-    formCntrlr.rmvExtranForm(action);
-    formCntrlr.displayForm(form);
-  } else { 
-
-    if (action === 'submit-project') {
-      let newProj = dataFns.createProj();
-      contentCntrlr.setNavPanel(dataFns.initItem(newProj));
-    } else if (action === 'submit-task') {
-      let newTask = dataFns.createTask();
-      contentCntrlr.setTaskList(dataFns.initItem(newTask));
-    } else if (action === 'submit-edit') {
-      let targetTask = e.target.closest('li').id;
-      dataFns.editTaskProp(targetTask, 'all');
-      contentCntrlr.setTaskList(dataFns.filterTasks(data.navSelection));
-    } 
-
-    formCntrlr.removeForm(form);
-  }
-} 
-
-const manageNavListResponse = (e) => {
-  const selection = e.target.closest('li');
-  const mainPanel = document.querySelector('main');
-
-  if (selection) {
-
-    if (e.target.classList.contains('delete-icon')) {
-      dataFns.deleteItem(selection.id);
-      contentCntrlr.setProjList(data.projects);
-
-      // Instead of using dataset, can compare to data.navSelection
-      // One more preferable?
-      if (selection.id === mainPanel.dataset.selected) {
-        dataFns.saveNavSelection('all');
-        contentCntrlr.setMainPanel();
-      }
-
-    } else {
-      dataFns.saveNavSelection(selection.id);
-      contentCntrlr.setMainPanel();
-    }
-
-    contentCntrlr.hlNavSelection();
-  } 
-}
-
-const manageTaskListResponse = (e) => {
-  let selection = e.target.closest('li');
-
-  if (e.target.classList.contains('edit-icon')) {
-    formCntrlr.rmvExtranForm();    
-    let taskInfo = dataFns.returnTask(selection.id);
-    formCntrlr.displayForm(contentFns.createEditForm(taskInfo), selection);
-  } else {
-
-    if (
-      e.target.classList.contains('checkbox') || 
-      e.target.classList.contains('checked')
-    ) {
-      dataFns.editTaskProp(selection.id, 'completed');
-    } else if (e.target.classList.contains('important-icon')) {
-      dataFns.editTaskProp(selection.id, 'important');
-    } else if (e.target.classList.contains('delete-icon')) {
-      dataFns.deleteItem(selection.id);
-      listenerFns.docListener(formCntrlr.sbmtFormByKey, 'remove', 'keydown');
-    } else {
-      // E.g., key events within task edit form. 
-      // Handled by formCntrlr module
-      return;
-    }
-
-    contentCntrlr.setTaskList(dataFns.filterTasks(data.navSelection));
-  }
-}
-
-const masterKeyCntrlr = (e) => {
-
-  if (e.key === 'Enter') {
-
-    if (e.target.classList.contains('menu-icon')) {
-      settingsCntrlr.toggleMenu();
-    }
-
-    if (e.target.classList.contains('theme-icon')) {
-      settingsCntrlr.toggleTheme();
-    }
-
-    if (e.target.closest('ul')) {
-
-      if (
-        e.target.closest('ul').id === 'home-list' || 
-        e.target.closest('ul').id === 'projects-list' 
-      ) {
-        manageNavListResponse(e);
-      } else {
-        manageTaskListResponse(e);
-
-        if (e.target.classList.contains('delete-icon')) {
-          listenerFns.docListener(formCntrlr.sbmtFormByKey, 'remove', 'keydown');
-        }
-
-      }
-
-    }
-
-    if (e.target.nodeName === 'BUTTON') {
-      manageBtnResponse(e);
-    }
-
-    e.preventDefault();
-
-    // else if (e.target.classList.contains('delete-icon')) {
-
-    //   if (e.target.parentElement.classList.contains('project-wrapper')) {
-    //     manageNavListResponse(e);
-    //   } else {
-
-
-    //     // listenerFns.docListener(formCntrlr.sbmtFormByKey, 'remove', 'keydown');
-    //     manageTaskListResponse(e);
-    //   }
-
-    // }
-
-  
-
-    // else {
-    //   manageTaskListResponse(e);  
-    //   e.preventDefault();
-    // }
-
-  } 
-
-  else if (e.key === 'Escape') {
-    document.activeElement.blur();
-  }
-
-}
-
-
-
-
-
 export {
-  masterKeyCntrlr,
-  settingsCntrlr,
-  contentCntrlr,
-  manageBtnResponse,
-  manageNavListResponse,
-  manageTaskListResponse
+  formCntrlr,
+  contentCntrlr
 }
-
-// const manageTaskListResponse = (e) => {
-//   if (e.type === 'click' || e.key === 'Enter') {
-//     let selection = e.target.closest('li');
-
-//     if (
-//       e.target.classList.contains('checkbox') || 
-//       e.target.classList.contains('checked')
-//     ) {
-//       dataFns.editTaskProp(selection.id, 'completed');
-
-//       console.log(document.activeElement);
-//       // Set a unique id for checkbox?
-
-//       setTaskList(dataFns.filterTasks(data.navSelection));
-
-
-
-//       // let checkbox = selection.querySelector('.checkbox');
-//       // let description = selection.querySelector('.task-descr-wrapper');
-//       // checkbox.classList.toggle('checked');
-//       // description.classList.toggle('crossed');
-//       // selection.classList.toggle('completed');
-//     } else if (e.target.classList.contains('important-icon')) {
-//       dataFns.editTaskProp(selection.id, 'important');
-
-//       focusedElem = document.activeElement.id;
-
-
-//       setTaskList(dataFns.filterTasks(data.navSelection));
-
-
-//       if (e.key) {
-//         document.getElementById(focusedElem).focus();
-//       }
-
-  
-//       // No need to toggle since redisplaying task list
-//       // e.target.classList.toggle('important');
-//     } else if (e.target.classList.contains('delete-icon')) {
-//       dataFns.deleteItem(selection.id);
-//       setTaskList(dataFns.filterTasks(data.navSelection));
-//     } else if (e.target.classList.contains('edit-icon')) {
-//       focusedElem = document.activeElement.id;
-
-
-//       rmvExtranForms();    
-//       let task = dataFns.returnTask(selection.id);
-//       displayForm(contentFns.createEditForm(task), selection);
-//       listenerFns.addPageBtnListeners(manageBtnResponse, 'click', 'keydown');
-
-
-//       e.preventDefault();
-//     } 
-
-//   } else if (e.key === 'Escape') {
-//     document.activeElement.blur();
-//   }
-// }
-
-
-
-// const masterKeyCntrlr = (e) => {
-//   if (e.key === 'Enter') {
-
-//     if (e.target.closest('form')) {
-//       formCntrlr.sbmtFormByKey(e);
-//     }
-
-
-//     if (e.target.classList.contains('menu-icon')) {
-//       toggle.menu();
-//     }
-
-//     else if (e.target.classList.contains('theme-icon')) {
-//       toggle.theme();
-//     }
-
-//     else if (e.target.classList.contains('task-view') || e.target.classList.contains('project-item')) {
-//       manageNavListResponse(e);
-//     }
-
-//     else if (e.target.nodeName === 'BUTTON') {
-//       manageBtnResponse(e);
-//       e.preventDefault();   
-//     }
-
-//     else if (e.target.classList.contains('delete-icon')) {
-
-//       if (e.target.parentElement.classList.contains('project-wrapper')) {
-//         manageNavListResponse(e);
-//       } else {
-
-
-//         // listenerFns.docListener(formCntrlr.sbmtFormByKey, 'remove', 'keydown');
-//         manageTaskListResponse(e);
-//       }
-
-//     }
-
-//     else if (e.target.classList.contains('github')) {
-//       return;
-//     }
-
-//     else {
-//       manageTaskListResponse(e);  
-//       e.preventDefault();
-//     }
-
-//   } 
-
-//   else if (e.key === 'Escape') {
-//     document.activeElement.blur();
-//   }
-
-// }

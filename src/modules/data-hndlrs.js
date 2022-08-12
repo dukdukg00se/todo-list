@@ -1,7 +1,11 @@
-/* This module's functions create/control/manipulate the application data, e.g., deleting/adding items from projects array, saving to local storage, etc.. */
+/**
+ * This module's functions serve as data handlers 
+ * They create/control/manipulate the application data 
+ * E.g., deleting/adding items from projects array, saving to local storage, etc..
+ */
 
 import { getDay, isThisWeek, isToday, parseISO } from 'date-fns';
-import data from './data.js';
+import data from './site-data.js';
 
 /* Helper functions used in exported fns */
 const add = (obj, arr) => {
@@ -75,18 +79,10 @@ function Task(name, details, due, important) {
 
 
 /* Exported fns */
-const returnTask = (taskId) => {
-  let targetTask;
 
-  data.projects.forEach(proj => {
-    proj.tasks.forEach(task => {
-      if (task.id === taskId) {
-        targetTask =  task;
-      }
-    })
-  })
-
-  return targetTask;
+const saveNavSelection = (input) => {
+  data.navSelection = input;
+  popLocalStorage(data.navSelection);
 }
 
 const createProj = () => {
@@ -102,11 +98,13 @@ const createTask = () => {
   return new Task(taskName, taskDetails, taskDue, taskImportant);
 }
 
-// Set up a new item -
-// Add item to container array, 
-// set id of items in array, 
-// save projects array to local storage, 
-// return container for display
+/**
+ * Set up a new item -
+ * Add item to container array
+ * Set id of items in array
+ * Save projects array to local storage
+ * Return container for display 
+ */ 
 const initItem = (itm) => {
   let itmContainer, idPrefix;
 
@@ -126,10 +124,12 @@ const initItem = (itm) => {
   return itmContainer;
 }
 
-// Delete proj/task - 
-// Remove item from container array,
-// Save projects array to local storage
-// return container for display
+/**
+ * Delete proj/task -
+ * Remove item from container array
+ * Save projects array to local storage
+ * Return container for display
+ */
 const deleteItem = (itmId) => {
   let isTask = /task/.test(itmId);
   let itmContainer;
@@ -144,7 +144,20 @@ const deleteItem = (itmId) => {
   popLocalStorage(data.projects);
 }
 
-// Returns selected tasks based on criteria
+const returnTask = (taskId) => {
+  let targetTask;
+
+  data.projects.forEach(proj => {
+    proj.tasks.forEach(task => {
+      if (task.id === taskId) {
+        targetTask = task;
+      }
+    })
+  })
+
+  return targetTask;
+}
+
 const filterTasks = (filter) => {
   let filteredTasks = [];
 
@@ -193,13 +206,6 @@ const filterTasks = (filter) => {
   return filteredTasks;
 }
 
-
-const saveNavSelection = (input) => {
-  data.navSelection = input;
-  popLocalStorage(data.navSelection);
-}
-
-// Find specific task by id and edit its input prop
 const editTaskProp = (tskId, prop) => {
   let projects = data.projects;
 
@@ -226,7 +232,6 @@ const editTaskProp = (tskId, prop) => {
     });
   });
 }
-
 
 export {
   returnTask,

@@ -1,5 +1,9 @@
-// This module contains functions that add (or remove) listeners to key page elements
+/* This module contains functions that add/remove listeners to key page elements */
 
+/**
+ * Originally wanted to run same fn for "keydown" and "click" events, thus the rest parameter
+ * Later decided to control "keydown" events with separate fn
+ */
 const addMenuToggListener = (fn, ...evnts) => {
   const menuToggle = document.querySelector('.menu-icon');
 
@@ -19,7 +23,7 @@ const addThemeToggListener = (fn, ...evnts) => {
 
 const addNavListListeners = (fn, ...evnts) => {
   // In lieu of adding listener to list items, add to lists
-  // May be more efficient?
+  // More efficient?
   let navLists = document.querySelectorAll('nav ul');
 
   for (let i = 0; i < navLists.length; i++) {
@@ -35,22 +39,8 @@ const addTaskListListener = (fn, ...evnts) => {
   evnts.forEach(evnt => {
     taskList.addEventListener(evnt, fn);
   });
-
-  // if (taskList) {
-  //   taskList.addEventListener(evnt, fn);
-  // }
 }
 
-
-
-
-// const addPageBtnListeners = (fn, evnt) => {
-//   const formBtns = document.querySelectorAll('button');
-
-//   formBtns.forEach(btn => {
-//     btn.addEventListener(evnt, fn);
-//   });
-// }
 const addPageBtnListeners = (fn, ...evnts) => {
   const formBtns = document.querySelectorAll('button');
 
@@ -61,9 +51,6 @@ const addPageBtnListeners = (fn, ...evnts) => {
   }
 
 }
-
-
-
 
 const docListener = (fn, action, evnt) => {
   action === 'add' 
