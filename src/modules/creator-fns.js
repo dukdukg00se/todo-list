@@ -1,4 +1,4 @@
-/* This module contains functions that create the dynamic page content */ 
+/* This module contains functions that create the dynamic page content */
 
 const createProj = (obj) => {
   const projectListItem = document.createElement('li');
@@ -6,7 +6,7 @@ const createProj = (obj) => {
   const projectIcon = document.createElement('span');
   const projectTitle = document.createElement('h3');
   const deleteIcon = document.createElement('span');
-  
+
   projectListItem.classList.add('project-item');
   projectListItem.id = obj.id;
   projectListItem.tabIndex = 0;
@@ -16,7 +16,7 @@ const createProj = (obj) => {
   projectTitle.textContent = obj.name ? obj.name : 'No name entered';
   deleteIcon.classList.add('material-symbols-rounded', 'delete-icon');
   deleteIcon.textContent = 'delete';
-  deleteIcon.tabIndex = 0;    
+  deleteIcon.tabIndex = 0;
 
   projectWrapper.append(projectIcon, projectTitle, deleteIcon);
   projectListItem.append(projectWrapper);

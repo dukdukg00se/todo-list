@@ -2,13 +2,13 @@ import {
   toggleMenu,
   toggleTheme,
   manageBtnResponse,
-  manageKeyResponse
+  manageKeyResponse,
 } from './modules/event-fns';
-import { 
+import {
   addMenuToggListener,
   addThemeToggListener,
   addPageBtnListeners,
-  docListener
+  docListener,
 } from './modules/listener-fns';
 import * as displayFns from './modules/display-fns';
 
@@ -20,5 +20,3 @@ docListener(manageKeyResponse, 'add', 'keydown');
 addMenuToggListener(toggleMenu, 'click');
 addThemeToggListener(toggleTheme, 'click');
 addPageBtnListeners(manageBtnResponse, 'click');
-
-
