@@ -373,9 +373,9 @@ const manageTaskListResponse = (e) => {
   const selection = e.target.closest('li');
 
   if (e.target.classList.contains('edit-icon')) {
-    displayFns.formCntrlr.rmvExtranForm();
+    formCntrlr.rmvExtranForm();
     const taskInfo = dataHndlrs.returnTask(selection.id);
-    displayFns.formCntrlr.displayForm(creatorFns.createEditForm(taskInfo), selection);
+    formCntrlr.displayForm(creatorFns.createEditForm(taskInfo), selection);
   } else {
     if (
       e.target.classList.contains('checkbox')
@@ -386,14 +386,14 @@ const manageTaskListResponse = (e) => {
       dataHndlrs.editTaskProp(selection.id, 'important');
     } else if (e.target.classList.contains('delete-icon')) {
       dataHndlrs.deleteItem(selection.id);
-      docListener(cntrlFormByKey, 'remove', 'keydown');
+      docListener(formCntrlr.cntrlFormByKey, 'remove', 'keydown');
     } else {
       // E.g., key events within task edit form.
       // Handled by formCntrlr module
       return;
     }
 
-    displayFns.contentCntrlr.setTaskList(dataHndlrs.filterTasks(data.navSelection));
+    contentCntrlr.setTaskList(dataHndlrs.filterTasks(data.navSelection));
   }
 };
 
