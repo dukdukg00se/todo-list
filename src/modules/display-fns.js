@@ -3,7 +3,7 @@
  * E.g., showing proj/tasks, highlighting nav selection, etc...
  */
 
-/* eslint-disable no-nested-ternary */
+/* eslint-disable no-nested-ternary, no-use-before-define, no-unused-expressions */
 
 import {
   addNavListListeners,
