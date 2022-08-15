@@ -1,22 +1,21 @@
 import {
-  toggleMenu,
-  toggleTheme,
-  manageBtnResponse,
-  manageKeyResponse,
-} from './modules/event-fns';
-import {
   addMenuToggListener,
   addThemeToggListener,
   addPageBtnListeners,
   docListener,
 } from './modules/listener-fns';
-import * as displayFns from './modules/display-fns';
+import {
+  contentCntrlr,
+  settingsCntrlr,
+  manageBtnResponse,
+  manageKeyResponse,
+} from './modules/display-fns';
 
 // Display page content and set up listeners
-displayFns.contentCntrlr.setMainPanel();
-displayFns.contentCntrlr.setNavPanel();
+contentCntrlr.setMainPanel();
+contentCntrlr.setNavPanel();
 
 docListener(manageKeyResponse, 'add', 'keydown');
-addMenuToggListener(toggleMenu, 'click');
-addThemeToggListener(toggleTheme, 'click');
+addMenuToggListener(settingsCntrlr.toggleMenu, 'click');
+addThemeToggListener(settingsCntrlr.toggleTheme, 'click');
 addPageBtnListeners(manageBtnResponse, 'click');
