@@ -6,9 +6,7 @@
 
 /* eslint-disable default-case, no-unused-expressions, no-param-reassign, no-plusplus */
 
-import {
-  getDay, isThisWeek, isToday, parseISO,
-} from 'date-fns';
+import { getDay, isThisWeek, isToday, parseISO } from 'date-fns';
 import data from './site-data';
 
 /* Helper functions used in exported fns */
@@ -107,8 +105,8 @@ const createTask = () => {
  * Return container for display
  */
 const initItem = (itm) => {
-  let itmContainer; let
-    idPrefix;
+  let itmContainer;
+  let idPrefix;
 
   if (itm instanceof Project) {
     itmContainer = data.projects;
@@ -184,7 +182,11 @@ const filterTasks = (filter) => {
       data.projects.forEach((proj) => {
         proj.tasks.forEach((task) => {
           if (task.due) {
-            if (isThisWeek(parseISO(task.due), { weekStartsOn: getDay(new Date()) })) {
+            if (
+              isThisWeek(parseISO(task.due), {
+                weekStartsOn: getDay(new Date()),
+              })
+            ) {
               filteredTasks.push(task);
             }
           }
@@ -226,7 +228,9 @@ const editTaskProp = (tskId, prop) => {
             task.name = document.querySelector('#edit-name-input').value;
             task.details = document.querySelector('#edit-details-input').value;
             task.due = document.querySelector('#edit-date-input').value;
-            task.important = document.querySelector('#edit-important-input').checked;
+            task.important = document.querySelector(
+              '#edit-important-input'
+            ).checked;
         }
 
         popLocalStorage(projects);

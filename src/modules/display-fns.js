@@ -19,7 +19,10 @@ const contentCntrlr = (() => {
   const hlNavSelection = () => {
     const navItems = document.querySelectorAll('nav li');
     navItems.forEach((item) => {
-      if (item.classList.contains('highlight') && item.id !== data.navSelection) {
+      if (
+        item.classList.contains('highlight') &&
+        item.id !== data.navSelection
+      ) {
         item.classList.remove('highlight');
       }
     });
@@ -28,9 +31,10 @@ const contentCntrlr = (() => {
   };
 
   const display = (arr) => {
-    let oldList; let listId; let
-      container;
-    const isProj = (arr === data.projects);
+    let oldList;
+    let listId;
+    let container;
+    const isProj = arr === data.projects;
 
     if (isProj) {
       container = document.querySelector('#projects-list-container');
@@ -50,7 +54,7 @@ const contentCntrlr = (() => {
     newList.id = listId;
     arr.forEach((item) => {
       newList.append(
-        isProj ? creatorFns.createProj(item) : creatorFns.createTask(item),
+        isProj ? creatorFns.createProj(item) : creatorFns.createTask(item)
       );
     });
     container.append(newList);
@@ -184,9 +188,12 @@ const formCntrlr = (() => {
     } else if (action === 'add-task') {
       // irrelForm = add new proj form
       irrelForm = document.querySelector('#projects-panel form');
-    } else { // action === 'show edit form'
+    } else {
+      // action === 'show edit form'
       // If either task/proj form not hidden, set as irrelForm
-      const pgForms = document.querySelectorAll('#projects-panel > form, main > form');
+      const pgForms = document.querySelectorAll(
+        '#projects-panel > form, main > form'
+      );
       pgForms.forEach((form) => {
         if (!form.classList.contains('hidden')) {
           irrelForm = form;
@@ -208,12 +215,15 @@ const formCntrlr = (() => {
   };
 
   const rmvFormOnClick = (e) => {
-    const isTaskBtn = e.target.classList.contains('task-button')
-      || e.target.parentElement.classList.contains('task-button');
-    const isProjBtn = e.target.classList.contains('project-button')
-      || e.target.parentElement.classList.contains('project-button');
-    const isEditBtn = e.target.classList.contains('edit-icon')
-      || e.target.classList.contains('edit-button');
+    const isTaskBtn =
+      e.target.classList.contains('task-button') ||
+      e.target.parentElement.classList.contains('task-button');
+    const isProjBtn =
+      e.target.classList.contains('project-button') ||
+      e.target.parentElement.classList.contains('project-button');
+    const isEditBtn =
+      e.target.classList.contains('edit-icon') ||
+      e.target.classList.contains('edit-button');
     const isForm = !!e.target.closest('form');
     let displayedForm;
 
@@ -239,10 +249,10 @@ const formCntrlr = (() => {
       // Make sure not on btn or delete
       // These events handles by manageBtn, manageTaskList
       if (
-        !e.target.classList.contains('project-button')
-        && !e.target.classList.contains('task-button')
-        && !e.target.classList.contains('edit-button')
-        && !e.target.classList.contains('delete-icon')
+        !e.target.classList.contains('project-button') &&
+        !e.target.classList.contains('task-button') &&
+        !e.target.classList.contains('edit-button') &&
+        !e.target.classList.contains('delete-icon')
       ) {
         if (form.id === 'edit-task-form') {
           const targetTask = e.target.closest('li').id;
@@ -277,7 +287,9 @@ const settingsCntrlr = (() => {
   const toggleMenu = () => {
     const navPanel = document.querySelector('nav');
     const menuIcon = document.querySelector('.menu-icon');
-    const menuToggleTooltip = document.querySelector('#menu-icon-wrapper > .tooltip-text');
+    const menuToggleTooltip = document.querySelector(
+      '#menu-icon-wrapper > .tooltip-text'
+    );
 
     navPanel.classList.toggle('hidden');
 
@@ -293,7 +305,9 @@ const settingsCntrlr = (() => {
   // Toggle between light/dark theme
   const toggleTheme = () => {
     const themeIcon = document.querySelector('.theme-icon');
-    const themeToggleTooltip = document.querySelector('#theme-icon-wrapper > .tooltip-text');
+    const themeToggleTooltip = document.querySelector(
+      '#theme-icon-wrapper > .tooltip-text'
+    );
 
     document.body.classList.toggle('dark');
 
@@ -313,17 +327,18 @@ const settingsCntrlr = (() => {
 })();
 
 const manageBtnResponse = (e) => {
-  const action = e.target.parentElement.id === 'add-project'
-    ? 'add-project'
-    : e.target.parentElement.id === 'add-task'
+  const action =
+    e.target.parentElement.id === 'add-project'
+      ? 'add-project'
+      : e.target.parentElement.id === 'add-task'
       ? 'add-task'
       : e.target.id;
 
   const form = /project/.test(action)
     ? document.querySelector('#projects-panel form')
     : /edit/.test(action)
-      ? document.querySelector('#edit-task-form')
-      : document.querySelector('main > form');
+    ? document.querySelector('#edit-task-form')
+    : document.querySelector('main > form');
 
   if (action === 'add-project' || action === 'add-task') {
     formCntrlr.rmvExtranForm(action);
@@ -378,8 +393,8 @@ const manageTaskListResponse = (e) => {
     formCntrlr.displayForm(creatorFns.createEditForm(taskInfo), selection);
   } else {
     if (
-      e.target.classList.contains('checkbox')
-      || e.target.classList.contains('checked')
+      e.target.classList.contains('checkbox') ||
+      e.target.classList.contains('checked')
     ) {
       dataHndlrs.editTaskProp(selection.id, 'completed');
     } else if (e.target.classList.contains('important-icon')) {
@@ -410,8 +425,8 @@ const manageKeyResponse = (e) => {
       settingsCntrlr.toggleTheme();
     } else if (e.target.closest('ul')) {
       if (
-        e.target.closest('ul').id === 'home-list'
-        || e.target.closest('ul').id === 'projects-list'
+        e.target.closest('ul').id === 'home-list' ||
+        e.target.closest('ul').id === 'projects-list'
       ) {
         manageNavListResponse(e);
       } else {

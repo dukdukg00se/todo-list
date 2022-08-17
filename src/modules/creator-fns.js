@@ -148,13 +148,9 @@ const createEditForm = (obj) => {
     dateLabel,
     dateInput,
     formSubContainer,
-    btnContainer,
+    btnContainer
   );
   return form;
 };
 
-export {
-  createProj,
-  createTask,
-  createEditForm,
-};
+export { createProj, createTask, createEditForm };

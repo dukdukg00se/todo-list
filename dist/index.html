@@ -1,130 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ToDo List</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDo List</title>
 
-  <link href="styles/reset.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <link href="styles/styles.css" rel="stylesheet">
-  <link rel="icon" href="./images/add_task_FILL1_wght400_GRAD0_opsz48.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="styles/reset.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <link href="styles/styles.css" rel="stylesheet" />
+    <link rel="icon" href="./images/add_task_FILL1_wght400_GRAD0_opsz48.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <script src="main.js" defer></script>
-</head>
+    <script src="main.js" defer></script>
+  </head>
 
-<body>
-  <header>
-    <div id="menu-icon-wrapper">
-      <span class="material-symbols-rounded menu-icon" tabindex="0">
-        menu_open
-      </span>
-      <span class="tooltip-text">Collapse menu</span>
-    </div>
-  
-    <h2><span class="material-symbols-rounded decor-icon">add_task</span>ToDo</h2>
-  
-    <div id="theme-icon-wrapper">
-      <span class="material-symbols-rounded theme-icon" tabindex="0">
-        brightness_4
-      </span>
-      <span class="tooltip-text">Dark theme</span>
-    </div>
-  </header>
+  <body>
+    <header>
+      <div id="menu-icon-wrapper">
+        <span class="material-symbols-rounded menu-icon" tabindex="0">
+          menu_open
+        </span>
+        <span class="tooltip-text">Collapse menu</span>
+      </div>
 
-  <div id="content-container">
-    <nav>
-      <section id="home-panel">
-        <h2>Tasks</h2>
+      <h2>
+        <span class="material-symbols-rounded decor-icon">add_task</span>ToDo
+      </h2>
 
-        <ul id="home-list">
-          <li class="task-view" id="all" tabindex="0">
+      <div id="theme-icon-wrapper">
+        <span class="material-symbols-rounded theme-icon" tabindex="0">
+          brightness_4
+        </span>
+        <span class="tooltip-text">Dark theme</span>
+      </div>
+    </header>
+
+    <div id="content-container">
+      <nav>
+        <section id="home-panel">
+          <h2>Tasks</h2>
+
+          <ul id="home-list">
+            <li class="task-view" id="all" tabindex="0">
+              <div>
+                <span class="material-symbols-rounded decor-icon"> inbox </span>
+                All
+              </div>
+            </li>
+            <li class="task-view" id="today" tabindex="0">
+              <div>
+                <span class="material-symbols-rounded decor-icon"> today </span>
+                Today
+              </div>
+            </li>
+            <li class="task-view" id="week" tabindex="0">
+              <div>
+                <span class="material-symbols-rounded decor-icon">
+                  date_range
+                </span>
+                Next 7 Days
+              </div>
+            </li>
+            <li class="task-view" id="important" tabindex="0">
+              <div>
+                <span class="material-symbols-rounded decor-icon"> flag </span>
+                Important
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section id="projects-panel">
+          <h2>Projects</h2>
+
+          <div id="projects-list-container"></div>
+
+          <form class="hidden" id="project-form">
+            <label for="project-name-input">Project name:</label>
+            <input
+              id="project-name-input"
+              type="text"
+              placeholder="E.g., Home tasks"
+            />
+
             <div>
-              <span class="material-symbols-rounded decor-icon">
-                inbox
-              </span>
-              All
+              <button class="project-button" id="submit-project" type="button">
+                Submit
+              </button>
+              <button class="project-button" id="cancel-project" type="button">
+                Cancel
+              </button>
             </div>
-          </li>
-          <li class="task-view" id="today" tabindex="0">
-            <div>
-              <span class="material-symbols-rounded decor-icon">
-                today
-              </span>
-              Today
-            </div>
-          </li>
-          <li class="task-view" id="week" tabindex="0">
-            <div>
-              <span class="material-symbols-rounded decor-icon">
-                date_range
-              </span>
-              Next 7 Days
-            </div>
-          </li>
-          <li class="task-view" id="important" tabindex="0">
-            <div>
-              <span class="material-symbols-rounded decor-icon">
-                flag
-              </span>
-              Important
-            </div>
-          </li>
-        </ul>
-      </section>
+          </form>
 
-      <section id="projects-panel">
-        <h2>Projects</h2>
+          <button class="project-button" id="add-project" type="button">
+            <span class="material-symbols-rounded .decor-icon">add</span>Add
+            Project
+          </button>
+        </section>
+      </nav>
 
-        <div id="projects-list-container"></div> 
+      <main data-selected="all">
+        <h1></h1>
 
-        <form class="hidden" id="project-form">
-          <label for="project-name-input">Project name:</label>
-          <input id="project-name-input" type="text" placeholder="E.g., Home tasks">
-    
+        <div id="tasks-list-container"></div>
+
+        <form class="hidden" id="task-form">
+          <label for="task-name-input">Task name:</label>
+          <input
+            id="task-name-input"
+            type="text"
+            placeholder="E.g., Get dinner"
+          />
+
+          <label for="task-details-input">Details:</label>
+          <textarea
+            id="task-details-input"
+            rows="4"
+            cols="30"
+            wrap="hard"
+            placeholder="E.g., Taco Bell"
+          ></textarea>
+
+          <label for="task-date-input">Date due:</label>
+          <input id="task-date-input" type="date" />
+
+          <label for="task-important-input"
+            >Important:<input id="task-important-input" type="checkbox"
+          /></label>
+
           <div>
-            <button class="project-button" id="submit-project" type="button">Submit</button>
-            <button class="project-button" id="cancel-project" type="button">Cancel</button>
+            <button class="task-button" id="submit-task" type="button">
+              Submit
+            </button>
+            <button class="task-button" id="cancel-task" type="button">
+              Cancel
+            </button>
           </div>
         </form>
-    
-        <button class="project-button" id="add-project" type="button"><span class="material-symbols-rounded .decor-icon">add</span>Add Project</button>
-      </section>  
-    </nav>
 
-    <main data-selected="all">
-      <h1></h1>
+        <button class="task-button hidden" id="add-task" type="button">
+          <span class="material-symbols-rounded decor-icon">add_task</span>Add
+          Task
+        </button>
+      </main>
+    </div>
 
-      <div id="tasks-list-container"></div>
-
-      <form class="hidden" id="task-form">
-        <label for="task-name-input">Task name:</label>
-        <input id="task-name-input" type="text" placeholder="E.g., Get dinner">
-
-        <label for="task-details-input">Details:</label>
-        <textarea id="task-details-input" rows="4" cols="30" wrap="hard" placeholder="E.g., Taco Bell"></textarea>
-
-        <label for="task-date-input">Date due:</label>
-        <input id="task-date-input" type="date">
-
-        <label for="task-important-input">Important:<input id="task-important-input" type="checkbox"></label>
-        
-        <div>
-          <button class="task-button" id="submit-task" type="button">Submit</button>
-          <button class="task-button" id="cancel-task" type="button">Cancel</button>
-        </div>
-      </form>
-
-      <button class="task-button hidden" id="add-task" type="button"><span class="material-symbols-rounded decor-icon">add_task</span>Add Task</button>
-    </main>
-  </div>
-
-  <footer>
-    <a class="github" href="https://github.com/dukdukg00se" target="#">By dukdukg00se <img class="github" src="./images/github-logo.svg"></a>
-  </footer>
-</body>
+    <footer>
+      <a class="github" href="https://github.com/dukdukg00se" target="#"
+        >By dukdukg00se <img class="github" src="./images/github-logo.svg"
+      /></a>
+    </footer>
+  </body>
 </html>
