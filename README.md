@@ -1,9 +1,26 @@
-# todo-list
+# ToDo list: Produtivity App
 
-A Todo List application done as part of The Odin Project curriculum.
+## Overview
 
-## Project Goals
+A Todo List web application to help with productivity and mental stability.
 
-- Make a functional, aesthetically decent To Do List application.
-- Practice webpack usage.
-- Apply SOLID principles, modules, and module patterns.
+## Usage
+
+- Create new projects and add tasks to organize your daily priorities
+- Flag important tasks and add a due date to quickly view upcoming or urgent priorities in the quick view panel
+- Mark tasks complete to blur out tasks
+- Delete projects and tasks by clicking the trash icon
+- To minimize menu select the Collapse Menu icon in the top left corner
+- To toggle between light and dark mode select theme toggler in the top right corner
+
+[Live Demo](https://dukdukg00se.github.io/todo-list/)
+
+<img src="./dist/images/user-ui.png" width="65%">
+
+## Learning Objectives
+
+Educational goals when building this application:
+
+- Consider code organization and SOLID principles
+- Practice working with webpack
+- Practice working with Babel
